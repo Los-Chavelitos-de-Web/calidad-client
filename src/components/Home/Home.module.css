@@ -1,0 +1,118 @@
+.homeBg {
+    min-height: 100vh;
+    background: #f9f9f9;
+    width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .sliderContainer {
+    width: 100vw;
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 0;
+  }
+  
+  .slide {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .sliderImg {
+    width: 100vw;
+    max-width: 1300px;
+    height: 500px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .brandButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+    width: 100vw;
+  }
+  
+  .brandBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 24px 32px;
+    cursor: pointer;
+    transition: transform 0.13s, box-shadow 0.13s, background 0.13s;
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+    min-width: 180px;
+    text-align: center;
+  }
+  
+  .brandBtn:hover {
+    transform: translateY(-2px);
+    background: #f0f0f0;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  .brandBtn span {
+    margin-top: 8px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  .brandLogo {
+    width: 120px;
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 12px;
+  }
+  
+  /* Flechas personalizadas del slider */
+  .customArrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  .customPrev {
+    left: 16px;
+  }
+  
+  .customNext {
+    right: 16px;
+  }
+  
+  @media (max-width: 900px) {
+    .sliderImg {
+      height: 220px;
+    }
+  
+    .brandBtn {
+      min-width: 120px;
+      padding: 16px 10px;
+      font-size: 16px;
+    }
+  
+    .brandLogo {
+      width: 70px;
+      height: 40px;
+    }
+  }
+  
