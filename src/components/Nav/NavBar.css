@@ -1,0 +1,130 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .logo-button {
+    width: 150px;
+    height: 60px;
+    background-color: #032615;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-button img {
+    width: 150%;
+    height: 100%;
+    object-fit: cover;
+    position: center;
+  }
+
+  .location span {
+    text-align: center;
+    font-size: 14px;
+    align-items: center;
+    color: #ffffff;
+    font-weight: bold;
+    margin-left: 10px;
+  }
+
+  .location img {
+    align-items: center;
+  }
+
+  
+
+  
+  .top-bar {
+    background-color: #032615;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo img {
+    height: 40px;
+  }
+  
+  .location {
+    margin-left: 14px;
+    text-align: center;
+    font-size: 14px;
+    color: #ffffff;
+  }
+  
+  .search-bar {
+    display: flex;
+    flex-grow: 1;
+    max-width: 600px;
+    margin: 0 20px;
+  }
+  
+  .search-bar select,
+  .search-bar input {
+    padding: 8px;
+    border: none;
+    outline: none;
+  }
+  
+  .search-bar select {
+    background-color: #fff;
+    font-weight: bold;
+  }
+  
+  .search-bar input {
+    flex-grow: 1;
+  }
+  
+  .search-bar button {
+    background-color: #e2b038;
+    border: none;
+    padding: 0 15px;
+    cursor: pointer;
+  }
+  
+  .icons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icons div {
+    margin-left: 20px;
+    text-align: right;
+    cursor: pointer;
+  }
+  
+  .cart button{
+    margin-left: 20px;
+    font-size: 24px;
+    background-color: #032615;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .menu-bar {
+    background-color: #858d84;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .menu-bar span {
+    margin-right: 20px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .menu-icon {
+    font-size: 20px;
+  }
+  
