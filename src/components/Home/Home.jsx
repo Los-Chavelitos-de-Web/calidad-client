@@ -5,11 +5,13 @@ import Slider from "react-slick";
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
+// Imágenes del slider
 const sliderImages = [
   "/img/banner001.jpg",
-  // Agrega más rutas si tienes más banners
+  // Puedes agregar más: "/img/banner002.jpg", etc.
 ];
 
+// Botones de marcas
 const brandButtons = [
   { name: "HONDA", img: "/img/Honda.jpg", route: "/honda" },
   { name: "RATO", img: "/img/rato.jpg", route: "/rato" },
@@ -18,7 +20,7 @@ const brandButtons = [
   { name: "DUCATI", img: "/img/ducati.jpg", route: "/ducati" },
 ];
 
-// Flechas personalizadas
+// Flechas personalizadas para el slider
 const CustomPrevArrow = ({ onClick }) => (
   <div className={`${styles.customArrow} ${styles.customPrev}`} onClick={onClick}>
     <FaArrowLeft size={20} color="#fff" />
@@ -32,13 +34,13 @@ const CustomNextArrow = ({ onClick }) => (
 );
 
 const Home = () => {
-  //const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   const sliderSettings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 1,
+    slidesToShow: 1,          
     slidesToScroll: 1,
     arrows: true,
     autoplay: true,
