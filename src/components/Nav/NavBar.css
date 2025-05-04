@@ -94,12 +94,19 @@ body {
   .icons {
     display: flex;
     align-items: center;
+    
   }
   
   .icons div {
     margin-left: 20px;
     text-align: right;
     cursor: pointer;
+    
+  }
+
+  .icons a {
+    text-decoration: none;
+    color: #ffffff;
   }
   
   .cart button{

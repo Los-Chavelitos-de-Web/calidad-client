@@ -1,52 +1,69 @@
-import React from "react";
-import "./NavBar.css";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './NavBar.css';
 
-const NavBar = () => (
-  <div>
-    <div className="top-bar">
-      <div className="logo">
-        <button className="logo-button">
-        <img src="/public/img/logo101.png" alt="" />
-        </button>
-        <div className="location">
-          <img src="./public/img/ubi.png" alt="" />
-          <span>
-            Enviar a Perú
-          </span>
+const NavBar = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      <div className="top-bar">
+        <div className="logo">
+          {/* Botón del logo que redirige al home */}
+          <button
+            className="logo-button"
+            onClick={() => navigate('/')}
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+            aria-label="Ir al inicio"
+          >
+            <img src="/img/logo101.png" alt="Logo CRN" />
+          </button>
+          <div className="location">
+            <img src="/img/ubi.png" alt="Ubicación" />
+            <span style={{ color: '#ffffff', marginLeft: 8 }}>
+              Enviar a  Perú
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div className="search-bar">
-        <select>
-          <option>Todo</option>
-        </select>
-        <input type="text" placeholder="Buscar ..." />
-        <button><img src="./public/img/lupa.png" alt="" /></button>
-      </div>
-
-      <div className="icons">
-        <div>
-          <a>
-            <img src="./public/img/usuario.png" alt="" /> ¡Bienvenido!
-            <br />
-            <small>Identifícate / Regístrate</small>
-          </a>
-        </div>
-        <div className="cart">
+        <div className="search-bar">
+          <select>
+            <option>Todo</option>
+          </select>
+          <input type="text" placeholder="Buscar ..." />
           <button>
-            <img src="./public/img/carrito.png" alt="" />
-          </button></div>
+            <img src="/img/lupa.png" alt="Buscar" />
+          </button>
+        </div>
+
+        <div className="icons">
+          <div>
+            <a 
+            onClick={() => navigate('/login')}
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+            >
+            <img src="/img/usuario.png" alt="" /> ¡Bienvenido!
+              <br />
+              <small>Identifícate / Regístrate</small>
+            </a>
+          </div>
+          <div className="cart">
+            <button>
+              <img src="/img/carrito.png" alt="Carrito" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="menu-bar">
+        <span className="menu-icon">☰</span>
+        <span>OFERTAS DEL DÍA</span>
+        <span>PRODUCTOS</span>
+        <span>NOSOTROS</span>
+        <span>CONTACTANOS</span>
       </div>
     </div>
-
-    <div className="menu-bar">
-      <span className="menu-icon">☰</span>
-      <span>OFERTAS DEL DÍA</span>
-      <span>PRODUCTOS</span>
-      <span>NOSOTROS</span>
-      <span>CONTACTANOS</span>
-    </div>
-  </div>
-);
+  );
+};
 
 export default NavBar;
