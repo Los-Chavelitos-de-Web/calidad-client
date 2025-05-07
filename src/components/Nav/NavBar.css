@@ -55,10 +55,9 @@ body {
   }
   
   .location {
-    margin-left: 14px;
-    text-align: center;
-    font-size: 14px;
-    color: #ffffff;
+    display: flex;
+    align-items: center;
+    margin-left: 150px;
   }
   
   .search-bar {
