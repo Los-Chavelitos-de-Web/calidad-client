@@ -1,9 +1,9 @@
 .loginContainer {
-    min-height: 100vh;
+    min-height: 82vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url('/public/img/login.png');
+    background-image: url('/public/img/login-logo.jpg');
     
   }
   
@@ -16,6 +16,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 60px auto 60px auto; 
   }
   
   .logoHeader {
@@ -59,7 +60,7 @@
   
   .loginBtn {
     width: 100%;
-    background: #234a24;
+    background: #092818;
     color: #fff;
     padding: 0.9rem;
     border: none;

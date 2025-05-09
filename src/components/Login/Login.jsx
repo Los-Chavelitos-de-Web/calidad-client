@@ -2,8 +2,11 @@
 import React from 'react';
 import styles from './Login.module.css';
 import NavBar from '../Nav/NavBar';
+import { useNavigate } from 'react-router-dom';
+
 
 const Login = () => {
+  const navigate = useNavigate();
   return (
     <div>
       <NavBar />
@@ -34,7 +37,8 @@ const Login = () => {
             Iniciar sesión
           </button>
         </form>
-        <a href="#" className={styles.register}>
+        <a onClick={() => navigate('/registro')}
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
           Registrar cuenta
         </a>
       </div>
