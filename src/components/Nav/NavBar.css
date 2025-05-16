@@ -117,7 +117,7 @@ body {
   }
   
   .menu-bar {
-    background-color: #858d84;
+    background-color: rgba(0, 0, 0, 0.3);
     color: white;
     padding: 10px 20px;
     display: flex;
