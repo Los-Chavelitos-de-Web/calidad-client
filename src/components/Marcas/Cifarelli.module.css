@@ -1,4 +1,4 @@
-.productosHonda {
+.productosCifarelli {
     margin: 120px auto 0 auto;
     background-color: white;
     padding: 20px 30px;
@@ -18,6 +18,7 @@
     font-family: Arial, sans-serif;
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: 20px;
 }
 
 .iconoFiltro {
@@ -26,11 +27,9 @@
 }
 
 .productosGrid {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    padding: 20px 0;
-    justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8rem;
 }
 
 .productoCard {
@@ -78,4 +77,35 @@
 }
 .botonOpcion:hover {
     background-color: #b71c1c;
+}
+
+.botonMostrarMasContainer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.botonMostrarMas {
+  background-color: #e60000;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.botonMostrarMas:hover {
+  background-color: #cc0000;
+}
+
+.fondoCifarelli {
+    background-image: url('public/Cifarelli.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    background-attachment: fixed;
 }
