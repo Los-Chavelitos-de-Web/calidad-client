@@ -1,32 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import NavBar from '../Nav/NavBar';
 import styles from './Rato.module.css';
 
-
-
-
 const Rato = () => {
+    const [mostrarMas, setMostrarMas] = useState(false);
+
+    const productosIniciales = 4;
+    const productosExtra = 8;
+
+    const productosTotales = mostrarMas
+        ? productosIniciales + productosExtra
+        : productosIniciales;
+
     return (
-        <div>
+        <div className={styles.fondoRato}>
             <NavBar />
-            <section className={styles.productosHonda}>
+            <section className={styles.productosRato}>
                 <div className={styles.productosHeader}>
-                    <h2>PRODUCTOS - RATO</h2>
+                    <h2>PRODUCTOS - HONDA</h2>
                     <span className={styles.iconoFiltro}>⚙</span>
                 </div>
+
                 <div className={styles.productosGrid}>
-                    {Array(5).fill(0).map((_, index) => (
+                    {Array(productosTotales).fill(0).map((_, index) => (
                         <div className={styles.productoCard} key={index}>
                             <div className={styles.imagenProducto}></div>
                             <div className={styles.detalleProducto}>
                                 <p className={styles.descripcion}>
-                                    RELOJ TIMEKEY 1115 ORIGINAL – DORADO Y PLATEADO | TIM-1, TIM-2
+                                    Lorem...
                                 </p>
                                 <p className={styles.precio}>S/. 118.99</p>
-                                <button className={styles.botonOpcion}>ESCOGER OPCIÓN</button>
+                                <button className={styles.botonOpcion}>Reservar</button>
                             </div>
                         </div>
                     ))}
+                </div>
+
+                <div className={styles.botonMostrarMasContainer}>
+                    <button
+                        className={styles.botonMostrarMas}
+                        onClick={() => setMostrarMas(!mostrarMas)}
+                    >
+                        {mostrarMas ? '↑ Mostrar menos' : '↓ Mostrar más'}
+                    </button>
                 </div>
             </section>
         </div>

@@ -12,6 +12,12 @@ import SPrincipal from '../SPrincipal/SPrincipal';
 import UltimoVideo from '../YSecttion/YSecction';
 
 
+// Imágenes del slider
+const sliderImages = [
+  "/img/banner001.jpg",
+  // Puedes agregar más: "/img/banner002.jpg", etc.
+];
+
 // Botones de marcas
 const brandButtons = [
   { name: "HONDA", img: "/img/Honda.jpg", route: "/honda" },
