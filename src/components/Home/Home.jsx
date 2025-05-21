@@ -4,6 +4,13 @@ import NavBar from '../Nav/NavBar';
 import Slider from "react-slick";
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import {ProductosSlider} from "../ProductoSlider/ProductoSlider"
+import Footer from '../Footer/Footer';
+import Ubicaciones from '../MapsSecttion/Ubicaciones';
+import Avisos from '../Avisos/Avisos';
+import SPrincipal from '../SPrincipal/SPrincipal';
+import UltimoVideo from '../YSecttion/YSecction';
+
 
 // Imágenes del slider
 const sliderImages = [
@@ -55,13 +62,7 @@ const Home = () => {
 
       {/* Slider principal */}
       <div className={styles.sliderContainer}>
-        <Slider {...sliderSettings}>
-          {sliderImages.map((src, idx) => (
-            <div key={idx} className={styles.slide}>
-              <img src={src} alt={`slide-${idx}`} className={styles.sliderImg} />
-            </div>
-          ))}
-        </Slider>
+        <SPrincipal></SPrincipal>
       </div>
 
       {/* Botones de marcas */}
@@ -76,6 +77,21 @@ const Home = () => {
             <span>{brand.name}</span>
           </button>
         ))}
+      </div>
+      <div>
+        <ProductosSlider/>
+      </div>
+      <div>
+        <UltimoVideo/>
+      </div>
+      <div>
+        <Ubicaciones/>
+      </div>
+      <div>
+        <Avisos/>
+      </div>
+      <div>
+        <Footer/>
       </div>
     </div>
   );
