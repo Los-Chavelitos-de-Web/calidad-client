@@ -5,9 +5,9 @@
     overflow-x: hidden;
     margin: 0;
     padding: 0;
-  }
-  
-  .sliderContainer {
+}
+
+.sliderContainer {
     width: 100vw;
     max-width: 100%;
     margin: 0 auto;
@@ -15,24 +15,24 @@
     background: #fff;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     padding: 0;
-  }
-  
-  .slide {
+}
+
+.slide {
     display: flex !important;
     justify-content: center;
     align-items: center;
-  }
-  
-  .sliderImg {
+}
+
+.sliderImg {
     width: 100%;
     max-width: 100%;
     height: 400px;
     object-fit: cover;
     display: block;
     margin: 0 auto;
-  }
-  
-  .brandButtons {
+}
+
+.brandButtons {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,9 +40,9 @@
     margin: 40px 0;
     flex-wrap: wrap;
     width: 100vw;
-  }
-  
-  .brandBtn {
+}
+
+.brandBtn {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -58,29 +58,31 @@
     color: #222;
     min-width: 180px;
     text-align: center;
-  }
-  
-  .brandBtn:hover {
+}
+
+.brandBtn:hover {
     transform: translateY(-2px);
     background: #f0f0f0;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  }
-  
-  .brandBtn span {
+}
+
+.brandBtn span {
     margin-top: 8px;
     font-size: 18px;
     font-weight: 500;
-  }
-  
-  .brandLogo {
+}
+
+.brandLogo {
     width: 120px;
     height: 60px;
     object-fit: contain;
     margin-bottom: 12px;
-  }
-  
-  /* Flechas personalizadas del slider */
-  .customArrow {
+}
+
+
+/* Flechas personalizadas del slider */
+
+.customArrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -89,46 +91,44 @@
     border-radius: 50%;
     cursor: pointer;
     z-index: 10;
-  }
-  
-  .customPrev {
-    left: 16px;
-  }
-  
-  .customNext {
-    right: 16px;
-  }
-  
-  @media (max-width: 900px) {
-    .sliderImg {
-      height: 220px;
-    }
-  
-    .brandBtn {
-      min-width: 120px;
-      padding: 16px 10px;
-      font-size: 16px;
-    }
-  
-    .brandLogo {
-      width: 70px;
-      height: 40px;
-    }
-  }
+}
 
-  /* Forzar solo una imagen visible */
+.customPrev {
+    left: 16px;
+}
+
+.customNext {
+    right: 16px;
+}
+
+@media (max-width: 900px) {
+    .sliderImg {
+        height: 220px;
+    }
+    .brandBtn {
+        min-width: 120px;
+        padding: 16px 10px;
+        font-size: 16px;
+    }
+    .brandLogo {
+        width: 70px;
+        height: 40px;
+    }
+}
+
+
+/* Forzar solo una imagen visible */
+
 .slick-slide {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
 }
 
 .slick-track {
-  display: flex !important;
+    display: flex !important;
 }
 
-.slick-slide > div {
-  width: 100%;
+.slick-slide>div {
+    width: 100%;
 }
-
-  

@@ -1,0 +1,109 @@
+/* ==== CONTENEDOR PRINCIPAL DEL SLIDER ==== */
+
+.slider-containerp {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 20px 0;
+    background-color: transparent;
+    /* Diseño plano */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* ==== ENVOLTURA DEL SLIDER PARA AISLAR LAS FLECHAS ==== */
+
+.slider-wrapper {
+    position: relative;
+    width: 950px;
+    overflow: hidden;
+    /* Oculta el scroll interno */
+}
+
+
+/* ==== SLIDER DE PRODUCTOS (SCROLL HORIZONTAL) ==== */
+
+.productos-slider {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    padding: 10px 0;
+    background-color: transparent;
+}
+
+.productos-slider::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* ==== PRODUCTO INDIVIDUAL ==== */
+
+.productos-slider>* {
+    flex: 0 0 auto;
+    width: 300px;
+    scroll-snap-align: start;
+}
+
+
+/* ==== BOTONES DE NAVEGACIÓN ==== */
+
+.slider-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+    padding: 0;
+}
+
+
+/* Posición separada del contenedor para evitar que empuje el diseño */
+
+.slider-button.left {
+    left: -50px;
+}
+
+.slider-button.right {
+    right: -50px;
+}
+
+.flecha-img {
+    width: 40px;
+    height: 40px;
+    transition: transform 0.2s ease;
+}
+
+.flecha-img:hover {
+    transform: scale(1.2);
+}
+
+
+/* ==== PUNTOS DE NAVEGACIÓN ==== */
+
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background-color: #ccc;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.dot.active {
+    background-color: #000;
+}

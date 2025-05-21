@@ -1,0 +1,96 @@
+/* Contenedor principal */
+
+.avisos {
+    margin: 40px auto;
+    max-width: 1000px;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    /* Centra el contenido horizontalmente */
+    align-items: center;
+    /* Centra el contenido verticalmente */
+}
+
+
+/* Grid para 2 filas y 2 columnas */
+
+.avisos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columnas */
+    grid-template-rows: repeat(2, 1fr);
+    /* 2 filas */
+    grid-gap: 20px;
+    /* 20px de separación entre filas y columnas */
+    justify-items: center;
+    /* Centra los elementos dentro de cada celda */
+    width: 100%;
+    max-width: 1000px;
+    /* Máximo ancho de la cuadrícula */
+}
+
+
+/* Estilo para cada item de aviso */
+
+.aviso-item {
+    display: flex;
+    align-items: center;
+    /* Alinea imagen y texto al centro */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px;
+    /* Controla el tamaño máximo de los items */
+    text-align: left;
+    /* Alinea el texto a la izquierda */
+    gap: 15px;
+    /* Espacio entre la imagen y el texto */
+    margin: 0 auto;
+    /* Centra cada elemento dentro de su contenedor */
+}
+
+
+/* Imagen dentro del item */
+
+.aviso-icono {
+    width: 50px;
+    height: 50px;
+}
+
+
+/* Estilo del texto */
+
+.aviso-texto h4 {
+    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.aviso-texto p {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+
+/* Responsive: Para pantallas pequeñas, 1 columna */
+
+@media (max-width: 600px) {
+    .avisos-grid {
+        grid-template-columns: 1fr;
+        /* 1 columna en pantallas pequeñas */
+    }
+    .aviso-item {
+        max-width: 90%;
+        /* Asegura que el aviso se ajuste bien en pantallas pequeñas */
+        text-align: center;
+        /* Centra el texto en pantallas pequeñas */
+    }
+    .aviso-icono {
+        margin-bottom: 10px;
+        /* Añade un margen abajo de la imagen */
+    }
+}
