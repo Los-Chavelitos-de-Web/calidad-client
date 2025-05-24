@@ -1,0 +1,46 @@
+.ubicaciones {
+    padding: 40px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.ubicaciones h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.descripcion {
+    margin-bottom: 40px;
+    font-size: 1.1em;
+    color: #666;
+}
+
+.ubicaciones-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 60px;
+}
+
+.ubicacion {
+    max-width: 320px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 12px;
+    /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    /* Sombra leve */
+    overflow: hidden;
+    /* Para que el borde redondeado se aplique al iframe también */
+    transition: transform 0.2s ease;
+}
+
+.ubicacion:hover {
+    transform: translateY(-4px);
+    /* Pequeño efecto al pasar el cursor */
+}
+
+.direccion {
+    margin-top: 10px;
+    font-size: 0.95em;
+}
