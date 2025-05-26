@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
 import styles from "./Bonhoeffer.module.css";
+import fondoBonhoeffer from "../../assets/Fondos_Marcas/Bonhoeffer2.png";
+
 
 const Bonhoeffer = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
@@ -27,7 +29,10 @@ const Bonhoeffer = () => {
   }, []);
 
   return (
-    <div className={styles.fondoBonhoeffer}>
+    <div
+      className={styles.fondoBonhoeffer}
+      style={{ backgroundImage: `url(${fondoBonhoeffer})` }}
+    >
       <NavBar />
 
       {/* Flecha izquierda para ir a Rato */}

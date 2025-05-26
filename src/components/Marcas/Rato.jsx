@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
 import styles from "./Rato.module.css";
+import fondoRato from "../../assets/Fondos_Marcas/Rato.png";
 
 const Rato = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
@@ -27,7 +28,10 @@ const Rato = () => {
   }, []);
 
   return (
-    <div className={styles.fondoRato}>
+    <div
+         className={styles.fondoRato}
+         style={{ backgroundImage: `url(${fondoRato})` }}
+       >
       <NavBar />
 
       {/* Flecha izquierda para ir a Honda */}

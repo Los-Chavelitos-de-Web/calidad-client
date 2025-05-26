@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
 import styles from "./Ducati.module.css";
+import fondoDucati from "../../assets/Fondos_Marcas/Ducati.png";
 
 const Ducati = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
@@ -27,7 +28,10 @@ const Ducati = () => {
   }, []);
 
   return (
-    <div className={styles.fondoDucati}>
+    <div
+      className={styles.fondoDucati}
+      style={{ backgroundImage: `url(${fondoDucati})` }}
+    >
       <NavBar />
 
       {/* Flecha izquierda para ir a Cifarelli */}
