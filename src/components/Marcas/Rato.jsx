@@ -1,24 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
 import styles from "./Rato.module.css";
 
 const Rato = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const productosIniciales = 4;
-  const productosExtra = 8;
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BACK}/products/getAll`);
+      const result = await response.json();
+      const filteredData = result.filter(product => product.brand === "Rato");
+      console.log(filteredData);
+      setData(filteredData);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-  const productosTotales = mostrarMas
-    ? productosIniciales + productosExtra
-    : productosIniciales;
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className={styles.fondoRato}>
       <NavBar />
 
-      {/* Flecha izquierda para ir a honda */}
+      {/* Flecha izquierda para ir a Honda */}
       <button
         className={styles.flechaIzquierda}
         onClick={() => navigate("/honda")}
@@ -33,27 +45,33 @@ const Rato = () => {
         </div>
 
         <div className={styles.productosGrid}>
-          {Array(productosTotales)
-            .fill(0)
-            .map((_, index) => (
-              <div className={styles.productoCard} key={index}>
-                <div className={styles.imagenProducto}></div>
-                <div className={styles.detalleProducto}>
-                  <p className={styles.descripcion}>Lorem...</p>
-                  <p className={styles.precio}>S/. 118.99</p>
-                  <button className={styles.botonOpcion}>Reservar</button>
+          {loading ? (
+            <h1>cargando...</h1>
+          ) : (
+            data
+              .slice(0, mostrarMas ? data.length : 4)
+              .map((producto, index) => (
+                <div className={styles.productoCard} key={index}>
+                  <div className={styles.imagenProducto}></div>
+                  <div className={styles.detalleProducto}>
+                    <p className={styles.descripcion}>{producto.title}</p>
+                    <p className={styles.precio}>S/. {Math.round(Math.random() * 200)}</p>
+                    <button className={styles.botonOpcion}>Reservar</button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+          )}
         </div>
 
         <div className={styles.botonMostrarMasContainer}>
-          <button
-            className={styles.botonMostrarMas}
-            onClick={() => setMostrarMas(!mostrarMas)}
-          >
-            {mostrarMas ? "↑ Mostrar menos" : "↓ Mostrar más"}
-          </button>
+          {data.length > 4 && (
+            <button
+              className={styles.botonMostrarMas}
+              onClick={() => setMostrarMas(!mostrarMas)}
+            >
+              {mostrarMas ? "↑ Mostrar menos" : "↓ Mostrar más"}
+            </button>
+          )}
         </div>
       </section>
 
