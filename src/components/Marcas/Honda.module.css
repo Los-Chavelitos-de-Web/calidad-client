@@ -109,3 +109,26 @@
   box-sizing: border-box;
   background-attachment: fixed; /* Opcional: hace que el fondo no se mueva al hacer scroll */
 }
+
+.flechaDerecha {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #ffffffcc;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    z-index: 10;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.flechaDerecha:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.flechaDerecha {
+    right: 1rem;
+}
+
