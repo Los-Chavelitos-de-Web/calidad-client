@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
 import styles from "./Honda.module.css";
+import fondoHonda from "../../assets/Fondos_Marcas/Honda.png";
 
 const Honda = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
@@ -27,7 +28,10 @@ const Honda = () => {
   }, []);
 
   return (
-    <div className={styles.fondoHonda}>
+    <div
+      className={styles.fondoHonda}
+      style={{ backgroundImage: `url(${fondoHonda})` }}
+    >
       <NavBar />
 
       <section className={styles.productosHonda}>
@@ -53,7 +57,6 @@ const Honda = () => {
                 </div>
               ))
           )}
-          
         </div>
 
         <div className={styles.botonMostrarMasContainer}>
@@ -68,14 +71,13 @@ const Honda = () => {
         </div>
       </section>
 
-      {/* Flecha derecha para ir a Rato */}
       <button
         className={styles.flechaDerecha}
         onClick={() => navigate("/rato")}
       >
         →
       </button>
-    </div>  
+    </div>
   );
 };
 

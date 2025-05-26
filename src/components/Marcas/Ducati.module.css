@@ -100,7 +100,6 @@
 }
 
 .fondoDucati {
-    background-image: url('public/Ducati.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center top;

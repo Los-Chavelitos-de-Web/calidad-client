@@ -28,8 +28,8 @@
 
 .productosGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Fuerza 4 columnas */
-  gap: 8rem; /* Ajusta el espacio entre tarjetas si es necesario */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8rem;
 }
 
 .productoCard {
@@ -75,6 +75,7 @@
   font-size: 13px;
   transition: background 0.2s;
 }
+
 .botonOpcion:hover {
   background-color: #b71c1c;
 }
@@ -100,35 +101,30 @@
 }
 
 .fondoHonda {
-  background-image: url("public/Honda.png"); /* Corrige la ruta */
-  background-size: cover; /* Ajusta sin estirar */
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center top;
-  min-height: 100vh; /* Ocupa al menos la altura de pantalla */
+  min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
-  background-attachment: fixed; /* Opcional: hace que el fondo no se mueva al hacer scroll */
+  background-attachment: fixed;
 }
 
 .flechaDerecha {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: #ffffffcc;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    z-index: 10;
-    border-radius: 50%;
-    transition: background-color 0.2s ease;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #ffffffcc;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  z-index: 10;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  right: 1rem;
 }
 
 .flechaDerecha:hover {
-    background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.3);
 }
-
-.flechaDerecha {
-    right: 1rem;
-}
-

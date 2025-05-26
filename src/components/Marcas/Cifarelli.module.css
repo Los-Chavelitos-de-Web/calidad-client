@@ -100,7 +100,6 @@
 }
 
 .fondoCifarelli {
-    background-image: url('public/Cifarelli.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center top;

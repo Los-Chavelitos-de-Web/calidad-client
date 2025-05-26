@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
 import styles from "./Cifarelli.module.css";
+import fondoCifarelli from "../../assets/Fondos_Marcas/Cifarelli.png";
 
 const Cifarelli = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
@@ -27,16 +28,19 @@ const Cifarelli = () => {
   }, []);
 
   return (
-    <div className={styles.fondoCifarelli}>
-      <NavBar />
-
-      {/* Flecha izquierda para ir a Bonhoeffer */}
-      <button
-        className={styles.flechaIzquierda}
-        onClick={() => navigate("/bonhoeffer")}
+      <div
+        className={styles.fondoCifarelli}
+        style={{ backgroundImage: `url(${fondoCifarelli})` }}
       >
-        ←
-      </button>
+        <NavBar />
+
+        {/* Flecha izquierda para ir a Bonhoeffer */}
+        <button
+          className={styles.flechaIzquierda}
+          onClick={() => navigate("/bonhoeffer")}
+        >
+          ←
+        </button>
 
       <section className={styles.productosCifarelli}>
         <div className={styles.productosHeader}>
