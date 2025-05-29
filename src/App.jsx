@@ -8,14 +8,25 @@ import Registro from './components/Registro/Registro';
 import Bonhoeffer from './components/Marcas/Bonhoeffer';
 import Cifarelli from './components/Marcas/Cifarelli';
 import Ducati from './components/Marcas/Ducati';
+import AdminAside from './components/admin/AdminAside';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+/>
+
 
 function App() {
   return (
+    
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
+        <Route path="/admin" element={<AdminAside />} />
+
         {/* Add more routes for other components here */}
         
         {/* Example routes for different brands */}

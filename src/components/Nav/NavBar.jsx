@@ -39,7 +39,7 @@ const NavBar = () => {
         <div className="icons">
           <div>
             <a 
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/Login')}
             style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
             >
             <img src="/img/usuario.png" alt="" /> ¡Bienvenido!
@@ -61,7 +61,17 @@ const NavBar = () => {
         <span>PRODUCTOS</span>
         <span>NOSOTROS</span>
         <span>CONTACTANOS</span>
+        <span>
+          <a 
+            onClick={() => navigate('/admin')}
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+            >
+              Admin
+            </a>
+          </span>
       </div>
+      
+
     </div>
   );
 };

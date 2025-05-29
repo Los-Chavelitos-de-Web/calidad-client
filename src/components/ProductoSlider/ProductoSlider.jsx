@@ -4,9 +4,13 @@ import { useRef, useEffect, useState } from 'react';
 import Derecha from '/icons/clasificar-derecho.png';
 import Izquierda from '/icons/clasificar-izquierda.png';
 
+
 export function ProductosSlider() {
     const sliderRef = useRef(null);
     const [currentPage, setCurrentPage] = useState(0);
+    //funcion para exportar datos
+    const [data, setData] = useState([]);
+
     const totalPages = 2; // 6 productos / 3 por página
 
     const scrollLeft = () => {
@@ -15,7 +19,20 @@ export function ProductosSlider() {
 
     const scrollRight = () => {
         sliderRef.current.scrollBy({ left: 1000, behavior: 'smooth' });
-    };
+    }; 
+
+    //this
+
+    async function getdata(){
+        const res = await fetch(`${import.meta.env.VITE_APP_BACK}/products/getAll`);
+        const data = await res.json();
+        console.log(data);
+        setData(data.slice(0,5));
+    }
+
+    useEffect(()=>{
+        getdata();
+    },[])
 
     // Detectar la página actual al hacer scroll
     useEffect(() => {
@@ -42,12 +59,9 @@ export function ProductosSlider() {
             
 
             <div className="productos-slider" ref={sliderRef}>
-                <ContProducto />
-                <ContProducto />
-                <ContProducto />
-                <ContProducto />
-                <ContProducto />
-                <ContProducto />
+                {
+                    data.map((p)=>{return <ContProducto titulo={p.title} descripcion={p.description}/>})
+                }
             </div>
             </div>
 
