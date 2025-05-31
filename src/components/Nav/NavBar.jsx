@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NavBar.css';
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const [cantidadCarrito, setCantidadCarrito] = useState(0);
+
+  useEffect(() => {
+    const actualizarCantidad = () => {
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || []; // obtener carrito del localStorage
+      setCantidadCarrito(carrito.length); // AGREGADO: actualizar la cantidad
+    };
+
+    actualizarCantidad(); //inicializa cantidad
+
+    //escucha cambios del carrito desde otras partes de la app
+    window.addEventListener("carritoActualizado", actualizarCantidad);
+
+    return () => {
+      window.removeEventListener("carritoActualizado", actualizarCantidad); //limpieza al icono carrito
+    };
+  }, []);
 
   return (
     <div>
@@ -48,9 +65,16 @@ const NavBar = () => {
             </a>
           </div>
           <div className="cart">
-            <button>
+              <a 
+            onClick={() => navigate('/Carrito')}
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', position: 'relative' }}
+            >
               <img src="/img/carrito.png" alt="Carrito" />
-            </button>
+              {/*contador si hay productos */}
+              {cantidadCarrito > 0 && (
+                <span className="carrito-contador">{cantidadCarrito}</span>
+              )}
+            </a>
           </div>
         </div>
       </div>

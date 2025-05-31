@@ -9,6 +9,7 @@ import Bonhoeffer from './components/Marcas/Bonhoeffer';
 import Cifarelli from './components/Marcas/Cifarelli';
 import Ducati from './components/Marcas/Ducati';
 import AdminAside from './components/admin/AdminAside';
+import Carrito from "./components/carrito/Carrito";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 <link
@@ -26,6 +27,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/admin" element={<AdminAside />} />
+        <Route path="/carrito" element={<Carrito />} />
 
         {/* Add more routes for other components here */}
         

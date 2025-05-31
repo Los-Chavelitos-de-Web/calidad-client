@@ -4,7 +4,6 @@ import NavBar from "../Nav/NavBar";
 import styles from "./Bonhoeffer.module.css";
 import fondoBonhoeffer from "../../assets/Fondos_Marcas/Bonhoeffer2.png";
 
-
 const Bonhoeffer = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
   const [data, setData] = useState([]);
@@ -13,10 +12,14 @@ const Bonhoeffer = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_APP_BACK}/products/getAll`);
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_BACK}/products/getAll`
+      );
       const result = await response.json();
-      const filteredData = result.filter(product => product.brand === "Bonhoeffer");
-      console.log(filteredData);
+      const filteredData = result.filter(
+        (product) => product.brand === "Bonhoeffer"
+      );
+      //console.log(filteredData);
       setData(filteredData);
       setLoading(false);
     } catch (error) {
@@ -60,8 +63,32 @@ const Bonhoeffer = () => {
                   <div className={styles.imagenProducto}></div>
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
-                    <p className={styles.precio}>S/. {Math.round(Math.random() * 200)}</p>
-                    <button className={styles.botonOpcion}>Reservar</button>
+                    <p className={styles.precio}>
+                      S/. {Math.round(Math.random() * 200)}
+                    </p>
+
+                    <button
+                      className={styles.botonOpcion}
+                      onClick={() => {
+                        const carritoActual =
+                          JSON.parse(localStorage.getItem("carrito")) || [];
+                        const productoAgregado = {
+                          ...producto,
+                          precio: Math.round(Math.random() * 200),
+                        };
+                        localStorage.setItem(
+                          "carrito",
+                          JSON.stringify([...carritoActual, productoAgregado])
+                        );
+
+                        // Notificar al NavBar para que actualice el contador (explicado en el punto 2)
+                        const evento = new Event("carritoActualizado");
+                        window.dispatchEvent(evento);
+                      }}
+                    >
+                      Reservar
+                    </button>
+                    
                   </div>
                 </div>
               ))
