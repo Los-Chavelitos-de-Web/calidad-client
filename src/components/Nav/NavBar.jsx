@@ -44,12 +44,7 @@ const NavBar = () => {
           >
             <img src="/img/logo101.png" alt="Logo CRN" />
           </button>
-          <div className="location">
-            <img src="/img/ubi.png" alt="Ubicación" />
-            <span style={{ color: '#ffffff', marginLeft: 8 }}>
-              Enviar a  Perú
-            </span>
-          </div>
+          
         </div>
 
         <div className="search-bar">
