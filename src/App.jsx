@@ -8,7 +8,10 @@ import Registro from './components/Registro/Registro';
 import Bonhoeffer from './components/Marcas/Bonhoeffer';
 import Cifarelli from './components/Marcas/Cifarelli';
 import Ducati from './components/Marcas/Ducati';
-import AdminAside from './components/admin/AdminAside';
+import ProductosView from './components/admin/products-view';
+import AdminAside from './components/admin/template/AdminAside';
+import SalesView from './components/admin/sales-view';
+import InsertProduct from './components/admin/controller/InsertProduct';
 import Carrito from "./components/carrito/Carrito";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
