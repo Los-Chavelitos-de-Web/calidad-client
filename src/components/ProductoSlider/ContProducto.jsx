@@ -1,6 +1,6 @@
 import './ContProducto.css';
 
-const ContProducto = () => {
+const ContProducto = ({titulo,descripcion}) => {
     return (
         <article className="product-container">
             <div className="image-wrapper">
@@ -10,9 +10,9 @@ const ContProducto = () => {
                 className="product-image"
                 />
             </div>
-            <h2 className="product-title">Minisierra GTA-26</h2>
+            <h2 className="product-title">{titulo}</h2>
             <p className="product-description">
-                Breve resumen del producto. Potente y compacta para trabajos de jardinería.
+                {descripcion}
             </p>
             <button className="product-button">Comprar ahora</button>
         </article>
