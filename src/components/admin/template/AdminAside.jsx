@@ -18,17 +18,23 @@ const AdminAside = () => {
             </a>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link aside-link">
+            <a
+            onClick={() => navigate('/admin/ventas')}
+            className="nav-link aside-link">
               <i className="bi bi-cart3 me-2"></i> Ventas
             </a>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link aside-link">
+            <a 
+            onClick={() => navigate('/admin/productos')}
+            className="nav-link aside-link">
               <i className="bi bi-box-seam me-2"></i> Productos
             </a>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link aside-link">
+            <a 
+            onClick={() => navigate('/admin/ventas')}
+            className="nav-link aside-link">
               <i className="bi bi-calendar-event me-2"></i> Reservas
             </a>
           </li>
