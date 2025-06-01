@@ -137,7 +137,7 @@ body {
   .carrito-contador {
   position: absolute;
   top: -6px;
-  right: -6px;
+  right: -10px;
   background-color: red;
   color: white;
   font-size: 12px;

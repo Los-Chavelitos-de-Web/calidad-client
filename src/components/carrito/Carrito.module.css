@@ -85,4 +85,32 @@
   width: 100%;
   box-sizing: border-box;
   background-attachment: fixed;
+} 
+
+.productoPrecio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 4px;
+}
+
+.cantidadBox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cantidadLabel {
+  font-size: 14px;
+  color: #444;
+}
+
+.inputCantidad {
+  width: 60px;
+  padding: 4px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
 }

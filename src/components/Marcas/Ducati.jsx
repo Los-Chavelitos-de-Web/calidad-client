@@ -72,23 +72,41 @@ const Ducati = () => {
                       onClick={() => {
                         const carritoActual =
                           JSON.parse(localStorage.getItem("carrito")) || [];
-                        const productoAgregado = {
-                          ...producto,
-                          precio: Math.round(Math.random() * 200),
-                        };
-                        localStorage.setItem(
-                          "carrito",
-                          JSON.stringify([...carritoActual, productoAgregado])
+
+                        const productoExistente = carritoActual.find(
+                          (item) => item.id === producto.id
                         );
 
-                        // Notificar al NavBar para que actualice el contador (explicado en el punto 2)
-                        const evento = new Event("carritoActualizado");
-                        window.dispatchEvent(evento);
+                        if (productoExistente) {
+                          // Si el producto ya existe, incrementa la cantidad
+                          const carritoActualizado = carritoActual.map((item) =>
+                            item.id === producto.id
+                              ? { ...item, cantidad: (item.cantidad || 1) + 1 }
+                              : item
+                          );
+                          localStorage.setItem(
+                            "carrito",
+                            JSON.stringify(carritoActualizado)
+                          );
+                        } else {
+                          // Si no existe, agrégalo con cantidad 1
+                          const productoAgregado = {
+                            ...producto,
+                            precio: Math.round(Math.random() * 200),
+                            cantidad: 1,
+                          };
+                          localStorage.setItem(
+                            "carrito",
+                            JSON.stringify([...carritoActual, productoAgregado])
+                          );
+                        }
+
+                        // Notificar que se actualizó el carrito
+                        window.dispatchEvent(new Event("carritoActualizado"));
                       }}
                     >
                       Reservar
                     </button>
-                    
                   </div>
                 </div>
               ))

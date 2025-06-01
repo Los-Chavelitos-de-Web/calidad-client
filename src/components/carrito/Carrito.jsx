@@ -10,7 +10,11 @@ const Carrito = () => {
 
   useEffect(() => {
     const carritoGuardado = JSON.parse(localStorage.getItem("carrito")) || [];
-    setProductos(carritoGuardado);
+    const carritoConCantidad = carritoGuardado.map((producto) => ({
+      ...producto,
+      cantidad: producto.cantidad || 1,
+    }));
+    setProductos(carritoConCantidad);
   }, []);
 
   const eliminarProducto = (index) => {
@@ -20,16 +24,30 @@ const Carrito = () => {
     window.dispatchEvent(new Event("carritoActualizado"));
   };
 
+  const actualizarCantidad = (index, nuevaCantidad) => {
+    const nuevosProductos = [...productos];
+    const cantidad = parseInt(nuevaCantidad, 10);
+    nuevosProductos[index].cantidad =
+      isNaN(cantidad) || cantidad < 1 ? 1 : cantidad;
+    setProductos(nuevosProductos);
+    localStorage.setItem("carrito", JSON.stringify(nuevosProductos));
+    window.dispatchEvent(new Event("carritoActualizado"));
+  };
+
   const total = productos
-    .reduce((acc, producto) => acc + producto.precio, 0)
+    .reduce((acc, producto) => acc + producto.precio * producto.cantidad, 0)
     .toFixed(2);
+
+  const cantidadTotal = productos.reduce(
+    (acc, producto) => acc + producto.cantidad,
+    0
+  );
 
   return (
     <div
-          className={styles.fondoCarrito}
-          style={{ backgroundImage: `url(${fondoCarrito})` }}
-        >
-
+      className={styles.fondoCarrito}
+      style={{ backgroundImage: `url(${fondoCarrito})` }}
+    >
       <NavBar />
       <div className={styles.carritoContainer}>
         <div className={styles.carritoProductos}>
@@ -43,10 +61,59 @@ const Carrito = () => {
               />
               <div className={styles.productoDetalle}>
                 <p className={styles.titulo}>{producto.title}</p>
-                <button onClick={() => eliminarProducto(index)}>Eliminar</button>
+                <button onClick={() => eliminarProducto(index)}>
+                  Eliminar
+                </button>
               </div>
+
               <div className={styles.productoPrecio}>
-                <p>S/ {producto.precio}</p>
+                <div className={styles.cantidadBox}>
+                  <label className={styles.cantidadLabel}>Cantidad:</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    className={styles.inputCantidad}
+                    value={producto.cantidad}
+                    onChange={(e) => {
+                      const nuevaCantidad = e.target.value;
+                      const nuevosProductos = [...productos];
+
+                      // Permitimos vacío temporalmente mientras el usuario edita
+                      if (nuevaCantidad === "") {
+                        nuevosProductos[index].cantidad = "";
+                      } else {
+                        const cantidadNumerica = parseInt(nuevaCantidad, 10);
+                        if (
+                          !isNaN(cantidadNumerica) &&
+                          cantidadNumerica <= 100
+                        ) {
+                          nuevosProductos[index].cantidad = cantidadNumerica;
+                        }
+                      }
+
+                      setProductos(nuevosProductos);
+                    }}
+                    onBlur={(e) => {
+                      let nuevaCantidad = parseInt(e.target.value, 10);
+                      const nuevosProductos = [...productos];
+
+                      // Validar límites
+                      if (isNaN(nuevaCantidad) || nuevaCantidad < 1)
+                        nuevaCantidad = 1;
+                      if (nuevaCantidad > 100) nuevaCantidad = 100;
+
+                      nuevosProductos[index].cantidad = nuevaCantidad;
+                      setProductos(nuevosProductos);
+                      localStorage.setItem(
+                        "carrito",
+                        JSON.stringify(nuevosProductos)
+                      );
+                      window.dispatchEvent(new Event("carritoActualizado"));
+                    }}
+                  />
+                </div>
+                <p>S/ {(producto.precio * producto.cantidad).toFixed(2)}</p>
               </div>
             </div>
           ))}
@@ -55,10 +122,7 @@ const Carrito = () => {
         <div className={styles.resumenCompra}>
           <h4>Resumen de compra</h4>
           <p>
-            Producto: <span>S/ {total}</span>
-          </p>
-          <p>
-            Envío: <span className={styles.gratis}>Gratis</span>
+            Productos ({cantidadTotal}): <span>S/ {total}</span>
           </p>
           <h3>
             Total: <span>S/ {total}</span>
