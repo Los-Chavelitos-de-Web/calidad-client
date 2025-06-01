@@ -9,6 +9,7 @@ import Bonhoeffer from './components/Marcas/Bonhoeffer';
 import Cifarelli from './components/Marcas/Cifarelli';
 import Ducati from './components/Marcas/Ducati';
 import AdminAside from './components/admin/AdminAside';
+import Carrito from "./components/carrito/Carrito";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
