@@ -1,0 +1,116 @@
+.carritoContainer {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.carritoProductos {
+  flex: 2;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.resumenCompra {
+  flex: 1;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  height: fit-content;
+}
+
+.producto {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.productoImagen {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.productoDetalle {
+  flex: 1;
+}
+
+.productoPrecio {
+  font-weight: bold;
+}
+
+.titulo {
+  font-size: 1.1rem;
+}
+
+.btnComprar {
+  background: #2979ff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.gratis {
+  color: green;
+}
+
+.btnVolver {
+  margin-top: 1rem;
+  background-color: #e0e0e0;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.btnVolver:hover {
+  background-color: #d6d6d6;
+}
+
+.fondoCarrito {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center top;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  background-attachment: fixed;
+} 
+
+.productoPrecio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 4px;
+}
+
+.cantidadBox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cantidadLabel {
+  font-size: 14px;
+  color: #444;
+}
+
+.inputCantidad {
+  width: 60px;
+  padding: 4px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}

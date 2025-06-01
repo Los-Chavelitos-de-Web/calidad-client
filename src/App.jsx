@@ -8,10 +8,7 @@ import Registro from './components/Registro/Registro';
 import Bonhoeffer from './components/Marcas/Bonhoeffer';
 import Cifarelli from './components/Marcas/Cifarelli';
 import Ducati from './components/Marcas/Ducati';
-import ProductosView from './components/admin/products-view';
-import AdminAside from './components/admin/template/AdminAside';
-import SalesView from './components/admin/sales-view';
-import InsertProduct from './components/admin/controller/InsertProduct';
+import AdminAside from './components/admin/AdminAside';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -22,6 +19,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/admin" element={<AdminAside />} />
+        <Route path="/carrito" element={<Carrito />} />
 
         {/* Marcas */}
         <Route path="/honda" element={<Honda />} />

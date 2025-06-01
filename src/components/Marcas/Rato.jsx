@@ -12,10 +12,12 @@ const Rato = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_APP_BACK}/products/getAll`);
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_BACK}/products/getAll`
+      );
       const result = await response.json();
-      const filteredData = result.filter(product => product.brand === "Rato");
-      console.log(filteredData);
+      const filteredData = result.filter((product) => product.brand === "Rato");
+      //console.log(filteredData);
       setData(filteredData);
       setLoading(false);
     } catch (error) {
@@ -29,9 +31,9 @@ const Rato = () => {
 
   return (
     <div
-         className={styles.fondoRato}
-         style={{ backgroundImage: `url(${fondoRato})` }}
-       >
+      className={styles.fondoRato}
+      style={{ backgroundImage: `url(${fondoRato})` }}
+    >
       <NavBar />
 
       {/* Flecha izquierda para ir a Honda */}
@@ -59,8 +61,50 @@ const Rato = () => {
                   <div className={styles.imagenProducto}></div>
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
-                    <p className={styles.precio}>S/. {Math.round(Math.random() * 200)}</p>
-                    <button className={styles.botonOpcion}>Reservar</button>
+                    <p className={styles.precio}>
+                      S/. {Math.round(Math.random() * 200)}
+                    </p>
+
+                    <button
+                      className={styles.botonOpcion}
+                      onClick={() => {
+                        const carritoActual =
+                          JSON.parse(localStorage.getItem("carrito")) || [];
+
+                        const productoExistente = carritoActual.find(
+                          (item) => item.id === producto.id
+                        );
+
+                        if (productoExistente) {
+                          // Si el producto ya existe, incrementa la cantidad
+                          const carritoActualizado = carritoActual.map((item) =>
+                            item.id === producto.id
+                              ? { ...item, cantidad: (item.cantidad || 1) + 1 }
+                              : item
+                          );
+                          localStorage.setItem(
+                            "carrito",
+                            JSON.stringify(carritoActualizado)
+                          );
+                        } else {
+                          // Si no existe, agrégalo con cantidad 1
+                          const productoAgregado = {
+                            ...producto,
+                            precio: Math.round(Math.random() * 200),
+                            cantidad: 1,
+                          };
+                          localStorage.setItem(
+                            "carrito",
+                            JSON.stringify([...carritoActual, productoAgregado])
+                          );
+                        }
+
+                        // Notificar que se actualizó el carrito
+                        window.dispatchEvent(new Event("carritoActualizado"));
+                      }}
+                    >
+                      Reservar
+                    </button>
                   </div>
                 </div>
               ))
