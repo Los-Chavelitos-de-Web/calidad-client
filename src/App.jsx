@@ -8,36 +8,36 @@ import Registro from './components/Registro/Registro';
 import Bonhoeffer from './components/Marcas/Bonhoeffer';
 import Cifarelli from './components/Marcas/Cifarelli';
 import Ducati from './components/Marcas/Ducati';
-import AdminAside from './components/admin/AdminAside';
+import ProductosView from './components/admin/products-view';
+import AdminAside from './components/admin/template/AdminAside';
+import SalesView from './components/admin/sales-view';
+import InsertProduct from './components/admin/controller/InsertProduct';
+import Carrito from "./components/carrito/Carrito";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-/>
-
 
 function App() {
   return (
-    
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/admin" element={<AdminAside />} />
+        <Route path="/carrito" element={<Carrito />} />
 
-        {/* Add more routes for other components here */}
-        
-        {/* Example routes for different brands */}
-        
+        {/* Marcas */}
         <Route path="/honda" element={<Honda />} />
         <Route path="/rato" element={<Rato />} />
         <Route path="/bonhoeffer" element={<Bonhoeffer />} />
         <Route path="/cifarelli" element={<Cifarelli />} />
         <Route path="/ducati" element={<Ducati />} />
-        {/* Add more routes as needed */}
-        
+
+        {/* Vistas en admin */}
+        <Route path="/admin/productos" element={<ProductosView />} />
+        <Route path="/admin/ventas" element={<SalesView/>}/>
+
+        {/*Vista Controladores*/}
+        <Route path='/admin/insertar' element={<InsertProduct/>}/>
       </Routes>
     </Router>
   );

@@ -34,13 +34,19 @@ const Registro = () => {
             autoComplete="current-password"
           />
           <input
-            type="text"
+            type="number"
+            placeholder="DNI"
+            className={styles.input}
+            autoComplete="current-password"
+          />
+          <input
+            type="email"
             placeholder="EMAIL"
             className={styles.input}
             autoComplete="current-password"
           />
           <input
-            type="text"
+            type="number"
             placeholder="TELEFONO"
             className={styles.input}
             autoComplete="current-password"
