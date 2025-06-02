@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AdminAside from "./template/AdminAside";
-import './admin-css/ProductosView.css';
+import './admin-css/admin.css';
 import './admin-css/ProductsDetaills.css';
 import { useNavigate } from "react-router-dom";
 
