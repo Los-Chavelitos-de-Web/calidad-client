@@ -33,9 +33,6 @@ body {
     align-items: center;
   }
 
-  
-
-  
   .top-bar {
     background-color: #032615;
     color: white;
@@ -65,6 +62,7 @@ body {
     flex-grow: 1;
     max-width: 600px;
     margin: 0 20px;
+    position: relative;
   }
   
   .search-bar select,
@@ -145,3 +143,38 @@ body {
   border-radius: 50%;
   font-weight: bold;
 }
+  
+.historial-dropdown {
+  position: absolute;
+  top: 38px; /* Deja este valor para que quede justo debajo del input */
+  left: 0;   /* Cambia de 155px a 0 para que esté alineado con el inicio del contenedor */
+  z-index: 999;
+  background-color: white;
+  width: 100%; /* Que ocupe todo el ancho del contenedor padre */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.item-historial {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: black;
+  font-size: 14px;
+}
+
+.item-historial:hover {
+  background-color: #f5f5f5;
+}
+
+.icono-historial {
+  margin-right: 8px;
+  color: #370606; /* color gris */
+  vertical-align: middle;
+  font-size: 14px;
+  opacity: 0.3; /* 50% transparente */
+}
+

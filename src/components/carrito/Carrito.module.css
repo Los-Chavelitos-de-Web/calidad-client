@@ -27,7 +27,7 @@
 }
 
 .productoImagen {
-  width: 80px;
+  width: 130px;
   height: 80px;
   object-fit: cover;
   margin-right: 15px;
@@ -43,7 +43,27 @@
 
 .titulo {
   font-size: 1.1rem;
+  font-weight: bold; /* Aquí se pone en negrita */
 }
+
+.marca {
+  color: black;
+}
+
+.stock {
+  color: black;
+  font-weight: normal;
+}
+
+.stockValue {
+  color: black; /* color negro para el valor del stock */
+}
+
+/* Si quieres que "Sin stock" esté en rojo, añade: */
+.stockValue.sinStock {
+  color: red;
+}
+
 
 .btnComprar {
   background: #2979ff;

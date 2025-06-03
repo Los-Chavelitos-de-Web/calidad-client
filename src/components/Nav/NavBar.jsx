@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./NavBar.css";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const [cantidadCarrito, setCantidadCarrito] = useState(0);
+  const [busqueda, setBusqueda] = useState("");
+  const [historial, setHistorial] = useState([]);
+  const [mostrarHistorial, setMostrarHistorial] = useState(false);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const actualizarCantidad = () => {
@@ -15,14 +19,57 @@ const NavBar = () => {
       );
       setCantidadCarrito(totalCantidad);
     };
-    
-    actualizarCantidad(); //inicializa cantidad
 
-    //escucha cambios del carrito desde otras partes de la app
+    actualizarCantidad(); // inicializa cantidad
+
+    // escucha cambios del carrito desde otras partes de la app
     window.addEventListener("carritoActualizado", actualizarCantidad);
 
     return () => {
-      window.removeEventListener("carritoActualizado", actualizarCantidad); //limpieza al icono carrito
+      window.removeEventListener("carritoActualizado", actualizarCantidad); // limpieza al icono carrito
+    };
+  }, []);
+
+  useEffect(() => {
+    const historialGuardado =
+      JSON.parse(localStorage.getItem("historialBusqueda")) || [];
+    setHistorial(historialGuardado);
+  }, []);
+
+  const manejarBusqueda = () => {
+    if (busqueda.trim() !== "") {
+      const nuevaBusqueda = busqueda.trim();
+      const historialActualizado = [nuevaBusqueda, ...historial.filter((item) => item !== nuevaBusqueda)].slice(0, 5);
+      localStorage.setItem(
+        "historialBusqueda",
+        JSON.stringify(historialActualizado)
+      );
+      setHistorial(historialActualizado);
+      navigate(`/buscar?query=${encodeURIComponent(nuevaBusqueda)}`);
+      setBusqueda(""); // Limpiar input después de buscar
+      setMostrarHistorial(false);
+    }
+  };
+
+  const seleccionarHistorial = (item) => {
+    setBusqueda(item);
+    setMostrarHistorial(false);
+    navigate(`/buscar?query=${encodeURIComponent(item)}`);
+  };
+
+  useEffect(() => {
+    const manejarClickFuera = (e) => {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(e.target)
+      ) {
+        setMostrarHistorial(false);
+      }
+    };
+
+    document.addEventListener("mousedown", manejarClickFuera);
+    return () => {
+      document.removeEventListener("mousedown", manejarClickFuera);
     };
   }, []);
 
@@ -44,17 +91,42 @@ const NavBar = () => {
           >
             <img src="/img/logo101.png" alt="Logo CRN" />
           </button>
-          
         </div>
 
-        <div className="search-bar">
+        <div className="search-bar" ref={inputRef}>
           <select>
             <option>Todo</option>
           </select>
-          <input type="text" placeholder="Buscar ..." />
-          <button>
+          <input
+            type="text"
+            placeholder="Buscar ..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            onFocus={() => setMostrarHistorial(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                manejarBusqueda();
+              }
+            }}
+          />
+          <button onClick={manejarBusqueda}>
             <img src="/img/lupa.png" alt="Buscar" />
           </button>
+
+          {/* Mostrar historial */}
+          {mostrarHistorial && historial.length > 0 && (
+            <div className="historial-dropdown">
+              {historial.map((item, index) => (
+                <div
+                  key={index}
+                  className="item-historial"
+                  onClick={() => seleccionarHistorial(item)}
+                >
+                  <span className="icono-historial" aria-hidden="true">🕒</span> {item}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="icons">
@@ -85,7 +157,7 @@ const NavBar = () => {
               }}
             >
               <img src="/img/carrito.png" alt="Carrito" />
-              {/*contador si hay productos */}
+              {/* contador si hay productos */}
               {cantidadCarrito > 0 && (
                 <span className="carrito-contador">{cantidadCarrito}</span>
               )}
