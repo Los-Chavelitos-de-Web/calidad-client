@@ -1,0 +1,110 @@
+.fondo {
+  background-color: #efeeee;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.wrapper {
+  display: flex;
+  max-width: 1100px; /* Más ancho para mejor espacio */
+  margin: 40px auto 0;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.imagenContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #ddd;
+  padding: 30px;
+}
+
+.imagenContainer img {
+  max-width: 100%;
+  max-height: 440px; /* Tamaño imagen */
+  object-fit: contain;
+}
+
+.infoContainer {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Empuja botón al final */
+}
+
+.tablaDatos {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tablaDatos td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: top;
+}
+
+.tablaDatos tr:last-child td {
+  border-bottom: none;
+}
+
+.productName {
+  font-weight: bold;
+  font-size: 1.4rem;
+  padding-bottom: 20px;
+}
+
+.botonContainer {
+  margin-top: 60px; /* Espacio arriba del botón */
+  text-align: right;
+  position: relative; /* Para posicionar el toast relativo aquí */
+}
+
+.boton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton:hover {
+  background-color: #0056b3;
+}
+
+/* Toast que aparece justo arriba del botón */
+.toast {
+  position: absolute;
+  bottom: 100%; /* Posicionado justo arriba del botón */
+  right: 0;
+  margin-bottom: 10px;
+  background-color: rgba(50, 50, 50, 0.85);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.icon {
+  font-size: 1.3rem;
+}
+
+.cargando {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.5rem;
+}
