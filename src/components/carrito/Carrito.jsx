@@ -8,7 +8,7 @@ const Carrito = () => {
   const [productos, setProductos] = useState([]);
   const navigate = useNavigate();
 
-  // Función para obtener el stock total, ya sea como número o suma de valores en objeto
+  // Función para obtener el stock total
   const getStock = (stockData) => {
     if (!stockData) return 0;
     return typeof stockData === "object"
@@ -16,7 +16,7 @@ const Carrito = () => {
       : stockData;
   };
 
-  // Al montar el componente, carga el carrito desde localStorage con datos por defecto
+  // Al montar el componente, carga el carrito desde localStorage
   useEffect(() => {
     const carritoGuardado = JSON.parse(localStorage.getItem("carrito")) || [];
     const hoy = new Date().toISOString();
@@ -87,9 +87,7 @@ const Carrito = () => {
                 <div className={styles.productoDetalle}>
                   <p className={styles.titulo}>{producto.title}</p>
                   <p className={styles.descripcion}>{producto.description}</p>
-                  {/* Marca en texto negro */}
                   <p className={styles.marca}>Marca: {producto.brand}</p>
-                  {/* Stock con estilos en CSS, texto negro, y rojo si no hay stock */}
                   <p className={styles.stock}>
                     Stock:{" "}
                     <span
@@ -100,7 +98,9 @@ const Carrito = () => {
                       {stockDisponible === 0 ? "Sin stock" : stockDisponible}
                     </span>
                   </p>
-                  <button onClick={() => eliminarProducto(index)}>Eliminar</button>
+                  <button onClick={() => eliminarProducto(index)}>
+                    Eliminar
+                  </button>
                 </div>
 
                 <div className={styles.productoPrecio}>
@@ -116,26 +116,30 @@ const Carrito = () => {
                         const nuevaCantidad = e.target.value;
                         const nuevosProductos = [...productos];
 
-                        // Permite borrar para cambiar cantidad temporalmente
                         if (nuevaCantidad === "") {
-                          nuevosProductos[index].quantity = "";
-                        } else {
-                          const cantidadNumerica = parseInt(nuevaCantidad, 10);
-                          if (
-                            !isNaN(cantidadNumerica) &&
-                            cantidadNumerica <= stockDisponible
-                          ) {
-                            nuevosProductos[index].quantity = cantidadNumerica;
-                          }
+                          // No permitir borrar el valor, mantener cantidad actual
+                          return;
                         }
 
-                        setProductos(nuevosProductos);
+                        const cantidadNumerica = parseInt(nuevaCantidad, 10);
+                        if (
+                          !isNaN(cantidadNumerica) &&
+                          cantidadNumerica >= 1 &&
+                          cantidadNumerica <= stockDisponible
+                        ) {
+                          nuevosProductos[index].quantity = cantidadNumerica;
+                          setProductos(nuevosProductos);
+                          localStorage.setItem(
+                            "carrito",
+                            JSON.stringify(nuevosProductos)
+                          );
+                          window.dispatchEvent(new Event("carritoActualizado"));
+                        }
                       }}
                       onBlur={(e) => {
                         let nuevaCantidad = parseInt(e.target.value, 10);
                         const nuevosProductos = [...productos];
 
-                        // Corrige la cantidad si es inválida o mayor al stock
                         if (isNaN(nuevaCantidad) || nuevaCantidad < 1)
                           nuevaCantidad = 1;
                         if (nuevaCantidad > stockDisponible)
@@ -148,6 +152,16 @@ const Carrito = () => {
                           JSON.stringify(nuevosProductos)
                         );
                         window.dispatchEvent(new Event("carritoActualizado"));
+                      }}
+                      onKeyDown={(e) => {
+                        // Permitir solo flechas arriba y abajo para cambiar valor
+                        if (e.key !== "ArrowUp" && e.key !== "ArrowDown") {
+                          e.preventDefault();
+                        }
+                      }}
+                      onPaste={(e) => {
+                        // Evitar pegar texto
+                        e.preventDefault();
                       }}
                     />
                   </div>

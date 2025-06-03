@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
 import styles from "./Buscar.module.css";
 
 const Buscar = () => {
-  const [productosOriginales, setProductosOriginales] = useState([]);
-  const [resultados, setResultados] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [orden, setOrden] = useState("ninguno");
+  const [productosOriginales, setProductosOriginales] = useState([]); // Todos los productos obtenidos
+  const [resultados, setResultados] = useState([]); // Productos filtrados y ordenados para mostrar
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [orden, setOrden] = useState("ninguno"); // Criterio de ordenamiento
   const location = useLocation();
+  const navigate = useNavigate();
+
   const query = new URLSearchParams(location.search).get("query");
 
   useEffect(() => {
@@ -18,24 +20,24 @@ const Buscar = () => {
           `${import.meta.env.VITE_APP_BACK}/products/getAll`
         );
         const productos = await response.json();
+
         const productosConPrecios = productos.map((p) => ({
           ...p,
           precio: p.precio ?? Math.round(Math.random() * 200),
         }));
 
         setProductosOriginales(productosConPrecios);
-        filtrarYOrdenar(productosConPrecios, query, orden);
+        filtrarYOrdenar(productosConPrecios, query, orden); // Filtrar y ordenar con los datos cargados
         setLoading(false);
       } catch (error) {
         console.error("Error al buscar:", error);
       }
     };
 
-    if (query) {
-      fetchData();
-    }
+    if (query) fetchData();
   }, [query]);
 
+  // Filtrar productos por texto y ordenar según selección
   const filtrarYOrdenar = (productos, texto, ordenSeleccionado) => {
     let filtrados = productos.filter((producto) =>
       producto.title.toLowerCase().includes(texto.toLowerCase())
@@ -50,10 +52,16 @@ const Buscar = () => {
     setResultados(filtrados);
   };
 
+  // Cambia el criterio de orden y actualiza resultados
   const handleOrdenChange = (e) => {
     const nuevoOrden = e.target.value;
     setOrden(nuevoOrden);
     filtrarYOrdenar(productosOriginales, query, nuevoOrden);
+  };
+
+  // Navega a la página del producto seleccionado
+  const handleClickProducto = (id) => {
+    navigate(`/producto/${id}`);
   };
 
   return (
@@ -78,7 +86,12 @@ const Buscar = () => {
           <p>No se encontraron productos.</p>
         ) : (
           resultados.map((producto, index) => (
-            <div className={styles.productoFila} key={index}>
+            <div
+              className={styles.productoFila}
+              key={index}
+              onClick={() => handleClickProducto(producto.id)}
+              style={{ cursor: "pointer" }}
+            >
               <div className={styles.imagenContenedor}>
                 <img src={producto.image} alt={producto.title} />
               </div>

@@ -10,25 +10,26 @@ const NavBar = () => {
   const [mostrarHistorial, setMostrarHistorial] = useState(false);
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    const actualizarCantidad = () => {
-      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-      const totalCantidad = carrito.reduce(
-        (acc, producto) => acc + (producto.cantidad || 1),
-        0
-      );
-      setCantidadCarrito(totalCantidad);
-    };
+useEffect(() => {
+  const actualizarCantidad = () => {
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    const totalCantidad = carrito.reduce(
+      (acc, producto) => acc + (producto.quantity ?? producto.cantidad ?? 1),
+      0
+    );
+    setCantidadCarrito(totalCantidad);
+  };
 
-    actualizarCantidad(); // inicializa cantidad
+  actualizarCantidad();
 
-    // escucha cambios del carrito desde otras partes de la app
-    window.addEventListener("carritoActualizado", actualizarCantidad);
+  window.addEventListener("carritoActualizado", actualizarCantidad);
 
-    return () => {
-      window.removeEventListener("carritoActualizado", actualizarCantidad); // limpieza al icono carrito
-    };
-  }, []);
+  return () => {
+    window.removeEventListener("carritoActualizado", actualizarCantidad);
+  };
+}, []);
+
+
 
   useEffect(() => {
     const historialGuardado =
