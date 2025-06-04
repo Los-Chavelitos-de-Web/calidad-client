@@ -59,7 +59,16 @@ const Cifarelli = () => {
             data
               .slice(0, mostrarMas ? data.length : 4)
               .map((producto, index) => (
-                <div className={styles.productoCard} key={index}>
+                <div
+                  className={styles.productoCard}
+                  key={index}
+                  onClick={() =>
+                    navigate(`/producto/${producto.id}`, {
+                      state: { producto },
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
                   <div className={styles.imagenProducto}></div>
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
@@ -69,7 +78,8 @@ const Cifarelli = () => {
 
                     <button
                       className={styles.botonOpcion}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation(); // <-- evitar que haga navigate
                         const carritoActual =
                           JSON.parse(localStorage.getItem("carrito")) || [];
 
@@ -78,7 +88,6 @@ const Cifarelli = () => {
                         );
 
                         if (productoExistente) {
-                          // Si el producto ya existe, incrementa la cantidad
                           const carritoActualizado = carritoActual.map((item) =>
                             item.id === producto.id
                               ? { ...item, cantidad: (item.cantidad || 1) + 1 }
@@ -89,7 +98,6 @@ const Cifarelli = () => {
                             JSON.stringify(carritoActualizado)
                           );
                         } else {
-                          // Si no existe, agrégalo con cantidad 1
                           const productoAgregado = {
                             ...producto,
                             precio: Math.round(Math.random() * 200),
@@ -101,7 +109,6 @@ const Cifarelli = () => {
                           );
                         }
 
-                        // Notificar que se actualizó el carrito
                         window.dispatchEvent(new Event("carritoActualizado"));
                       }}
                     >

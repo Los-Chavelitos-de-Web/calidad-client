@@ -24,7 +24,6 @@ const Carrito = () => {
     const carritoConDatos = carritoGuardado.map((producto) => ({
       id: producto.id,
       title: producto.title,
-      description: producto.description || "Sin descripción.",
       brand: producto.brand || "Marca genérica",
       unit_price: producto.unit_price || producto.precio || 0,
       stock: producto.stock || 100,
@@ -86,7 +85,6 @@ const Carrito = () => {
                 />
                 <div className={styles.productoDetalle}>
                   <p className={styles.titulo}>{producto.title}</p>
-                  <p className={styles.descripcion}>{producto.description}</p>
                   <p className={styles.marca}>Marca: {producto.brand}</p>
                   <p className={styles.stock}>
                     Stock:{" "}
