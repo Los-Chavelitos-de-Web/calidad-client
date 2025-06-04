@@ -17,6 +17,7 @@ import Buscar from "./components/Nav/Buscar";
 import ProductoU from "./components/ProductoU/ProductoU";
 import UserView from "./components/admin/users-view";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ReservaView from './components/admin/reserva-view';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route path="/admin/productos" element={<ProductosView />} />
         <Route path="/admin/ventas" element={<SalesView/>}/>
         <Route path="/admin/users" element={<UserView/>}/>
+        <Route path="/admin/reservas" element={<ReservaView/>}/>
 
         {/*Vista Controladores*/}
         <Route path='/admin/insertar' element={<InsertProduct/>}/>
