@@ -21,7 +21,7 @@ const SalesView = () => {
     getSalesData();
   }, [loading, error]);
   
-  async function getSalesData() {
+  async function getSalesData() {//ventas
     try {
       setIsLoading(true);
       const res = await fetch(`${import.meta.env.VITE_APP_BACK}/sales/getAll`, {
@@ -30,15 +30,13 @@ const SalesView = () => {
         }
       });
       const salesData = await res.json();
-      const Sales = salesData.filter(sale => sale.status === "CANCELADA");
-      setSales(Sales);
+      setSales(salesData);
     } catch (error) {
       console.error("Error al cargar ventas:", error);
     } finally {
       setIsLoading(false);
     }
   }
-
   useEffect(() => {
     getSalesData();
   }, []);

@@ -186,7 +186,6 @@ const ProductosView = () => {
                   <p><strong>Categoría:</strong> {selectedProduct.category}</p>
                   <p><strong>Stock total:</strong> {getStock(selectedProduct.stock)}</p>
                 </div>
-                
                 <div className="specs-section">
                   <h4>Especificaciones Técnicas</h4>
                   {selectedProduct.specs ? (
