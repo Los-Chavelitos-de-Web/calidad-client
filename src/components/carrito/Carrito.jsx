@@ -3,6 +3,7 @@ import NavBar from "../Nav/NavBar";
 import { useNavigate } from "react-router-dom";
 import fondoCarrito from "../../assets/Fondo_Carrito/fondoCarrito.png";
 import styles from "./Carrito.module.css";
+import BotonCompra from "./BotonCompra";
 
 const Carrito = () => {
   const [productos, setProductos] = useState([]);
@@ -16,8 +17,19 @@ const Carrito = () => {
       : stockData;
   };
 
-  // Al montar el componente, carga el carrito desde localStorage
   useEffect(() => {
+    // Verificar si se completó una compra recientemente
+    if (localStorage.getItem("compra_en_proceso") === "true") {
+      // Limpiar carrito
+      localStorage.removeItem("carrito");
+      setProductos([]);
+      window.dispatchEvent(new Event("carritoActualizado"));
+
+      localStorage.removeItem("compra_en_proceso");
+
+      return; // salimos del useEffect sin cargar el carrito
+    }
+    // Cargar carrito si no hay bandera de compra
     const carritoGuardado = JSON.parse(localStorage.getItem("carrito")) || [];
     const hoy = new Date().toISOString();
 
@@ -164,7 +176,9 @@ const Carrito = () => {
                     />
                   </div>
                   {/* Precio total por producto */}
-                  <p>S/ {(producto.unit_price * producto.quantity).toFixed(2)}</p>
+                  <p>
+                    S/ {(producto.unit_price * producto.quantity).toFixed(2)}
+                  </p>
                 </div>
               </div>
             );
@@ -180,7 +194,7 @@ const Carrito = () => {
           <h3>
             Total: <span>S/ {total}</span>
           </h3>
-          <button className={styles.btnComprar}>Continuar compra</button>
+          <BotonCompra carritoGuardado={productos} />
           <button className={styles.btnVolver} onClick={() => navigate(-1)}>
             ← Regresar
           </button>
