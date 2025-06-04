@@ -15,6 +15,7 @@ import InsertProduct from './components/admin/controller/InsertProduct';
 import Carrito from "./components/carrito/Carrito";
 import Buscar from "./components/Nav/Buscar";
 import ProductoU from "./components/ProductoU/ProductoU";
+import UserView from "./components/admin/users-view";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         {/* Vistas en admin */}
         <Route path="/admin/productos" element={<ProductosView />} />
         <Route path="/admin/ventas" element={<SalesView/>}/>
+        <Route path="/admin/users" element={<UserView/>}/>
 
         {/*Vista Controladores*/}
         <Route path='/admin/insertar' element={<InsertProduct/>}/>

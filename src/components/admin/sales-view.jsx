@@ -29,17 +29,40 @@ const SalesView = () => {
 
   // Obtener datos de ventas
   async function getVentas() {
-    try {
-      setIsLoading(true);
-      const res = await fetch(`${import.meta.env.VITE_APP_BACK}/sales/getAll`);
-      const data = await res.json();
-      setVentas(data);
-    } catch (error) {
-      console.error("Error al obtener ventas:", error);
-    } finally {
-      setIsLoading(false);
+  try {
+    setIsLoading(true);
+    const token = localStorage.getItem("token"); // Obtén el token guardado al hacer login
+
+    if (!token) {
+      navigate("/login"); // Redirige si no hay token
+      return;
     }
+
+    const res = await fetch(`${import.meta.env.VITE_APP_BACK}/sales/getAll`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    if (res.status === 401) {
+      localStorage.removeItem("token"); // Elimina el token inválido
+      navigate("/login"); // Redirige a login
+      return;
+    }
+
+    if (!res.ok) {
+      throw new Error(`Error ${res.status}: ${await res.text()}`);
+    }
+
+    const data = await res.json();
+    setVentas(data);
+  } catch (error) {
+    console.error("Error al obtener ventas:", error);
+    alert("No se pudieron cargar las ventas. Intenta de nuevo.");
+  } finally {
+    setIsLoading(false);
   }
+}
 
   useEffect(() => {
     getVentas();
@@ -67,9 +90,8 @@ const SalesView = () => {
               <thead>
                 <tr>
                   <th className="column-id">ID</th>
+                  <th className="column-user">User ID</th>
                   <th className="column-date">Fecha</th>
-                  <th className="column-customer">Cliente</th>
-                  <th className="column-products">Productos</th>
                   <th className="column-total">Total</th>
                   <th className="column-status">Estado</th>
                 </tr>
@@ -79,18 +101,8 @@ const SalesView = () => {
                   ventas.map((venta) => (
                     <tr key={venta.id}>
                       <td className="cell-id">#{venta.id}</td>
-                      <td className="cell-date">{formatDate(venta.fecha)}</td>
-                      <td className="cell-customer">
-                        <div>{venta.cliente.nombre}</div>
-                        <div className="customer-email">{venta.cliente.email}</div>
-                      </td>
-                      <td className="cell-products">
-                        {venta.productos.map((producto, index) => (
-                          <div key={index} className="product-item">
-                            {producto.cantidad} × {producto.nombre}
-                          </div>
-                        ))}
-                      </td>
+                      <td className="cell-user">{venta.userId}</td>
+                      <td className="cell-date">{formatDate(venta.createdAt)}</td>
                       <td className="cell-total">
                         {formatCurrency(venta.total)}
                       </td>
@@ -103,7 +115,7 @@ const SalesView = () => {
                   ))
                 ) : (
                   <tr className="no-results">
-                    <td colSpan="6">No hay ventas registradas</td>
+                    <td colSpan="5">No hay ventas registradas</td>
                   </tr>
                 )}
               </tbody>
