@@ -44,13 +44,14 @@ export const usePayload = () => {
         };
     }
 
-    const { username, role, userId } = decodedToken;
+    const { username, role, userId, email } = decodedToken;
 
     return {
         loading: false,
         authToken: token,
         username,
         role,
+        email,
         userId,
         error: null,
     };
