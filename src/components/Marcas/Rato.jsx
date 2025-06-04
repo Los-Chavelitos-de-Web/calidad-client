@@ -57,7 +57,16 @@ const Rato = () => {
             data
               .slice(0, mostrarMas ? data.length : 4)
               .map((producto, index) => (
-                <div className={styles.productoCard} key={index}>
+                <div
+                  className={styles.productoCard}
+                  key={index}
+                  onClick={() =>
+                    navigate(`/producto/${producto.id}`, {
+                      state: { producto },
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
                   <div className={styles.imagenProducto}></div>
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
@@ -67,7 +76,8 @@ const Rato = () => {
 
                     <button
                       className={styles.botonOpcion}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation(); // <-- evitar que haga navigate
                         const carritoActual =
                           JSON.parse(localStorage.getItem("carrito")) || [];
 
@@ -76,7 +86,6 @@ const Rato = () => {
                         );
 
                         if (productoExistente) {
-                          // Si el producto ya existe, incrementa la cantidad
                           const carritoActualizado = carritoActual.map((item) =>
                             item.id === producto.id
                               ? { ...item, cantidad: (item.cantidad || 1) + 1 }
@@ -87,7 +96,6 @@ const Rato = () => {
                             JSON.stringify(carritoActualizado)
                           );
                         } else {
-                          // Si no existe, agrégalo con cantidad 1
                           const productoAgregado = {
                             ...producto,
                             precio: Math.round(Math.random() * 200),
@@ -99,7 +107,6 @@ const Rato = () => {
                           );
                         }
 
-                        // Notificar que se actualizó el carrito
                         window.dispatchEvent(new Event("carritoActualizado"));
                       }}
                     >
