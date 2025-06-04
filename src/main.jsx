@@ -1,19 +1,13 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
+// main.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
+root.render(
+  <React.StrictMode>
     <App />
-  </StrictMode>,
-  <link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-/>
+  </React.StrictMode>
+);
 
-)
+// Si quieres usar Bootstrap Icons, incluye esto en tu index.html, no aquí:
