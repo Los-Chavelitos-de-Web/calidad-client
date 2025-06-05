@@ -6,9 +6,11 @@ import { usePayload } from "../../utils/authHelpers";
 
 const UserView = () => {
   const navigate = useNavigate();
-  const [sales, setSales] = useState([]);
+  const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { authToken, email, userId, username, role, error, loading } = usePayload();
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { authToken, error, loading } = usePayload();
 
   useEffect(() => {
     if (loading) return;
@@ -19,10 +21,10 @@ const UserView = () => {
       return;
     }
 
-    getSalesData();
+    getUsersData();
   }, [loading, error]);
 
-  async function getSalesData() {
+  async function getUsersData() {
     try {
       setIsLoading(true);
       const res = await fetch(`${import.meta.env.VITE_APP_BACK}/users/getAll`, {
@@ -30,20 +32,85 @@ const UserView = () => {
           'Authorization': `Bearer ${authToken}`
         }
       });
-      const salesData = await res.json();
-      console.log(salesData);
+      const usersData = await res.json();
       
-      setSales(salesData);
+      const usersWithProfiles = await Promise.all(
+        usersData.map(async (user) => {
+          try {
+            const profileRes = await fetch(`${import.meta.env.VITE_APP_BACK}/users/profile/${user.id}`, {
+              headers: {
+                'Authorization': `Bearer ${authToken}`
+              }
+            });
+            const profileData = await profileRes.json();
+            return { ...user, profile: profileData };
+          } catch (error) {
+            console.error(`Error al cargar perfil del usuario ${user.id}:`, error);
+            return { ...user, profile: null };
+          }
+        })
+      );
+      
+      setUsers(usersWithProfiles);
     } catch (error) {
-      console.error("Error al cargar trabajadores:", error);
+      console.error("Error al cargar usuarios:", error);
     } finally {
       setIsLoading(false);
     }
   }
 
-  useEffect(() => {
-    getSalesData();
-  }, []);
+  const handleOpenModal = (user) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const toggleUserStatus = async () => {
+    if (!selectedUser) return;
+    
+    try {
+      const newStatus = !selectedUser.isActive;
+      
+      const response = await fetch(`${import.meta.env.VITE_APP_BACK}/users/isActive`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({
+          id: selectedUser.id,
+          isActive: newStatus
+        })
+      });
+
+      if (response.ok) {
+        // Actualizar el estado local
+        const updatedUsers = users.map(user => 
+          user.id === selectedUser.id 
+            ? { ...user, isActive: newStatus } 
+            : user
+        );
+        
+        setUsers(updatedUsers);
+        setSelectedUser({ ...selectedUser, isActive: newStatus });
+      } else {
+        console.error('Error al cambiar el estado del usuario');
+        const errorData = await response.json();
+        console.error('Detalles del error:', errorData);
+      }
+    } catch (error) {
+      console.error('Error al cambiar el estado del usuario:', error);
+    }
+  };
+  
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString('es-ES', options);
+  };
 
   return (
     <div className="admin-container">
@@ -54,43 +121,50 @@ const UserView = () => {
       <div className="admin-main-content">
         <div className="productos-content">
           <div className="productos-header">
-            <h1>Trabajadores </h1>
-            <span className="product-count">{sales.length} trabajadores</span>
+            <h1>Usuarios</h1>
+            <span className="product-count">{users.length} usuarios</span>
           </div>
         </div>
 
         <div className="table-container">
           {isLoading ? (
-            <div className="loading-indicator">Cargando trabajadores...</div>
+            <div className="loading-indicator">Cargando usuarios...</div>
           ) : (
             <table className="products-table">
               <thead>
                 <tr>
-                  <th className="column-id">Código</th>
-                  <th className="column-brand">Cliente</th>
-                  <th className="column-model">Fecha</th>
-                  <th className="column-category">Total</th>
+                  <th className="column-id">ID</th>
+                  <th className="column-category">Nombre</th>
+                  <th className="column-brand">Email</th>
+                  <th className="column-model">Fecha Registro</th>
+                  <th className="column-category">Rol</th>
                   <th className="column-stock">Estado</th>
-                  <th className="cell-actions"></th>
+                  <th className="cell-actions">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {sales.length > 0 ? (
-                  sales.map((sale) => (
-                    <tr key={sale.id}>
-                      <td className="cell-id">{sale.id}</td>
-                      <td className="cell-name">{sale.userId || "N/A"}</td>
+                {users.length > 0 ? (
+                  users.map((user) => (
+                    <tr key={user.id}>
+                      <td className="cell-name">{user.id}</td>
+                      <td className="cell-id">
+                        {user.profile?.name || "No especificado"}
+                      </td>
+                      <td className="cell-name">{user.email}</td>
                       <td className="cell-model">
-                        {new Date(sale.createdAt).toLocaleDateString()}
+                        {new Date(user.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="cell-category">
-                        ${sale.total?.toFixed(2)}
+                      <td className="cell-id">{user.role}</td>
+                      <td className="cell-stock">
+                        <span className={`status-badge ${user.isActive ? 'active' : 'inactive'}`}>
+                          {user.isActive ? "Activo" : "Inactivo"}
+                        </span>
                       </td>
-                      <td className="cell-stock">{sale.status || "N/A"}</td>
                       <td className="cell-actions">
                         <button
                           className="action-btn"
-                          onClick={() => handleOpenModal(producto)}
+                          onClick={() => handleOpenModal(user)}
+                          title="Ver detalles"
                         >
                           <img
                             src="../public/icons/tres-puntos.png"
@@ -103,7 +177,7 @@ const UserView = () => {
                   ))
                 ) : (
                   <tr className="no-results">
-                    <td colSpan="5">No hay trabajadores</td>
+                    <td colSpan="7">No hay usuarios registrados</td>
                   </tr>
                 )}
               </tbody>
@@ -111,6 +185,63 @@ const UserView = () => {
           )}
         </div>
       </div>
+
+      {/* Modal de detalles del usuario */}
+      {isModalOpen && selectedUser && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <div className="modal-header">
+              <h2>Detalles del Usuario</h2>
+              <button className="modal-close-btn" onClick={handleCloseModal}>
+                &times;
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="user-detail-row">
+                <span className="detail-label">ID:</span>
+                <span className="detail-value">{selectedUser.id}</span>
+              </div>
+              <div className="user-detail-row">
+                <span className="detail-label">Email:</span>
+                <span className="detail-value">{selectedUser.email}</span>
+              </div>
+              <div className="user-detail-row">
+                <span className="detail-label">Nombre completo:</span>
+                <span className="detail-value">
+                  {selectedUser.profile?.name || "No especificado"}
+                </span>
+              </div>
+              <div className="user-detail-row">
+                <span className="detail-label">Rol:</span>
+                <span className="detail-value">{selectedUser.role}</span>
+              </div>
+              <div className="user-detail-row">
+                <span className="detail-label">Estado:</span>
+                <span className="detail-value">
+                  <span className={`status-badge ${selectedUser.isActive ? 'active' : 'inactive'}`}>
+                    {selectedUser.isActive ? "Activo" : "Inactivo"}
+                  </span>
+                </span>
+              </div>
+              <div className="user-detail-row">
+                <span className="detail-label">Fecha de creación:</span>
+                <span className="detail-value">{formatDate(selectedUser.createdAt)}</span>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button 
+                className={`status-toggle-btn ${selectedUser.isActive ? 'deactivate' : 'activate'}`}
+                onClick={toggleUserStatus}
+              >
+                {selectedUser.isActive ? 'Desactivar Usuario' : 'Activar Usuario'}
+              </button>
+              <button className="modal-btn close-btn" onClick={handleCloseModal}>
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

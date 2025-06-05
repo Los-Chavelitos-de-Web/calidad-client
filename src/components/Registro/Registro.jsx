@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 const Registro = () => {
   const navigate = useNavigate();
 
-
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -19,6 +18,23 @@ const Registro = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === 'dni') {
+      // Solo números y máximo 8 dígitos
+      const onlyNumbers = value.replace(/\D/g, '');
+      if (onlyNumbers.length <= 8) {
+        setFormData({ ...formData, [name]: onlyNumbers });
+      }
+      return;
+    }
+
+    if (name === 'nombre' || name === 'apellido') {
+      // Solo letras y espacios
+      const onlyLetters = value.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ\s]/g, '');
+      setFormData({ ...formData, [name]: onlyLetters });
+      return;
+    }
+
     setFormData({
       ...formData,
       [name]: value
@@ -35,7 +51,6 @@ const Registro = () => {
       dni: formData.dni.trim(),
       email: formData.email.trim().toLowerCase(),
       password: formData.password
-      
     };
 
     try {
