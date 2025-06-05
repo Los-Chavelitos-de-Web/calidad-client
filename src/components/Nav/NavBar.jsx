@@ -62,17 +62,17 @@ const NavBar = () => {
     };
   }, []);
 
-  const manejarBusqueda = () => {
-    if (busqueda.trim() !== "") {
-      const nuevaBusqueda = busqueda.trim();
-      const historialActualizado = [nuevaBusqueda, ...historial.filter((item) => item !== nuevaBusqueda)].slice(0, 5);
-      localStorage.setItem("historialBusqueda", JSON.stringify(historialActualizado));
-      setHistorial(historialActualizado);
-      navigate(`/buscar?query=${encodeURIComponent(nuevaBusqueda)}`);
-      setBusqueda("");
-      setMostrarHistorial(false);
-    }
-  };
+  const manejarBusqueda = (valorBusqueda) => {
+  const termino = valorBusqueda?.trim() || busqueda.trim();
+  if (termino !== "") {
+    const historialActualizado = [termino, ...historial.filter((item) => item !== termino)].slice(0, 5);
+    localStorage.setItem("historialBusqueda", JSON.stringify(historialActualizado));
+    setHistorial(historialActualizado);
+    navigate(`/buscar?query=${encodeURIComponent(termino)}`);
+    setBusqueda("");
+    setMostrarHistorial(false);
+  }
+};
 
   const cerrarSesion = () => {
     Cookies.remove("authToken");
