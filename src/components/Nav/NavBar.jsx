@@ -160,9 +160,6 @@ const NavBar = () => {
         <span>PRODUCTOS</span>
         <span>NOSOTROS</span>
         <span>CONTACTANOS</span>
-        <span>
-          <button onClick={() => navigate("/admin")}>Admin</button>
-        </span>
       </div>
     </div>
   );
