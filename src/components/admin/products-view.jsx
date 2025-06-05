@@ -3,7 +3,7 @@ import AdminAside from "./template/AdminAside";
 import './admin-css/admin.css';
 import './admin-css/ProductsDetaills.css';
 import { useNavigate } from "react-router-dom";
-
+import { usePayload } from "../../utils/authHelpers";
 
 const ProductosView = () => {
   const navigate = useNavigate();
@@ -13,6 +13,9 @@ const ProductosView = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const { authToken } = usePayload();
 
   async function getData() {
     try {
@@ -61,13 +64,51 @@ const ProductosView = () => {
     setSelectedProduct(null);
   };
 
-  // Función para formatear las claves de las especificaciones
+  const handleDeleteClick = (producto) => {
+    setProductToDelete(producto);
+    setShowDeleteConfirm(true);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
+    setProductToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!productToDelete) return;
+    
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BACK}/products/delete`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({ id: productToDelete.id })
+      });
+
+      if (response.ok) {
+        // Actualizar la lista de productos
+        await getData();
+        alert('Producto eliminado correctamente');
+      } else {
+        const errorData = await response.json();
+        alert(`Error al eliminar producto: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error al eliminar producto:', error);
+      alert('Error al conectar con el servidor');
+    } finally {
+      setShowDeleteConfirm(false);
+      setProductToDelete(null);
+    }
+  };
+
   const formatSpecKey = (key) => {
     const words = key.replace(/([A-Z])/g, ' $1');
     return words.charAt(0).toUpperCase() + words.slice(1);
   };
 
-  // Función para renderizar el valor de las especificaciones
   const renderSpecValue = (value) => {
     if (Array.isArray(value)) {
       return (
@@ -106,11 +147,8 @@ const ProductosView = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-          <button 
-          onClick={() => navigate('/admin/insertar')}
-          >
+          <button onClick={() => navigate('/admin/insertar')}>
             Agregar Producto +
-
           </button>
         </div>
         
@@ -127,7 +165,7 @@ const ProductosView = () => {
                   <th className="column-model">Modelo</th>
                   <th className="column-category">Categoría</th>
                   <th className="column-stock">Stock</th>
-                  <th className="column-actions"></th>
+                  <th className="column-actions">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -143,16 +181,30 @@ const ProductosView = () => {
                         {getStock(producto.stock)}
                       </td>
                       <td className="cell-actions">
-                        <button 
-                          className="action-btn"
-                          onClick={() => handleOpenModal(producto)}
-                        >
-                          <img 
-                            src="../public/icons/tres-puntos.png" 
-                            alt="Opciones" 
-                            className="action-icon"
-                          />
-                        </button>
+                        <div className="action-buttons">
+                          <button 
+                            className="action-btn delete-btn"
+                            onClick={() => handleDeleteClick(producto)}
+                            title="Eliminar producto"
+                          >
+                            <img 
+                              src="../public/icons/delete-icon.png" 
+                              alt="Eliminar" 
+                              className="action-icon"
+                            />
+                          </button>
+                          <button 
+                            className="action-btn"
+                            onClick={() => handleOpenModal(producto)}
+                            title="Ver detalles"
+                          >
+                            <img 
+                              src="../public/icons/tres-puntos.png" 
+                              alt="Opciones" 
+                              className="action-icon"
+                            />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -169,7 +221,7 @@ const ProductosView = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal de detalles */}
       {showModal && (
         <div className="modal-overlay" onClick={handleCloseModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -209,6 +261,29 @@ const ProductosView = () => {
         </div>
       )}
 
+      {/* Modal de confirmación de eliminación */}
+      {showDeleteConfirm && (
+        <div className="modal-overlay">
+          <div className="confirm-modal">
+            <h3>¿Estás seguro de eliminar este producto?</h3>
+            <p>Esta acción no se puede deshacer.</p>
+            <div className="confirm-buttons">
+              <button 
+                className="confirm-btn cancel-btn"
+                onClick={handleCancelDelete}
+              >
+                Cancelar
+              </button>
+              <button 
+                className="confirm-btn delete-btn"
+                onClick={handleConfirmDelete}
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
