@@ -90,7 +90,11 @@ const Ducati = () => {
                         if (productoExistente) {
                           const carritoActualizado = carritoActual.map((item) =>
                             item.id === producto.id
-                              ? { ...item, cantidad: (item.cantidad || 1) + 1 }
+                              ? {
+                                  ...item,
+                                  quantity:
+                                    (item.quantity || item.cantidad || 1) + 1,
+                                }
                               : item
                           );
                           localStorage.setItem(
@@ -100,8 +104,8 @@ const Ducati = () => {
                         } else {
                           const productoAgregado = {
                             ...producto,
-                            precio: Math.round(Math.random() * 200),
-                            cantidad: 1,
+                            unit_price: Math.round(Math.random() * 200),
+                            quantity: 1,
                           };
                           localStorage.setItem(
                             "carrito",
