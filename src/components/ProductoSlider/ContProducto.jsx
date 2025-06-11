@@ -14,7 +14,7 @@ const ContProducto = ({titulo,descripcion}) => {
             <p className="product-description">
                 {descripcion}
             </p>
-            <button className="product-button">Comprar ahora</button>
+            <button className="product-button">Ver producto</button>
         </article>
     );
 };

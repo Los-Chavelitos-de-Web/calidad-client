@@ -6,7 +6,7 @@
     max-width: 1000px;
     margin: 0 auto;
     box-sizing: border-box;
-    padding: 20px 0;
+    padding: 30px 0;
     background-color: transparent;
     /* Diseño plano */
     display: flex;
@@ -19,7 +19,7 @@
 
 .slider-wrapper {
     position: relative;
-    width: 950px;
+    width: 850px;
     overflow: hidden;
     /* Oculta el scroll interno */
 }
@@ -39,6 +39,12 @@
 
 .productos-slider::-webkit-scrollbar {
     display: none;
+}
+
+.title-slider {
+    color: #011d03;
+    font-size: 2rem;
+    font-weight: 600;
 }
 
 

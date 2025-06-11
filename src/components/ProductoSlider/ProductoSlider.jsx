@@ -51,6 +51,7 @@ export function ProductosSlider() {
 
     return (
         <div className="slider-containerp">
+            <div className='title-slider'>Productos que te recomendamos</div>
 
             <button className="slider-button left" onClick={scrollLeft}>
                             <img src={Izquierda} alt="Flecha izquierda" className="flecha-img" />
