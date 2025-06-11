@@ -18,7 +18,11 @@ const Ducati = () => {
       const result = await response.json();
       const filteredData = result.filter(
         (product) => product.brand === "Ducati"
-      );
+      )
+      .map((product) => ({
+        ...product,
+        unit_price: product.unit_price ?? Math.round(Math.random() * 200),
+      }));
       //console.log(filteredData);
       setData(filteredData);
       setLoading(false);
@@ -72,9 +76,7 @@ const Ducati = () => {
                   <div className={styles.imagenProducto}></div>
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
-                    <p className={styles.precio}>
-                      S/. {Math.round(Math.random() * 200)}
-                    </p>
+                    <p className={styles.precio}>S/. {producto.unit_price}</p>
 
                     <button
                       className={styles.botonOpcion}
@@ -104,7 +106,6 @@ const Ducati = () => {
                         } else {
                           const productoAgregado = {
                             ...producto,
-                            unit_price: Math.round(Math.random() * 200),
                             quantity: 1,
                           };
                           localStorage.setItem(

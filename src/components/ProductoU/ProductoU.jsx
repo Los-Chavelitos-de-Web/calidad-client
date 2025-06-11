@@ -20,7 +20,7 @@ const ProductoU = () => {
 
         if (encontrado) {
           const precioAleatorio =
-            Math.floor(Math.random() * (2000 - 500 + 1)) + 500;
+            Math.round(Math.random() * 200);
 
           const stockTotal =
             typeof encontrado.stock === "object"

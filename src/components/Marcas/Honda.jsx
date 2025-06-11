@@ -9,7 +9,6 @@ const Honda = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
   const fetchData = async () => {
     try {
       const response = await fetch(
@@ -18,7 +17,11 @@ const Honda = () => {
       const result = await response.json();
       const filteredData = result.filter(
         (product) => product.brand === "Honda"
-      );
+      )
+      .map((product) => ({
+        ...product,
+        unit_price: product.unit_price ?? Math.round(Math.random() * 200),
+      }));
       //console.log(filteredData);
       setData(filteredData);
       setLoading(false);
@@ -72,9 +75,7 @@ const Honda = () => {
                   <div className={styles.imagenProducto}></div>
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
-                    <p className={styles.precio}>
-                      S/. {Math.round(Math.random() * 200)}
-                    </p>
+                    <p className={styles.precio}>S/. {producto.unit_price}</p>
 
                     <button
                       className={styles.botonOpcion}
@@ -104,7 +105,6 @@ const Honda = () => {
                         } else {
                           const productoAgregado = {
                             ...producto,
-                            unit_price: Math.round(Math.random() * 200),
                             quantity: 1,
                           };
                           localStorage.setItem(
