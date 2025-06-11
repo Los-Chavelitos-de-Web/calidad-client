@@ -1,6 +1,6 @@
 import './ContProducto.css';
 
-const ContProducto = ({titulo,descripcion}) => {
+const ContProducto = ({titulo,marca}) => {
     return (
         <article className="product-container">
             <div className="image-wrapper">
@@ -11,8 +11,8 @@ const ContProducto = ({titulo,descripcion}) => {
                 />
             </div>
             <h2 className="product-title">{titulo}</h2>
-            <p className="product-description">
-                {descripcion}
+            <p className="product-brand">
+                {marca}
             </p>
             <button className="product-button">Ver producto</button>
         </article>

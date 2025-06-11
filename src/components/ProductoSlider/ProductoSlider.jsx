@@ -61,7 +61,7 @@ export function ProductosSlider() {
 
             <div className="productos-slider" ref={sliderRef}>
                 {
-                    data.map((p)=>{return <ContProducto titulo={p.title} descripcion={p.description}/>})
+                    data.map((p)=>{return <ContProducto titulo={p.title} marca={p.brand}/>})
                 }
             </div>
             </div>

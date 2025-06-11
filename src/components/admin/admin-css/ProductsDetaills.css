@@ -1,13 +1,48 @@
 /* Estilos para el modal */
 
+.btn-agregr-prod {
+    border-radius: 10px;
+    background-color: #0352a1;
+    border: #0352a1;
+    width: 200px;
+    height: 40px;
+    margin-left: 1rem;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.btn-agregr-prod:hover {
+    border-radius: 10px;
+    background-color: #003061;
+    border: #003061;
+}
+
+.modal-content {
+    padding: 2rem;
+    border-radius: 20px !important;
+    width: 85%;
+    max-width: 800px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background-color: #ffffff !important;
+    /* Fondo blanco bien definido */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.603);
+    /* Sombra más fuerte */
+    border: 1px solid #ccc;
+    position: relative;
+    animation: slideUp 0.3s ease-out;
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.452);
+    /* Más oscuro para evitar transparencia */
+    /* backdrop-filter: blur(3px); */
+    /* Puedes dejarlo comentado si no quieres desenfoque */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,20 +50,8 @@
     animation: fadeIn 0.3s ease-out;
 }
 
-.modal-content {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 12px;
-    width: 85%;
-    max-width: 800px;
-    max-height: 85vh;
-    overflow-y: auto;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    border: 1px solid #e1e1e1;
-    border-radius: 10px;
-    position: relative;
-    animation: slideUp 0.3s ease-out;
-}
+
+/* Botón de cierre */
 
 .modal-close-btn {
     position: absolute;
@@ -53,6 +76,9 @@
     color: #333;
 }
 
+
+/* Encabezado del modal */
+
 .modal-content h2 {
     color: #2c3e50;
     margin-bottom: 1.5rem;
@@ -61,7 +87,7 @@
 }
 
 
-/* Estilos para la información básica */
+/* Información básica */
 
 .product-details {
     display: flex;
@@ -91,7 +117,7 @@
 }
 
 
-/* Estilos para las especificaciones técnicas */
+/* Especificaciones técnicas */
 
 .specs-section {
     margin-top: 1rem;
@@ -173,7 +199,7 @@
 }
 
 
-/* Scrollbar personalizada para el modal */
+/* Scrollbar personalizada */
 
 .modal-content::-webkit-scrollbar {
     width: 8px;

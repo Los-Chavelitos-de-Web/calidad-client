@@ -147,7 +147,8 @@ const ProductosView = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-          <button onClick={() => navigate('/admin/insertar')}>
+          <button onClick={() => navigate('/admin/insertar')}
+            className="btn-agregr-prod">
             Agregar Producto +
           </button>
         </div>
