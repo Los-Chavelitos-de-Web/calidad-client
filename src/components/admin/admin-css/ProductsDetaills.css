@@ -159,6 +159,49 @@
 }
 
 
+/*Modal de eliminación*/
+
+.confirm-modal {
+    border-radius: 10px !important;
+    background-color: #ffffff !important;
+    /* Fondo blanco bien definido */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.603);
+    /* Sombra más fuerte */
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+.cancel-btn {
+    background-color: #0067ce;
+    border: #0067ce;
+    border-radius: 10px;
+    width: 90px;
+    height: 30px;
+    color: #ffffff;
+    margin-right: 20px;
+}
+
+.cancel-btn:hover {
+    background-color: #004285;
+    border: #004285;
+}
+
+.delete-btn {
+    background-color: #cf0000;
+    border: #cf0000;
+    border-radius: 10px;
+    width: 90px;
+    height: 30px;
+    color: #ffffff;
+    margin-right: 20px;
+}
+
+.delete-btn:hover {
+    background-color: #800000;
+    border: #800000;
+}
+
+
 /* Animaciones */
 
 @keyframes fadeIn {

@@ -3,6 +3,7 @@ import React from 'react';
 import './Footer.css';
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <footer className="footer">
       <div className="footer-columns">
@@ -19,15 +20,17 @@ const Footer = () => {
         </div>
 
         <div className="footer-column">
-          <h4>Marcas</h4>
+        <h4>Marcas</h4>
           <ul>
-          <li><a href="#"></a>Honda</li>
-          <li><a href="#"></a>Still</li>
-          <li><a href="#"></a>Rato</li>
-          <li><a href="#"></a>Ducati</li>
-          <li><a href="#"></a>Bonhoeffer</li>
+            <li><a className="footer-link" onClick={() => navigate('/honda')}>Honda</a></li>
+            <li><a className="footer-link" onClick={() => navigate('/honda')}>Still</a></li>
+            <li><a className="footer-link" onClick={() => navigate('/rato')}>Rato</a></li>
+            <li><a className="footer-link" onClick={() => navigate('/ducati')}>Ducati</a></li>
+            <li><a className="footer-link" onClick={() => navigate('/bonhoeffer')}>Bonhoeffer</a></li>
+            <li><a className="footer-link" onClick={() => navigate('/cifarelli')}>Cifarelli</a></li>
           </ul>
         </div>
+
 
         <div className="footer-column">
           <h4>Políticas</h4>
