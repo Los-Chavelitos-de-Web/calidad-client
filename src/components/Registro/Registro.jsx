@@ -3,6 +3,21 @@ import styles from './Registro.module.css';
 import NavBar from '../Nav/NavBar';
 import { useNavigate } from 'react-router-dom';
 
+const ModalError = ({ mensaje, onClose }) => {
+  if (!mensaje) return null;
+
+  return (
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <p className={styles.modalText}>{mensaje}</p>
+        <button onClick={onClose} className={styles.modalButton}>
+          Cerrar
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const Registro = () => {
   const navigate = useNavigate();
 
@@ -15,12 +30,34 @@ const Registro = () => {
   });
 
   const [mensaje, setMensaje] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState('');
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    length: false,
+    hasLetters: false,
+    hasNumbers: false,
+    hasSpecialChars: false,
+  });
+
+  const evaluatePassword = (password) => {
+    const length = password.length === 8;
+    const hasLetters = /[a-zA-Z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    const passed = [length, hasLetters, hasNumbers, hasSpecialChars].filter(Boolean).length;
+
+    let strength = 'Débil';
+    if (passed >= 3) strength = 'Media';
+    if (passed === 4) strength = 'Fuerte';
+
+    setPasswordCriteria({ length, hasLetters, hasNumbers, hasSpecialChars });
+    setPasswordStrength(strength);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (name === 'dni') {
-      // Solo números y máximo 8 dígitos
       const onlyNumbers = value.replace(/\D/g, '');
       if (onlyNumbers.length <= 8) {
         setFormData({ ...formData, [name]: onlyNumbers });
@@ -29,20 +66,38 @@ const Registro = () => {
     }
 
     if (name === 'nombre' || name === 'apellido') {
-      // Solo letras y espacios
       const onlyLetters = value.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ\s]/g, '');
-      setFormData({ ...formData, [name]: onlyLetters });
+      if (onlyLetters.length <= 50) {
+        setFormData({ ...formData, [name]: onlyLetters });
+      }
       return;
     }
 
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    if (name === 'email') {
+      if (value.length <= 254) {
+        setFormData({ ...formData, [name]: value });
+      }
+      return;
+    }
+
+    if (name === 'password') {
+      if (value.length <= 8) {
+        setFormData({ ...formData, [name]: value });
+        evaluatePassword(value);
+      }
+      return;
+    }
+
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.email.endsWith('@gmail.com')) {
+      setMensaje('❌ Solo se permiten correos @gmail.com');
+      return;
+    }
 
     const nombreCompleto = `${formData.nombre.trim()} ${formData.apellido.trim()}`.trim();
 
@@ -64,9 +119,7 @@ const Registro = () => {
           body: JSON.stringify(dataToSend),
         }
       );
-
       const data = await response.json();
-      console.log('Respuesta del servidor:', data);
 
       if (response.ok) {
         alert('✅ Registro exitoso');
@@ -74,8 +127,8 @@ const Registro = () => {
       } else {
         setMensaje(data.message || '❌ Error al registrar');
       }
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
-      console.error('❌ Error de conexión:', error);
       setMensaje('❌ Error de conexión con el servidor');
     }
   };
@@ -86,13 +139,11 @@ const Registro = () => {
       <div className={styles.loginContainer}>
         <div className={styles.loginBox}>
           <div className={styles.logoHeader}>
-            <div className="cabecera">
-              <h2>
-                COMERCIAL <img src="/img/logo101 (1).png" alt="Logo" />
-                <br />RAFAEL NORTE
-              </h2>
-              <p className={styles.subtitle}>Tu solución en Maquinaria Agrícola</p>
-            </div>
+            <h2>
+              COMERCIAL <img src="/img/logo101 (1).png" alt="Logo" />
+              <br />RAFAEL NORTE
+            </h2>
+            <p className={styles.subtitle}>Tu solución en Maquinaria Agrícola</p>
           </div>
 
           <form onSubmit={handleSubmit}>
@@ -135,14 +186,35 @@ const Registro = () => {
             <input
               type="password"
               name="password"
-              placeholder="Contraseña"
+              placeholder="Contraseña (8 caracteres)"
               className={styles.input}
               value={formData.password}
               onChange={handleChange}
               required
+              maxLength={8}
             />
 
-            {mensaje && <p className={styles.error}>{mensaje}</p>}
+            <div>
+              <div className={styles.passwordStrengthBar}>
+                <div
+                  style={{
+                    height: '8px',
+                    width: passwordStrength === 'Débil' ? '33%' :
+                          passwordStrength === 'Media' ? '66%' : '100%',
+                    backgroundColor: passwordStrength === 'Débil' ? 'red' :
+                                     passwordStrength === 'Media' ? 'orange' : 'green',
+                    transition: 'width 0.3s ease'
+                  }}
+                />
+              </div>
+              <p>Seguridad: <strong>{passwordStrength}</strong></p>
+              <ul className={styles.passwordChecklist}>
+                <li style={{ color: passwordCriteria.length ? 'green' : 'gray' }}>Exactamente 8 caracteres</li>
+                <li style={{ color: passwordCriteria.hasLetters && passwordCriteria.hasNumbers && passwordCriteria.hasSpecialChars ? 'green' : 'gray' }}>
+                  Letras, números y caracteres especiales
+                </li>
+              </ul>
+            </div>
 
             <button type="submit" className={styles.loginBtn}>
               Registrar
@@ -157,6 +229,8 @@ const Registro = () => {
           </form>
         </div>
       </div>
+
+      {mensaje && <ModalError mensaje={mensaje} onClose={() => setMensaje('')} />}
     </div>
   );
 };
