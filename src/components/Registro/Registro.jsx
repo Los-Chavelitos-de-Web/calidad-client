@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import styles from './Registro.module.css';
 import NavBar from '../Nav/NavBar';
@@ -34,23 +35,25 @@ const Registro = () => {
   const [passwordCriteria, setPasswordCriteria] = useState({
     length: false,
     hasLetters: false,
+    hasUppercase: false,
     hasNumbers: false,
     hasSpecialChars: false,
   });
 
   const evaluatePassword = (password) => {
     const length = password.length === 8;
-    const hasLetters = /[a-zA-Z]/.test(password);
+    const hasLetters = /[a-z]/.test(password);
+    const hasUppercase = /[A-Z]/.test(password);
     const hasNumbers = /\d/.test(password);
     const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    const passed = [length, hasLetters, hasNumbers, hasSpecialChars].filter(Boolean).length;
+    const passed = [length, hasLetters, hasUppercase, hasNumbers, hasSpecialChars].filter(Boolean).length;
 
     let strength = 'Débil';
-    if (passed >= 3) strength = 'Media';
-    if (passed === 4) strength = 'Fuerte';
+    if (passed >= 4) strength = 'Media';
+    if (passed === 5) strength = 'Fuerte';
 
-    setPasswordCriteria({ length, hasLetters, hasNumbers, hasSpecialChars });
+    setPasswordCriteria({ length, hasLetters, hasUppercase, hasNumbers, hasSpecialChars });
     setPasswordStrength(strength);
   };
 
@@ -127,7 +130,6 @@ const Registro = () => {
       } else {
         setMensaje(data.message || '❌ Error al registrar');
       }
-    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       setMensaje('❌ Error de conexión con el servidor');
     }
@@ -209,9 +211,21 @@ const Registro = () => {
               </div>
               <p>Seguridad: <strong>{passwordStrength}</strong></p>
               <ul className={styles.passwordChecklist}>
-                <li style={{ color: passwordCriteria.length ? 'green' : 'gray' }}>Exactamente 8 caracteres</li>
-                <li style={{ color: passwordCriteria.hasLetters && passwordCriteria.hasNumbers && passwordCriteria.hasSpecialChars ? 'green' : 'gray' }}>
-                  Letras, números y caracteres especiales
+                <li style={{ color: passwordCriteria.length ? 'green' : 'gray' }}>
+                  Exactamente 8 caracteres
+                </li>
+                <li
+                  style={{
+                    color:
+                      passwordCriteria.hasLetters &&
+                      passwordCriteria.hasUppercase &&
+                      passwordCriteria.hasNumbers &&
+                      passwordCriteria.hasSpecialChars
+                        ? 'green'
+                        : 'gray',
+                  }}
+                >
+                  Letras, may, números y caracteres especiales
                 </li>
               </ul>
             </div>
