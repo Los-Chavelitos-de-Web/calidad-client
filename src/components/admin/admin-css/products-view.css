@@ -108,6 +108,26 @@
 }
 
 
+/*Boton de agregar Producto*/
+
+.btn-agregr-prod {
+    border-radius: 10px;
+    background-color: #0352a1;
+    border: #0352a1;
+    width: 200px;
+    height: 40px;
+    margin-left: 1rem;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.btn-agregr-prod:hover {
+    border-radius: 10px;
+    background-color: #003061;
+    border: #003061;
+}
+
+
 /* Tabla */
 
 .table-container {
@@ -154,7 +174,7 @@
 /* Columnas específicas */
 
 .column-id {
-    width: 80px;
+    width: 40px;
 }
 
 .column-name {
@@ -174,7 +194,7 @@
 }
 
 .column-stock {
-    width: 80px;
+    width: 40px;
     text-align: center;
 }
 
@@ -221,6 +241,17 @@
 
 .action-btn:hover .action-icon {
     opacity: 1;
+}
+
+.action-btn-delete-btn {
+    background-color: #d40000;
+    border-radius: 10px;
+    height: 35px;
+    border: #d40000;
+}
+
+.action-btn-delete-btn:hover {
+    background-color: #6e0000;
 }
 
 

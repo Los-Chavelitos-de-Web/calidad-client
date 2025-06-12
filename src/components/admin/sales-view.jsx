@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AdminAside from "./template/AdminAside";
-import './admin-css/admin.css';
+import './admin-css/sales-view.css';
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
 
@@ -223,10 +223,10 @@ const SalesView = () => {
               <thead>
                 <tr>
                   <th className="column-id">Código</th>
-                  <th className="column-brand">Cliente</th>
-                  <th className="column-model">Fecha</th>
-                  <th className="column-category">Total</th>
-                  <th className="column-stock">Estado</th>
+                  <th className="column-client">Cliente</th>
+                  <th className="column-date">Fecha</th>
+                  <th className="column-total">Total</th>
+                  <th className="column-state">Estado</th>
                   <th className="cell-actions"></th>
                 </tr>
               </thead>

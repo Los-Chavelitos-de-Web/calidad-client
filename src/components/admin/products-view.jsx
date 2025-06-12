@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AdminAside from "./template/AdminAside";
-import './admin-css/admin.css';
+import './admin-css/products-view.css';
 import './admin-css/ProductsDetaills.css';
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
@@ -149,7 +149,7 @@ const ProductosView = () => {
           />
           <button onClick={() => navigate('/admin/insertar')}
             className="btn-agregr-prod">
-            Agregar Producto +
+            Agregar Producto
           </button>
         </div>
         
@@ -184,12 +184,12 @@ const ProductosView = () => {
                       <td className="cell-actions">
                         <div className="action-buttons">
                           <button 
-                            className="action-btn delete-btn"
+                            className="action-btn-delete-btn"
                             onClick={() => handleDeleteClick(producto)}
                             title="Eliminar producto"
                           >
                             <img 
-                              src="../public/icons/delete-icon.png" 
+                              src="../../../public/icons/delete-icon.png" 
                               alt="Eliminar" 
                               className="action-icon"
                             />

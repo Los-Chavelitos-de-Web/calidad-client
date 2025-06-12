@@ -1,0 +1,86 @@
+/* Contenedor general */
+
+.sales-filters {
+    margin: 2px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+
+/* Botones rápidos */
+
+.quick-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.filter-btn {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s ease-in-out;
+    color: #333;
+}
+
+.filter-btn:hover {
+    background-color: #d5d5d5;
+}
+
+.filter-btn.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+
+/* Filtros personalizados */
+
+.custom-date-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.date-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.date-input-group label {
+    font-size: 0.85rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.date-input-group input[type="date"] {
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+}
+
+
+/* Botón Reiniciar */
+
+.reset-btn {
+    background-color: #ff1100;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 0.9rem;
+    height: fit-content;
+}
+
+.reset-btn:hover {
+    background-color: #830000;
+}
