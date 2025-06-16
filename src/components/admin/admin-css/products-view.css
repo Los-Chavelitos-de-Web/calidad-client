@@ -229,7 +229,7 @@
 }
 
 .action-btn:hover {
-    background-color: #edf2f7;
+    background-color: #c6e2ff;
 }
 
 .action-icon {
@@ -248,6 +248,7 @@
     border-radius: 10px;
     height: 35px;
     border: #d40000;
+    margin-right: 20px;
 }
 
 .action-btn-delete-btn:hover {

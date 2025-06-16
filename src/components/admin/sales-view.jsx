@@ -222,7 +222,7 @@ const SalesView = () => {
             <table className="products-table">
               <thead>
                 <tr>
-                  <th className="column-id">Código</th>
+                  <th className="column-cod">Código</th>
                   <th className="column-client">Cliente</th>
                   <th className="column-date">Fecha</th>
                   <th className="column-total">Total</th>
@@ -234,11 +234,11 @@ const SalesView = () => {
                 {filteredSales.length > 0 ? (
                   filteredSales.map((sale) => (
                     <tr key={sale.id}>
-                      <td className="cell-id">{sale.id}</td>
-                      <td className="cell-name">{sale.userId || "N/A"}</td>
-                      <td className="cell-model">{new Date(sale.createdAt).toLocaleDateString()}</td>
-                      <td className="cell-category">${sale.total?.toFixed(2)}</td> 
-                      <td className="cell-stock">
+                      <td className="cell-cod">{sale.id}</td>
+                      <td className="cell-client">{sale.userId || "N/A"}</td>
+                      <td className="cell-date">{new Date(sale.createdAt).toLocaleDateString()}</td>
+                      <td className="cell-state">S/.{sale.total?.toFixed(2)}</td> 
+                      <td className="cell-actions">
                         {sale.status || "N/A"}
                       </td>
                       <td className="cell-actions">

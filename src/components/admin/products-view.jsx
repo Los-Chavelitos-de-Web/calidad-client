@@ -270,13 +270,13 @@ const ProductosView = () => {
             <p>Esta acción no se puede deshacer.</p>
             <div className="confirm-buttons">
               <button 
-                className="confirm-btn cancel-btn"
+                className="cancel-btn"
                 onClick={handleCancelDelete}
               >
                 Cancelar
               </button>
               <button 
-                className="confirm-btn delete-btn"
+                className="delete-btn"
                 onClick={handleConfirmDelete}
               >
                 Eliminar
