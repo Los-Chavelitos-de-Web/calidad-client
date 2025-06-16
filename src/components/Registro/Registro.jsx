@@ -41,7 +41,7 @@ const Registro = () => {
   });
 
   const evaluatePassword = (password) => {
-    const length = password.length === 8;
+    const length = password.length >= 8 && password.length <= 20;
     const hasLetters = /[a-z]/.test(password);
     const hasUppercase = /[A-Z]/.test(password);
     const hasNumbers = /\d/.test(password);
@@ -84,7 +84,7 @@ const Registro = () => {
     }
 
     if (name === 'password') {
-      if (value.length <= 8) {
+      if (value.length <= 20) {
         setFormData({ ...formData, [name]: value });
         evaluatePassword(value);
       }
@@ -99,6 +99,11 @@ const Registro = () => {
 
     if (!formData.email.endsWith('@gmail.com')) {
       setMensaje('❌ Solo se permiten correos @gmail.com');
+      return;
+    }
+
+    if (formData.password.length < 8) {
+      setMensaje('❌ La contraseña debe tener al menos 8 caracteres');
       return;
     }
 
@@ -188,12 +193,12 @@ const Registro = () => {
             <input
               type="password"
               name="password"
-              placeholder="Contraseña (8 caracteres)"
+              placeholder="Contraseña (8-20 caracteres)"
               className={styles.input}
               value={formData.password}
               onChange={handleChange}
               required
-              maxLength={8}
+              maxLength={20}
             />
 
             <div>
@@ -212,7 +217,7 @@ const Registro = () => {
               <p>Seguridad: <strong>{passwordStrength}</strong></p>
               <ul className={styles.passwordChecklist}>
                 <li style={{ color: passwordCriteria.length ? 'green' : 'gray' }}>
-                  Exactamente 8 caracteres
+                  Entre 8 y 20 caracteres
                 </li>
                 <li
                   style={{
