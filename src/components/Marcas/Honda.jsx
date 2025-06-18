@@ -6,15 +6,18 @@ import fondoHonda from "../../assets/Fondos_Marcas/Honda.png";
 
 const Honda = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]); // Estado para almacenar los productos filtrados por marca
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  // Función para obtener los productos de la API 
   const fetchData = async () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_APP_BACK}/products/getAll`
       );
       const result = await response.json();
+      // Filtrarlos por marca "Honda"
       const filteredData = result.filter(
         (product) => product.brand === "Honda"
       )
@@ -31,7 +34,7 @@ const Honda = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(); // Llama a la función para obtener productos
   }, []);
 
   return (
