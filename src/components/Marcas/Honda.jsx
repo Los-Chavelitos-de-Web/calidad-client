@@ -44,7 +44,7 @@ const Honda = () => {
       {/* Flecha izquierda para ir a Rato */}
       <button
         className={styles.flechaIzquierda}
-        onClick={() => navigate("/ducati")}
+        onClick={() => navigate("/stihl")} // Cambia a la ruta correcta
       >
         ←
       </button>
@@ -116,7 +116,7 @@ const Honda = () => {
                         window.dispatchEvent(new Event("carritoActualizado"));
                       }}
                     >
-                      Reservar
+                      Añadir al carrito
                     </button>
                   </div>
                 </div>

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
-import styles from "./Ducati.module.css";
-import fondoDucati from "../../assets/Fondos_Marcas/Ducati.png";
+import styles from "./Stihl.module.css";
+import fondoStihl from "../../assets/Fondos_Marcas/Stihl.png";
 
-const Ducati = () => {
+const Stihl = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,13 +16,12 @@ const Ducati = () => {
         `${import.meta.env.VITE_APP_BACK}/products/getAll`
       );
       const result = await response.json();
-      const filteredData = result.filter(
-        (product) => product.brand === "Ducati"
-      )
-      .map((product) => ({
-        ...product,
-        unit_price: product.unit_price ?? Math.round(Math.random() * 200),
-      }));
+      const filteredData = result
+        .filter((product) => product.brand === "Stihl")
+        .map((product) => ({
+          ...product,
+          unit_price: product.unit_price ?? Math.round(Math.random() * 200),
+        }));
       //console.log(filteredData);
       setData(filteredData);
       setLoading(false);
@@ -37,20 +36,20 @@ const Ducati = () => {
 
   return (
     <div
-      className={styles.fondoDucati}
-      style={{ backgroundImage: `url(${fondoDucati})` }}
+      className={styles.fondoStihl}
+      style={{ backgroundImage: `url(${fondoStihl})` }}
     >
       <NavBar />
 
-      {/* Flecha izquierda para ir a Cifarelli */}
+      {/* Flecha izquierda para ir a Ducati */}
       <button
         className={styles.flechaIzquierda}
-        onClick={() => navigate("/cifarelli")}
+        onClick={() => navigate("/ducati")}
       >
         ←
       </button>
 
-      <section className={styles.productosDucati}>
+      <section className={styles.productosStihl}>
         <div className={styles.productosHeader}>
           <h2>PRODUCTOS</h2>
           <span className={styles.iconoFiltro}>⚙</span>
@@ -140,7 +139,7 @@ const Ducati = () => {
       {/* Flecha derecha para ir a Honda */}
       <button
         className={styles.flechaDerecha}
-        onClick={() => navigate("/stihl")}
+        onClick={() => navigate("/Honda")}
       >
         →
       </button>
@@ -148,4 +147,4 @@ const Ducati = () => {
   );
 };
 
-export default Ducati;
+export default Stihl;

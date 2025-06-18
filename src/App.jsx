@@ -8,6 +8,7 @@ import Registro from './components/Registro/Registro';
 import Bonhoeffer from './components/Marcas/Bonhoeffer';
 import Cifarelli from './components/Marcas/Cifarelli';
 import Ducati from './components/Marcas/Ducati';
+import Stihl from './components/Marcas/Stihl';
 import ProductosView from './components/admin/products-view';
 import AdminAside from './components/admin/template/AdminAside';
 import SalesView from './components/admin/sales-view';
@@ -33,6 +34,7 @@ function App() {
         <Route path="/producto/:id" element={<ProductoU />} />
 
         {/* Marcas */}
+        <Route path="/stihl" element={<Stihl />} />
         <Route path="/honda" element={<Honda />} />
         <Route path="/rato" element={<Rato />} />
         <Route path="/bonhoeffer" element={<Bonhoeffer />} />

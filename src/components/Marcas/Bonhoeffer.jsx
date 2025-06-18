@@ -116,7 +116,7 @@ const Bonhoeffer = () => {
                         window.dispatchEvent(new Event("carritoActualizado"));
                       }}
                     >
-                      Reservar
+                      Añadir al carrito
                     </button>
                   </div>
                 </div>
