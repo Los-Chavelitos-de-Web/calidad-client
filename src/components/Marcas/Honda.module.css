@@ -73,21 +73,6 @@
   margin-bottom: 10px;
 }
 
-.botonOpcion {
-  background-color: #d11e1e;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: background 0.2s;
-}
-
-.botonOpcion:hover {
-  background-color: #b71c1c;
-}
-
 .botonMostrarMasContainer {
   text-align: center;
   margin-top: 0;

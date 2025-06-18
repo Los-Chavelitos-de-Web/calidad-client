@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
+import BotonAñadir from "../carrito/BotonAñadir";
 import styles from "./ProductoU.module.css";
 
 const ProductoU = () => {
@@ -19,8 +20,7 @@ const ProductoU = () => {
         const encontrado = await response.json(); // 🔄 Ya es un objeto, no uses .find
 
         if (encontrado) {
-          const precioAleatorio =
-            Math.round(Math.random() * 200);
+          const precioAleatorio = Math.round(Math.random() * 200);
 
           const stockTotal =
             typeof encontrado.stock === "object"
@@ -49,7 +49,8 @@ const ProductoU = () => {
     fetchProducto();
   }, [id]); // ✅ Asegúrate de incluir id como dependencia
 
-  const agregarAlCarrito = () => {
+  {
+    /*const agregarAlCarrito = () => {
     const carritoGuardado = JSON.parse(localStorage.getItem("carrito")) || [];
     const indexProducto = carritoGuardado.findIndex(
       (p) => p.id === producto.id
@@ -66,7 +67,8 @@ const ProductoU = () => {
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
     window.dispatchEvent(new Event("carritoActualizado"));
-  };
+  };  */
+  }
 
   if (!producto) {
     return <h2 className={styles.cargando}>Cargando producto...</h2>;
@@ -139,9 +141,14 @@ const ProductoU = () => {
                     className={styles.botonContainer}
                     style={{ position: "relative" }}
                   >
-                    <button className={styles.boton} onClick={agregarAlCarrito}>
-                      Añadir al carrito
-                    </button>
+                    {/* Botón para añadir al carrito */}
+                    <BotonAñadir
+                      producto={producto}
+                      onAdded={() => {
+                        setShowToast(true);
+                        setTimeout(() => setShowToast(false), 3000);
+                      }}
+                    />
                     {showToast && (
                       <div className={styles.toast}>
                         <span className={styles.icon}>✅</span> Producto añadido

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
 import styles from "./Cifarelli.module.css";
+import BotonAñadir from "../carrito/BotonAñadir";
 import fondoCifarelli from "../../assets/Fondos_Marcas/Cifarelli.png";
 
 const Cifarelli = () => {
@@ -79,47 +80,9 @@ const Cifarelli = () => {
                     <p className={styles.descripcion}>{producto.title}</p>
                     <p className={styles.precio}>S/. {producto.unit_price}</p>
 
-                    <button
-                      className={styles.botonOpcion}
-                      onClick={(e) => {
-                        e.stopPropagation(); // <-- evitar que haga navigate
-                        const carritoActual =
-                          JSON.parse(localStorage.getItem("carrito")) || [];
-
-                        const productoExistente = carritoActual.find(
-                          (item) => item.id === producto.id
-                        );
-
-                        if (productoExistente) {
-                          const carritoActualizado = carritoActual.map((item) =>
-                            item.id === producto.id
-                              ? {
-                                  ...item,
-                                  quantity:
-                                    (item.quantity || item.cantidad || 1) + 1,
-                                }
-                              : item
-                          );
-                          localStorage.setItem(
-                            "carrito",
-                            JSON.stringify(carritoActualizado)
-                          );
-                        } else {
-                          const productoAgregado = {
-                            ...producto,
-                            quantity: 1,
-                          };
-                          localStorage.setItem(
-                            "carrito",
-                            JSON.stringify([...carritoActual, productoAgregado])
-                          );
-                        }
-
-                        window.dispatchEvent(new Event("carritoActualizado"));
-                      }}
-                    >
-                      Añadir al carrito
-                    </button>
+                    {/* Botón para añadir al carrito */}
+                    <BotonAñadir producto={producto} />
+                    
                   </div>
                 </div>
               ))
