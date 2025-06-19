@@ -1,9 +1,8 @@
 // NavBar.jsx
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
-import { usePayload } from "../../utils/authHelpers"; // Asegúrate del path
-
+import { usePayload } from "../../utils/authHelpers";
 import "./NavBar.css";
 
 function getInitials(name = "") {
@@ -16,6 +15,7 @@ function getInitials(name = "") {
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [cantidadCarrito, setCantidadCarrito] = useState(0);
   const [busqueda, setBusqueda] = useState("");
   const [historial, setHistorial] = useState([]);
@@ -88,6 +88,19 @@ const NavBar = () => {
   const cerrarSesion = () => {
     Cookies.remove("authToken");
     navigate("/login");
+  };
+
+  const scrollToSection = (id) => {
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const section = document.getElementById(id);
+        if (section) section.scrollIntoView({ behavior: "smooth" });
+      }, 500);
+    } else {
+      const section = document.getElementById(id);
+      if (section) section.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -196,11 +209,10 @@ const NavBar = () => {
       </div>
 
       <div className="menu-bar">
-        <span>☰</span>
-        <span>OFERTAS DEL DÍA</span>
-        <span>PRODUCTOS</span>
-        <span>NOSOTROS</span>
-        <span>CONTACTANOS</span>
+        <span onClick={() => scrollToSection("inicio")}>PRODUCTOS</span>
+        <span onClick={() => scrollToSection("ofertas")}>OFERTAS DEL DÍA</span>
+        <span onClick={() => scrollToSection("nosotros")}>NOSOTROS</span>
+        <span onClick={() => scrollToSection("contacto")}>CONTACTANOS</span>
       </div>
     </div>
   );
