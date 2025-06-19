@@ -12,6 +12,7 @@ import SPrincipal from '../SPrincipal/SPrincipal';
 import UltimoVideo from '../YSecttion/YSecction';
 
 const brandButtons = [
+  { name: "STIHL", img: "/img/stihl.png", route: "/stihl" },
   { name: "HONDA", img: "/img/Honda.jpg", route: "/honda" },
   { name: "RATO", img: "/img/rato.jpg", route: "/rato" },
   { name: "BONHOEFFER", img: "/img/bonhoeffer.jpg", route: "/bonhoeffer" },

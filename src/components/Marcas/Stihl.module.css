@@ -1,30 +1,30 @@
-.productosHonda {
-  margin: 120px auto 0 auto;
-  background-color: white;
-  padding: 20px 30px;
-  max-width: 1300px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  overflow-x: hidden;
+.productosStihl {
+    margin: 120px auto 0 auto;
+    background-color: white;
+    padding: 20px 30px;
+    max-width: 1300px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden;
 }
 
 .productosHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #092818;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 10px 10px 0 0;
-  font-family: Arial, sans-serif;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #092818;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px 10px 0 0;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 .iconoFiltro {
-  font-size: 20px;
-  cursor: pointer;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 .productosGrid {
@@ -51,31 +51,31 @@
 }
 
 .imagenProducto {
-  height: 150px;
-  background-color: #eee;
-  border-bottom: 1px solid #ccc;
+    height: 150px;
+    background-color: #eee;
+    border-bottom: 1px solid #ccc;
 }
 
 .detalleProducto {
-  padding: 10px;
-  text-align: center;
+    padding: 10px;
+    text-align: center;
 }
 
 .descripcion {
-  font-size: 13px;
-  margin-bottom: 8px;
-  font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-weight: bold;
 }
 
 .precio {
-  color: #d11e1e;
-  font-weight: bold;
-  margin-bottom: 10px;
+    color: #d11e1e;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .botonMostrarMasContainer {
   text-align: center;
-  margin-top: 0;
+  margin-top: 20px;
 }
 
 .botonMostrarMas {
@@ -94,14 +94,15 @@
   background-color: #cc0000;
 }
 
-.fondoHonda {
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center top;
-  min-height: 100vh;
-  width: 100%;
-  box-sizing: border-box;
-  background-attachment: fixed;
+
+.fondoStihl {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    background-attachment: fixed;
 }
 
 .flechaIzquierda,

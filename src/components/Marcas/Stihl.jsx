@@ -1,31 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
-import styles from "./Ducati.module.css";
+import styles from "./Stihl.module.css";
 import BotonAñadir from "../carrito/BotonAñadir";
-import fondoDucati from "../../assets/Fondos_Marcas/Ducati.png";
+import fondoStihl from "../../assets/Fondos_Marcas/Stihl.png";
 
-const Ducati = () => {
+const Stihl = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
   const [data, setData] = useState([]);  // Estado para almacenar los productos filtrados por marca
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Función para obtener los productos de la API
+    // Función para obtener los productos de la API 
   const fetchData = async () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_APP_BACK}/products/getAll`
       );
       const result = await response.json();
-      // Filtrarlos por marca "Ducati"
-      const filteredData = result.filter(
-        (product) => product.brand === "Ducati"
-      )
-      .map((product) => ({
-        ...product,
-        unit_price: product.unit_price ?? Math.round(Math.random() * 200),
-      }));
+        // Filtrarlos por marca "Stihl"
+      const filteredData = result
+        .filter((product) => product.brand === "Stihl")
+        .map((product) => ({
+          ...product,
+          unit_price: product.unit_price ?? Math.round(Math.random() * 200),
+        }));
       //console.log(filteredData);
       setData(filteredData);
       setLoading(false);
@@ -40,20 +39,20 @@ const Ducati = () => {
 
   return (
     <div
-      className={styles.fondoDucati}
-      style={{ backgroundImage: `url(${fondoDucati})` }}
+      className={styles.fondoStihl}
+      style={{ backgroundImage: `url(${fondoStihl})` }}
     >
       <NavBar />
 
-      {/* Flecha izquierda para ir a Cifarelli */}
+      {/* Flecha izquierda para ir a Ducati */}
       <button
         className={styles.flechaIzquierda}
-        onClick={() => navigate("/cifarelli")}
+        onClick={() => navigate("/ducati")}
       >
         ←
       </button>
 
-      <section className={styles.productosDucati}>
+      <section className={styles.productosStihl}>
         <div className={styles.productosHeader}>
           <h2>PRODUCTOS</h2>
           <span className={styles.iconoFiltro}>⚙</span>
@@ -83,7 +82,7 @@ const Ducati = () => {
 
                     {/* Botón para añadir al carrito */}
                     <BotonAñadir producto={producto} />
-                    
+
                   </div>
                 </div>
               ))
@@ -105,7 +104,7 @@ const Ducati = () => {
       {/* Flecha derecha para ir a Honda */}
       <button
         className={styles.flechaDerecha}
-        onClick={() => navigate("/stihl")}
+        onClick={() => navigate("/Honda")}
       >
         →
       </button>
@@ -113,4 +112,4 @@ const Ducati = () => {
   );
 };
 
-export default Ducati;
+export default Stihl;

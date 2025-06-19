@@ -64,21 +64,6 @@
   position: relative; /* Para posicionar el toast relativo aquí */
 }
 
-.boton {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.boton:hover {
-  background-color: #0056b3;
-}
-
 /* Toast que aparece justo arriba del botón */
 .toast {
   position: absolute;
