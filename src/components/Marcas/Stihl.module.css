@@ -103,6 +103,7 @@
     width: 100%;
     box-sizing: border-box;
     background-attachment: fixed;
+    padding-top: 90px;
 }
 
 .flechaIzquierda,
@@ -132,3 +133,10 @@
 .flechaDerecha {
     right: 1rem;
 }
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+

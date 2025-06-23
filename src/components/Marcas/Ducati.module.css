@@ -101,6 +101,7 @@
     width: 100%;
     box-sizing: border-box;
     background-attachment: fixed;
+    padding-top: 90px;
 }
 
 .flechaIzquierda,
