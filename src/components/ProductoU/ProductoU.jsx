@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
 import BotonAñadir from "../carrito/BotonAñadir";
 import styles from "./ProductoU.module.css";
+import ProductosSimilares from "./ProductosSimilares";
 
 const ProductoU = () => {
   const { id } = useParams();
@@ -10,6 +11,9 @@ const ProductoU = () => {
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
+    // Al cambiar de producto (cambiar el id), se sube al inicio de la página
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setProducto(null);
     const fetchProducto = async () => {
       try {
         console.log("ID:", id);
@@ -17,7 +21,7 @@ const ProductoU = () => {
         const response = await fetch(
           `${import.meta.env.VITE_APP_BACK}/products/${id}`
         );
-        const encontrado = await response.json(); // 🔄 Ya es un objeto, no uses .find
+        const encontrado = await response.json();
 
         if (encontrado) {
           const precioAleatorio = Math.round(Math.random() * 200);
@@ -47,7 +51,7 @@ const ProductoU = () => {
     };
 
     fetchProducto();
-  }, [id]); // ✅ Asegúrate de incluir id como dependencia
+  }, [id]); // incluye el id como dependencia
 
   {
     /*const agregarAlCarrito = () => {
@@ -207,6 +211,12 @@ const ProductoU = () => {
           </div>
         </div>
       </div>
+      {/* Productos Similares */}
+      <ProductosSimilares
+        categoria={producto.category}
+        idProductoActual={producto.id}
+        nombreBase={producto.title}
+      />
     </div>
   );
 };

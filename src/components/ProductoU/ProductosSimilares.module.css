@@ -1,0 +1,65 @@
+.similaresSection {
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  max-width: 1200px;
+  border: 1px solid #ddd;
+}
+
+.titulo {
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #222;
+}
+
+.similaresGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  width: 200px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fefefe;
+  transition: transform 0.2s ease;
+  text-align: center;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.imagenProducto {
+  width: 100%;
+  height: 150px;
+  background-color: #ddd; /* puedes cambiar por una imagen o fondo dinámico */
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.detalleProducto {
+  padding: 10px;
+}
+
+.descripcion {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.precio {
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.mensajeVacio {
+  font-style: italic;
+  color: #777;
+  text-align: center;
+}
