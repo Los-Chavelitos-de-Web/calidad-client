@@ -108,6 +108,27 @@
 }
 
 
+/*Boton de agregar Excel*/
+
+.btn-excel {
+    border-radius: 10px;
+    background-color: #328a6f;
+    border: #328a6f;
+    height: 40px;
+    margin-left: 1rem;
+}
+
+.img-excel {
+    width: 35px;
+}
+
+.btn-excel:hover {
+    .img-excel {
+        filter: brightness(0) invert(1);
+    }
+}
+
+
 /*Boton de agregar Producto*/
 
 .btn-agregr-prod {
@@ -235,7 +256,6 @@
 .action-icon {
     width: 18px;
     height: 18px;
-    opacity: 0.7;
     transition: all 0.2s ease;
 }
 

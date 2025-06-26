@@ -4,11 +4,6 @@ import AdminAside from "./template/AdminAside";
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
 
-/**
- * 
- * @returns 
- */
-
 const UserView = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);

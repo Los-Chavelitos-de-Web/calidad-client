@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import AdminAside from "./template/AdminAside";
-import './admin-css/products-view.css';
-import './admin-css/ProductsDetaills.css';
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
+import ProductDetailsModal from "./productDetailsModal";
+import DeleteConfirmationModal from "./deleteConfirmationModal";
+import { exportProductsToExcel } from "./exportToExcel";
+import './admin-css/products-view.css';
+import './admin-css/ProductsDetaills.css';
 
 const ProductosView = () => {
   const navigate = useNavigate();
@@ -17,6 +20,7 @@ const ProductosView = () => {
   const [productToDelete, setProductToDelete] = useState(null);
   const { authToken } = usePayload();
 
+  // Obtener datos de productos
   async function getData() {
     try {
       setIsLoading(true);
@@ -35,11 +39,13 @@ const ProductosView = () => {
     getData();
   }, []);
 
+  // Calcular stock total
   const getStock = (stockData) => {
     if (!stockData) return 0;
     return Object.values(stockData).reduce((sum, val) => sum + (val || 0), 0);
   };
 
+  // Filtrar productos
   useEffect(() => {
     if (!searchTerm) {
       setFilteredData(data);
@@ -48,12 +54,23 @@ const ProductosView = () => {
       const filtered = data.filter(producto => 
         producto.title.toLowerCase().includes(term) || 
         producto.brand.toLowerCase().includes(term) ||
-        producto.model.toLowerCase().includes(term)
+        producto.model.toLowerCase().includes(term) ||
+        producto.category.toLowerCase().includes(term)
       );
       setFilteredData(filtered);
     }
   }, [searchTerm, data]);
 
+  // Manejar exportación a Excel
+  const handleExport = async () => {
+    try {
+      await exportProductsToExcel(filteredData, getStock);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  // Modal handlers
   const handleOpenModal = (producto) => {
     setSelectedProduct(producto);
     setShowModal(true);
@@ -64,6 +81,7 @@ const ProductosView = () => {
     setSelectedProduct(null);
   };
 
+  // Delete handlers
   const handleDeleteClick = (producto) => {
     setProductToDelete(producto);
     setShowDeleteConfirm(true);
@@ -88,7 +106,6 @@ const ProductosView = () => {
       });
 
       if (response.ok) {
-        // Actualizar la lista de productos
         await getData();
         alert('Producto eliminado correctamente');
       } else {
@@ -102,27 +119,6 @@ const ProductosView = () => {
       setShowDeleteConfirm(false);
       setProductToDelete(null);
     }
-  };
-
-  const formatSpecKey = (key) => {
-    const words = key.replace(/([A-Z])/g, ' $1');
-    return words.charAt(0).toUpperCase() + words.slice(1);
-  };
-
-  const renderSpecValue = (value) => {
-    if (Array.isArray(value)) {
-      return (
-        <ul>
-          {value.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      );
-    }
-    if (typeof value === 'object' && value !== null) {
-      return JSON.stringify(value);
-    }
-    return value.toString();
   };
 
   return (
@@ -142,15 +138,27 @@ const ProductosView = () => {
         <div className="search-container">
           <input
             type="text"
-            placeholder="Buscar por nombre, marca o modelo..."
+            placeholder="Buscar por nombre, marca, modelo o categoría..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-          <button onClick={() => navigate('/admin/insertar')}
-            className="btn-agregr-prod">
-            Agregar Producto
-          </button>
+            <button 
+              onClick={handleExport}
+              className="btn-excel"
+              disabled={filteredData.length === 0 || isLoading}
+            >
+              <img 
+                src="/icons/img-excel.png" 
+                className="img-excel"
+              />
+            </button>
+            <button 
+              onClick={() => navigate('/admin/insertar')}
+              className="btn-agregr-prod"
+            >
+              Agregar Producto
+            </button>
         </div>
         
         <div className="table-container">
@@ -189,7 +197,7 @@ const ProductosView = () => {
                             title="Eliminar producto"
                           >
                             <img 
-                              src="../../../public/icons/delete-icon.png" 
+                              src="/icons/delete-icon.png" 
                               alt="Eliminar" 
                               className="action-icon"
                             />
@@ -200,7 +208,7 @@ const ProductosView = () => {
                             title="Ver detalles"
                           >
                             <img 
-                              src="../public/icons/tres-puntos.png" 
+                              src="/icons/tres-puntos.png" 
                               alt="Opciones" 
                               className="action-icon"
                             />
@@ -222,68 +230,20 @@ const ProductosView = () => {
         </div>
       </div>
 
-      {/* Modal de detalles */}
+      {/* Modales */}
       {showModal && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={handleCloseModal}>
-              &times;
-            </button>
-            <h2>Detalles del Producto</h2>
-            {selectedProduct && (
-              <div className="product-details">
-                <div className="basic-info">
-                  <p><strong>Nombre:</strong> {selectedProduct.title}</p>
-                  <p><strong>Marca:</strong> {selectedProduct.brand}</p>
-                  <p><strong>Modelo:</strong> {selectedProduct.model}</p>
-                  <p><strong>Categoría:</strong> {selectedProduct.category}</p>
-                  <p><strong>Stock total:</strong> {getStock(selectedProduct.stock)}</p>
-                </div>
-                <div className="specs-section">
-                  <h4>Especificaciones Técnicas</h4>
-                  {selectedProduct.specs ? (
-                    <table className="specs-table">
-                      <tbody>
-                        {Object.entries(selectedProduct.specs).map(([key, value]) => (
-                          <tr key={key}>
-                            <td className="spec-key"><strong>{formatSpecKey(key)}</strong></td>
-                            <td className="spec-value">{renderSpecValue(value)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p>No hay especificaciones disponibles</p>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        <ProductDetailsModal 
+          product={selectedProduct} 
+          onClose={handleCloseModal} 
+        />
       )}
 
-      {/* Modal de confirmación de eliminación */}
       {showDeleteConfirm && (
-        <div className="modal-overlay">
-          <div className="confirm-modal">
-            <h3>¿Estás seguro de eliminar este producto?</h3>
-            <p>Esta acción no se puede deshacer.</p>
-            <div className="confirm-buttons">
-              <button 
-                className="cancel-btn"
-                onClick={handleCancelDelete}
-              >
-                Cancelar
-              </button>
-              <button 
-                className="delete-btn"
-                onClick={handleConfirmDelete}
-              >
-                Eliminar
-              </button>
-            </div>
-          </div>
-        </div>
+        <DeleteConfirmationModal 
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+          productName={productToDelete?.title}
+        />
       )}
     </div>
   );
