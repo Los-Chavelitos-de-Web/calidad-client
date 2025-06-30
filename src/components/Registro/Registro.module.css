@@ -1,5 +1,6 @@
 .loginContainer {
     min-height: 10vh;
+    padding-top: 75px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -12,7 +13,7 @@
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     padding: 2.5rem 2rem 2rem 2rem;
-    width: 350px;
+    width: 415px;
     display: flex;
     flex-direction: column;
     align-items: center;
