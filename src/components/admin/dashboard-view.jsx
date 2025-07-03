@@ -3,7 +3,10 @@ import AdminAside from "./template/AdminAside";
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
 import DashboardChart from "./DashboardChart";
+import LowStockProducts from "./LowStockProducts";
 import './admin-css/dashboard-view.css';
+import './admin-css/low-stock-products.css';
+
 
 const DashboardView = () => {
   const navigate = useNavigate();
@@ -153,6 +156,13 @@ const DashboardView = () => {
           ventas={ventas} 
           isLoading={isLoadingVentas} 
         />
+
+        {/* Componente de productos con bajo stock */}
+        <LowStockProducts 
+          productos={productosData} 
+          isLoading={isLoadingProductos} 
+        />
+
       </div>
     </div>
   );

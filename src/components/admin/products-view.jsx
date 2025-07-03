@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
 import ProductDetailsModal from "./productDetailsModal";
 import DeleteConfirmationModal from "./deleteConfirmationModal";
+import FormularioProducto from "./controller/InsertProduct"; // Importamos el formulario
 import { exportProductsToExcel } from "./exportToExcel";
 import './admin-css/products-view.css';
 import './admin-css/ProductsDetaills.css';
@@ -15,7 +16,8 @@ const ProductosView = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showFormModal, setShowFormModal] = useState(false); // Estado para el formulario modal
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const { authToken } = usePayload();
@@ -71,14 +73,28 @@ const ProductosView = () => {
   };
 
   // Modal handlers
-  const handleOpenModal = (producto) => {
+  const handleOpenDetailsModal = (producto) => {
     setSelectedProduct(producto);
-    setShowModal(true);
+    setShowDetailsModal(true);
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const handleCloseDetailsModal = () => {
+    setShowDetailsModal(false);
     setSelectedProduct(null);
+  };
+
+  // Form modal handlers
+  const handleOpenFormModal = () => {
+    setShowFormModal(true);
+  };
+
+  const handleCloseFormModal = () => {
+    setShowFormModal(false);
+  };
+
+  const handleProductCreated = () => {
+    getData(); // Refrescar la lista después de crear
+    handleCloseFormModal();
   };
 
   // Delete handlers
@@ -143,22 +159,23 @@ const ProductosView = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-            <button 
-              onClick={handleExport}
-              className="btn-excel"
-              disabled={filteredData.length === 0 || isLoading}
-            >
-              <img 
-                src="/icons/img-excel.png" 
-                className="img-excel"
-              />
-            </button>
-            <button 
-              onClick={() => navigate('/admin/insertar')}
-              className="btn-agregr-prod"
-            >
-              Agregar Producto
-            </button>
+          <button 
+            onClick={handleExport}
+            className="btn-excel"
+            disabled={filteredData.length === 0 || isLoading}
+          >
+            <img 
+              src="/icons/img-excel.png" 
+              className="img-excel"
+              alt="Exportar a Excel"
+            />
+          </button>
+          <button 
+            onClick={handleOpenFormModal}
+            className="btn-agregr-prod"
+          >
+            Agregar Producto
+          </button>
         </div>
         
         <div className="table-container">
@@ -204,7 +221,7 @@ const ProductosView = () => {
                           </button>
                           <button 
                             className="action-btn"
-                            onClick={() => handleOpenModal(producto)}
+                            onClick={() => handleOpenDetailsModal(producto)}
                             title="Ver detalles"
                           >
                             <img 
@@ -231,10 +248,18 @@ const ProductosView = () => {
       </div>
 
       {/* Modales */}
-      {showModal && (
+      {showDetailsModal && (
         <ProductDetailsModal 
           product={selectedProduct} 
-          onClose={handleCloseModal} 
+          onClose={handleCloseDetailsModal} 
+        />
+      )}
+
+      {showFormModal && (
+        <FormularioProducto 
+          isOpen={showFormModal}
+          onClose={handleCloseFormModal}
+          onProductCreated={handleProductCreated}
         />
       )}
 
