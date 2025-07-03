@@ -209,7 +209,7 @@ const NavBar = () => {
       </div>
 
       <div className="menu-bar">
-        <span onClick={() => scrollToSection("inicio")}>PRODUCTOS</span>
+        <span onClick={() => navigate("/productos")}>PRODUCTOS</span>
         <span onClick={() => scrollToSection("ofertas")}>OFERTAS DEL DÍA</span>
         <span onClick={() => scrollToSection("nosotros")}>NOSOTROS</span>
         <span onClick={() => scrollToSection("contacto")}>CONTACTANOS</span>
