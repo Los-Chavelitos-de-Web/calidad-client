@@ -20,6 +20,9 @@ import UserView from "./components/admin/users-view";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ReservaView from './components/admin/reserva-view';
 import DashboardView from './components/admin/dashboard-view';
+import Perfil from './components/Perfil/Perfil';
+import Reservas from './components/Reservas/Reservas';
+import Compras from './components/Compras/Compras';
 
 function App() {
   return (
@@ -32,6 +35,9 @@ function App() {
         <Route path="/carrito" element={<Carrito />} />
         <Route path="/buscar" element={<Buscar />} />
         <Route path="/producto/:id" element={<ProductoU />} />
+        <Route path="/reservas" element={<Reservas />} />
+        <Route path="/compras" element={<Compras />} />
+
 
         {/* Marcas */}
         <Route path="/stihl" element={<Stihl />} />
@@ -50,6 +56,14 @@ function App() {
 
         {/*Vista Controladores*/}
         <Route path='/admin/insertar' element={<InsertProduct/>}/>
+
+        <Route path="/admin/aside" element={<AdminAside />} />
+        <Route path="/admin/aside/productos" element={<ProductosView />} />
+
+        <Route path="/perfil" element={<Perfil />} />
+
+
+
       </Routes>
     </Router>
   );
