@@ -1,0 +1,240 @@
+/* Estilos del modal */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalFadeIn 0.3s ease-out;
+    padding: 10px;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6b7280;
+    transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+    color: #111827;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+
+/* Estilos del formulario */
+
+.space-y-6>*+* {
+    margin-top: 1.5rem;
+}
+
+.form-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.grid-cols-1 {
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+    .md\:grid-cols-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.space-y-4>*+* {
+    margin-top: 1rem;
+}
+
+.block {
+    display: block;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.text-gray-700 {
+    color: #374151;
+}
+
+.mb-1 {
+    margin-bottom: 0.25rem;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.border {
+    border: 1px solid #e5e7eb;
+}
+
+.rounded-md {
+    border-radius: 0.375rem;
+}
+
+.p-2 {
+    padding: 0.5rem;
+}
+
+.border-gray-300 {
+    border-color: #d1d5db;
+}
+
+.border-red-500 {
+    border-color: #ef4444;
+}
+
+.text-red-500 {
+    color: #ef4444;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+}
+
+.mt-1 {
+    margin-top: 0.25rem;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.inset-y-0 {
+    top: 0;
+    bottom: 0;
+}
+
+.left-0 {
+    left: 0;
+}
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.pl-3 {
+    padding-left: 0.75rem;
+}
+
+.text-gray-500 {
+    color: #6b7280;
+}
+
+.pl-8 {
+    padding-left: 2rem;
+}
+
+.font-mono {
+    font-family: monospace;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.pt-4 {
+    padding-top: 1rem;
+}
+
+.px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.text-white {
+    color: white;
+}
+
+.bg-blue-600 {
+    background-color: #2563eb;
+}
+
+.bg-blue-400 {
+    background-color: #60a5fa;
+}
+
+.hover\:bg-blue-700:hover {
+    background-color: #1d4ed8;
+}
+
+
+/* Textarea styles */
+
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+
+/* Botón cancelar */
+
+.hover\:bg-gray-50:hover {
+    background-color: #f9fafb;
+}
