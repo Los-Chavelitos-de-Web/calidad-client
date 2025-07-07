@@ -1,0 +1,116 @@
+.compras-container {
+  padding-top: 140px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.compras-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.compras-content h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.compras-content input {
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.compra-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  transition: box-shadow 0.3s;
+}
+
+.compra-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.compra-detalle {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.compra-img {
+  width: 70px;
+  height: 70px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+}
+
+.compra-info {
+  flex: 1;
+}
+
+.compra-info h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.compra-info p {
+  margin: 0.25rem 0;
+  color: #555;
+}
+
+.estado-confirmada {
+  color: green;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.compra-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.compra-actions p {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.btn-ver,
+.btn-repetir {
+  padding: 0.4rem 0.8rem;
+  margin-top: 0.4rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-ver {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-ver:hover {
+  background-color: #0056b3;
+}
+
+.btn-repetir {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-repetir:hover {
+  background-color: #1e7e34;
+}
