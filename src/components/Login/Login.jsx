@@ -28,7 +28,7 @@ const Login = () => {
     const { name, value } = e.target;
 
     if (name === 'email' && value.length > 254) return;
-    if (name === 'password' && value.length > 8) return;
+    if (name === 'password' && value.length > 20) return;
 
     setForm({ ...form, [name]: value });
   };
@@ -47,6 +47,9 @@ const Login = () => {
 
       if (response.ok && data.token) {
         Cookies.set('authToken', data.token, { expires: 1 });
+        Cookies.set('userName', data.user?.nombre || 'Usuario');
+        Cookies.set('userEmail', data.user?.email || form.email);
+
         navigate('/');
       } else {
         setMensaje(data.message || '❌ Usuario o contraseña incorrectos');
@@ -88,7 +91,7 @@ const Login = () => {
               value={form.password}
               onChange={handleChange}
               autoComplete="current-password"
-              maxLength={8}
+              maxLength={20}
               required
             />
             <button type="submit" className={styles.loginBtn}>
