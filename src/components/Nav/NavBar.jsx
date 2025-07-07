@@ -174,11 +174,11 @@ const NavBar = () => {
                       </div>
                     </div>
                     <div className="usuario-opciones">
-                      <button onClick={() => navigate("/compras")}>
-                        Mis compras
-                      </button>
                       <button onClick={() => navigate("/reservas")}>
                         Mis reservas
+                      </button>
+                      <button onClick={() => navigate("/compras")}>
+                        Mis compras
                       </button>
                       <button onClick={cerrarSesion}>Cerrar sesión</button>
                     </div>
