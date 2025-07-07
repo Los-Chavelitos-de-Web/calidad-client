@@ -69,6 +69,14 @@ const Reservas = () => {
   return (
     <div className="reservas-container">
       <NavBar />
+      <aside className="sidebar">
+        <h2>Mi cuenta</h2>
+        <ul>
+          <li><a href="/perfil">🧍Perfil</a></li>
+          <li><a href="/reservas">🏷️ Mis reservas</a></li>
+          <li><a href="/compras">🛒 Mis compras</a></li>
+        </ul>
+      </aside>
       <div className="reservas-content">
         <h1>Mis Reservas</h1>
 
