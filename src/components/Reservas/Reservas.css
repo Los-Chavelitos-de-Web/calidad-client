@@ -1,0 +1,96 @@
+.reservas-container {
+  padding-top: 140px;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+}
+
+.reservas-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.filtros {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.filtros input,
+.filtros select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 250px;
+}
+
+.reserva-card {
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.reserva-fecha {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.reserva-detalle {
+  display: flex;
+  gap: 20px;
+}
+
+.reserva-img img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.img-placeholder {
+  width: 80px;
+  height: 80px;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.reserva-info {
+  flex-grow: 1;
+}
+
+.estado-confirmada {
+  color: green;
+  font-weight: bold;
+}
+
+.producto, .color {
+  margin: 4px 0;
+}
+
+.reserva-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.reserva-actions .btn-ver,
+.reserva-actions .btn-repetir {
+  background-color: #3483fa;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  margin-top: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reserva-actions .btn-repetir {
+  background-color: #dbe7ff;
+  color: #333;
+}
