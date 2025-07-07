@@ -1,0 +1,84 @@
+.perfil-container {
+  display: flex;
+  font-family: 'Arial', sans-serif;
+  background: #f2f2f2;
+  height: 100vh;
+  padding-top: 130px;
+}
+
+.sidebar {
+  width: 250px;
+  background: #eeeeee;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.perfil-main {
+  flex: 1;
+  padding: 30px;
+}
+
+.perfil-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.perfil-avatar {
+  background-color: #ccc;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  font-size: 28px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.perfil-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.perfil-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: 0.2s;
+}
+
+.perfil-card-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.perfil-card.ok {
+  border-left: 5px solid green;
+}
+
+.perfil-card.alerta {
+  border-left: 5px solid orange;
+}
+
+.perfil-card.disabled {
+  opacity: 0.6;
+  background-color: #e5e5e5;
+}
