@@ -28,7 +28,7 @@ const Compras = () => {
           return;
         }
 
-        const decoded = jwt_decode(token);
+        const decoded = jwtDecode(token);
         const userId = decoded.id;
 
         const response = await fetch(`http://localhost:3000/api/v1/reservas/items/${userId}`);
@@ -56,6 +56,14 @@ const Compras = () => {
   return (
     <div className="compras-container">
       <NavBar />
+      <aside className="sidebar">
+        <h2>Mi cuenta</h2>
+        <ul>
+          <li><a href="/perfil">🧍Perfil</a></li>
+          <li><a href="/reservas">🏷️ Mis reservas</a></li>
+          <li><a href="/compras">🛒 Mis compras</a></li>
+        </ul>
+      </aside>
       <div className="compras-content">
         <h1>Compras</h1>
 
