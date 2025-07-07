@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import AdminAside from "./template/AdminAside";
-import "./admin-css/admin.css";
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
+import * as XLSX from 'xlsx'; // Importar la librería para exportar a Excel
 
 const UserView = () => {
   const navigate = useNavigate();
@@ -10,6 +10,7 @@ const UserView = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
   const { authToken, error, loading } = usePayload();
 
   useEffect(() => {
@@ -58,6 +59,40 @@ const UserView = () => {
       setIsLoading(false);
     }
   }
+
+  // Función para filtrar usuarios por nombre o email
+  const filteredUsers = users.filter(user => {
+    if (!searchTerm) return true;
+    
+    const searchLower = searchTerm.toLowerCase();
+    const nameMatch = user.profile?.name?.toLowerCase().includes(searchLower) || false;
+    const emailMatch = user.email.toLowerCase().includes(searchLower);
+    
+    return nameMatch || emailMatch;
+  });
+
+  // Función para exportar a Excel
+  const exportToExcel = () => {
+    // Preparar los datos para exportar
+    const dataToExport = filteredUsers.map(user => ({
+      ID: user.id,
+      Nombre: user.profile?.name || "No especificado",
+      Email: user.email,
+      Rol: user.role,
+      Estado: user.isActive ? "Activo" : "Inactivo",
+      'Fecha Registro': new Date(user.createdAt).toLocaleDateString(),
+      'Teléfono': user.profile?.phone || "N/A",
+      'Dirección': user.profile?.address || "N/A"
+    }));
+
+    // Crear hoja de trabajo
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    // Crear libro de trabajo
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
+    // Exportar el archivo
+    XLSX.writeFile(wb, "usuarios.xlsx");
+  };
 
   const handleOpenModal = (user) => {
     setSelectedUser(user);
@@ -122,7 +157,28 @@ const UserView = () => {
         <div className="productos-content">
           <div className="productos-header">
             <h1>Usuarios</h1>
-            <span className="product-count">{users.length} usuarios</span>
+            <span className="product-count">{filteredUsers.length} usuarios</span>
+          </div>
+
+          {/* Barra de búsqueda y botón de exportación */}
+          <div className="search-export-container" >
+            <div className="search-container" style={{ position: 'relative' }}>
+              <input
+                type="text"
+                placeholder="Buscar por nombre o email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+              <button 
+              onClick={exportToExcel}
+              className="btn-excel">
+              <img 
+                src="/icons/img-excel.png" 
+                className="img-excel"
+              />
+            </button>
+            </div>
           </div>
         </div>
 
@@ -138,13 +194,13 @@ const UserView = () => {
                   <th className="column-brand">Email</th>
                   <th className="column-model">Fecha Registro</th>
                   <th className="column-category">Rol</th>
-                  <th className="column-stock">Estado</th>
+                  <th className="cell-category">Estado</th>
                   <th className="cell-actions">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {users.length > 0 ? (
-                  users.map((user) => (
+                {filteredUsers.length > 0 ? (
+                  filteredUsers.map((user) => (
                     <tr key={user.id}>
                       <td className="cell-name">{user.id}</td>
                       <td className="cell-id">
@@ -177,7 +233,9 @@ const UserView = () => {
                   ))
                 ) : (
                   <tr className="no-results">
-                    <td colSpan="7">No hay usuarios registrados</td>
+                    <td colSpan="7">
+                      {searchTerm ? "No hay usuarios que coincidan con la búsqueda" : "No hay usuarios registrados"}
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -227,6 +285,18 @@ const UserView = () => {
                 <span className="detail-label">Fecha de creación:</span>
                 <span className="detail-value">{formatDate(selectedUser.createdAt)}</span>
               </div>
+              {selectedUser.profile?.phone && (
+                <div className="user-detail-row">
+                  <span className="detail-label">Teléfono:</span>
+                  <span className="detail-value">{selectedUser.profile.phone}</span>
+                </div>
+              )}
+              {selectedUser.profile?.address && (
+                <div className="user-detail-row">
+                  <span className="detail-label">Dirección:</span>
+                  <span className="detail-value">{selectedUser.profile.address}</span>
+                </div>
+              )}
             </div>
             <div className="modal-footer">
               <button 

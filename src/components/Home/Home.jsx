@@ -1,25 +1,18 @@
+// Home.jsx
 import React from 'react';
 import styles from './Home.module.css';
 import NavBar from '../Nav/NavBar';
-import Slider from "react-slick";
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import {ProductosSlider} from "../ProductoSlider/ProductoSlider"
+import { ProductosSlider } from "../ProductoSlider/ProductoSlider";
 import Footer from '../Footer/Footer';
 import Ubicaciones from '../MapsSecttion/Ubicaciones';
 import Avisos from '../Avisos/Avisos';
 import SPrincipal from '../SPrincipal/SPrincipal';
 import UltimoVideo from '../YSecttion/YSecction';
 
-
-// Imágenes del slider
-const sliderImages = [
-  "/img/banner001.jpg",
-  // Puedes agregar más: "/img/banner002.jpg", etc.
-];
-
-// Botones de marcas
 const brandButtons = [
+  { name: "STIHL", img: "/img/stihl.png", route: "/stihl" },
   { name: "HONDA", img: "/img/Honda.jpg", route: "/honda" },
   { name: "RATO", img: "/img/rato.jpg", route: "/rato" },
   { name: "BONHOEFFER", img: "/img/bonhoeffer.jpg", route: "/bonhoeffer" },
@@ -27,7 +20,6 @@ const brandButtons = [
   { name: "DUCATI", img: "/img/ducati.jpg", route: "/ducati" },
 ];
 
-// Flechas personalizadas para el slider
 const CustomPrevArrow = ({ onClick }) => (
   <div className={`${styles.customArrow} ${styles.customPrev}`} onClick={onClick}>
     <FaArrowLeft size={20} color="#fff" />
@@ -41,31 +33,16 @@ const CustomNextArrow = ({ onClick }) => (
 );
 
 const Home = () => {
-  const navigate = useNavigate(); 
-
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,          
-    slidesToScroll: 1,
-    arrows: true,
-    autoplay: true,
-    autoplaySpeed: 4000,
-    prevArrow: <CustomPrevArrow />,
-    nextArrow: <CustomNextArrow />
-  };
+  const navigate = useNavigate();
 
   return (
     <div className={styles.homeBg}>
       <NavBar />
 
-      {/* Slider principal */}
-      <div className={styles.sliderContainer}>
-        <SPrincipal></SPrincipal>
+      <div id="inicio" className={styles.sliderContainer}>
+        <SPrincipal />
       </div>
 
-      {/* Botones de marcas */}
       <div className={styles.brandButtons}>
         {brandButtons.map((brand) => (
           <button
@@ -78,20 +55,25 @@ const Home = () => {
           </button>
         ))}
       </div>
-      <div>
-        <ProductosSlider/>
+
+      <div id="ofertas">
+        <ProductosSlider />
       </div>
-      <div>
-        <UltimoVideo/>
+
+      <div id="nosotros">
+        <UltimoVideo />
       </div>
-      <div>
-        <Ubicaciones/>
+
+      <div id="contacto">
+        <Ubicaciones />
       </div>
+
       <div>
-        <Avisos/>
+        <Avisos />
       </div>
+
       <div>
-        <Footer/>
+        <Footer />
       </div>
     </div>
   );

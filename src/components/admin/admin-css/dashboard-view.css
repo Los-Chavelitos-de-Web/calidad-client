@@ -1,0 +1,77 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.dashboard-aside {
+    width: 240px;
+    background-color: #1f2937;
+    color: white;
+    padding: 20px 0;
+}
+
+.dashboard-main {
+    flex: 1;
+    background-color: #f4f6f8;
+    padding: 40px;
+}
+
+.dashboard-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.cards-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.dashboard-card0 {
+    background-color: #0C5FFA;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    width: 260px;
+    transition: transform 0.2s ease;
+}
+
+.dashboard-card1 {
+    background-color: #0C5FFA;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    width: 260px;
+    transition: transform 0.2s ease;
+}
+
+.dashboard-card2 {
+    background-color: #39AFEA;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    width: 260px;
+    transition: transform 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+}
+
+.cards-container h2 {
+    font-size: 30px;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.card-count {
+    font-size: 36px;
+    color: #ffffff;
+    font-weight: bold;
+}

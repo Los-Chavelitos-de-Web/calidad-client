@@ -1,0 +1,142 @@
+.productosStihl {
+    margin: 120px auto 0 auto;
+    background-color: white;
+    padding: 20px 30px;
+    max-width: 1300px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden;
+}
+
+.productosHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #092818;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px 10px 0 0;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.iconoFiltro {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.productosGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8rem;
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 1rem;
+  padding-right: 10px;
+  box-sizing: border-box;
+}
+
+.productoCard {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  max-width: 220px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.imagenProducto {
+    height: 150px;
+    background-color: #eee;
+    border-bottom: 1px solid #ccc;
+}
+
+.detalleProducto {
+    padding: 10px;
+    text-align: center;
+}
+
+.descripcion {
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.precio {
+    color: #d11e1e;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.botonMostrarMasContainer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.botonMostrarMas {
+  background-color: #e60000;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.botonMostrarMas:hover {
+  background-color: #cc0000;
+}
+
+
+.fondoStihl {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    background-attachment: fixed;
+    padding-top: 90px;
+}
+
+.flechaIzquierda,
+.flechaDerecha {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #ffffffcc;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    z-index: 10;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.flechaIzquierda:hover,
+.flechaDerecha:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.flechaIzquierda {
+    left: 1rem;
+}
+
+.flechaDerecha {
+    right: 1rem;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+

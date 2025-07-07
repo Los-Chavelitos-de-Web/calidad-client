@@ -1,9 +1,8 @@
 // NavBar.jsx
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
-import { usePayload } from "../../utils/authHelpers"; // Asegúrate del path
-
+import { usePayload } from "../../utils/authHelpers";
 import "./NavBar.css";
 
 function getInitials(name = "") {
@@ -16,6 +15,7 @@ function getInitials(name = "") {
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [cantidadCarrito, setCantidadCarrito] = useState(0);
   const [busqueda, setBusqueda] = useState("");
   const [historial, setHistorial] = useState([]);
@@ -39,11 +39,13 @@ const NavBar = () => {
 
     actualizarCantidad();
     window.addEventListener("carritoActualizado", actualizarCantidad);
-    return () => window.removeEventListener("carritoActualizado", actualizarCantidad);
+    return () =>
+      window.removeEventListener("carritoActualizado", actualizarCantidad);
   }, []);
 
   useEffect(() => {
-    const historialGuardado = JSON.parse(localStorage.getItem("historialBusqueda")) || [];
+    const historialGuardado =
+      JSON.parse(localStorage.getItem("historialBusqueda")) || [];
     setHistorial(historialGuardado);
   }, []);
 
@@ -52,7 +54,10 @@ const NavBar = () => {
       if (inputRef.current && !inputRef.current.contains(e.target)) {
         setMostrarHistorial(false);
       }
-      if (menuUsuarioRef.current && !menuUsuarioRef.current.contains(e.target)) {
+      if (
+        menuUsuarioRef.current &&
+        !menuUsuarioRef.current.contains(e.target)
+      ) {
         setMostrarMenuUsuario(false);
       }
     };
@@ -63,20 +68,39 @@ const NavBar = () => {
   }, []);
 
   const manejarBusqueda = (valorBusqueda) => {
-  const termino = valorBusqueda?.trim() || busqueda.trim();
-  if (termino !== "") {
-    const historialActualizado = [termino, ...historial.filter((item) => item !== termino)].slice(0, 5);
-    localStorage.setItem("historialBusqueda", JSON.stringify(historialActualizado));
-    setHistorial(historialActualizado);
-    navigate(`/buscar?query=${encodeURIComponent(termino)}`);
-    setBusqueda("");
-    setMostrarHistorial(false);
-  }
-};
+    const termino = valorBusqueda?.trim() || busqueda.trim();
+    if (termino !== "") {
+      const historialActualizado = [
+        termino,
+        ...historial.filter((item) => item !== termino),
+      ].slice(0, 5);
+      localStorage.setItem(
+        "historialBusqueda",
+        JSON.stringify(historialActualizado)
+      );
+      setHistorial(historialActualizado);
+      navigate(`/buscar?query=${encodeURIComponent(termino)}`);
+      setBusqueda("");
+      setMostrarHistorial(false);
+    }
+  };
 
   const cerrarSesion = () => {
     Cookies.remove("authToken");
     navigate("/login");
+  };
+
+  const scrollToSection = (id) => {
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const section = document.getElementById(id);
+        if (section) section.scrollIntoView({ behavior: "smooth" });
+      }, 500);
+    } else {
+      const section = document.getElementById(id);
+      if (section) section.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -89,7 +113,9 @@ const NavBar = () => {
         </div>
 
         <div className="search-bar" ref={inputRef}>
-          <select><option>Todo</option></select>
+          <select>
+            <option>Todo</option>
+          </select>
           <input
             type="text"
             placeholder="Buscar ..."
@@ -97,12 +123,19 @@ const NavBar = () => {
             onChange={(e) => setBusqueda(e.target.value)}
             onFocus={() => setMostrarHistorial(true)}
             onKeyDown={(e) => e.key === "Enter" && manejarBusqueda()}
+            maxLength={80}
           />
-          <button onClick={manejarBusqueda}><img src="/img/lupa.png" alt="Buscar" /></button>
+          <button onClick={manejarBusqueda}>
+            <img src="/img/lupa.png" alt="Buscar" />
+          </button>
           {mostrarHistorial && historial.length > 0 && (
             <div className="historial-dropdown">
               {historial.map((item, index) => (
-                <div key={index} className="item-historial" onClick={() => manejarBusqueda(item)}>
+                <div
+                  key={index}
+                  className="item-historial"
+                  onClick={() => manejarBusqueda(item)}
+                >
                   🕒 {item}
                 </div>
               ))}
@@ -114,30 +147,49 @@ const NavBar = () => {
           <div>
             {!loading && !error && username ? (
               <div className="usuario-logueado" ref={menuUsuarioRef}>
-                <button onClick={() => setMostrarMenuUsuario(prev => !prev)} className="usuario-nombre">
-                  <span className="avatar-usuario">{getInitials(username)}</span> -   
-                   <span className="nombre-usuario">{username}</span> <img src="/icons/logueo.png" alt="Usuario" />
+                <button
+                  onClick={() => setMostrarMenuUsuario((prev) => !prev)}
+                  className="usuario-nombre"
+                >
+                  <span className="avatar-usuario">
+                    {getInitials(username)}
+                  </span>{" "}
+                  -<span className="nombre-usuario">{username}</span>{" "}
+                  <img src="/icons/logueo.png" alt="Usuario" />
                 </button>
                 {mostrarMenuUsuario && (
                   <div className="usuario-menu">
                     <div className="usuario-header">
-                      <span className="avatar-usuario-grande">{getInitials(username)}</span>
+                      <span className="avatar-usuario-grande">
+                        {getInitials(username)}
+                      </span>
                       <div>
                         <strong>{username}</strong>
-                        <div className="mi-perfil" onClick={() => navigate("/perfil")}>Mi perfil &gt;</div>
+                        <div
+                          className="mi-perfil"
+                          onClick={() => navigate("/perfil")}
+                        >
+                          Mi perfil &gt;
+                        </div>
                       </div>
                     </div>
                     <div className="usuario-opciones">
-                      
-                      <button onClick={() => navigate("/compras")}>Mis compras</button>
-                      <button onClick={() => navigate("/reservas")}>Mis reservas</button>
+                      <button onClick={() => navigate("/reservas")}>
+                        Mis reservas
+                      </button>
+                      <button onClick={() => navigate("/compras")}>
+                        Mis compras
+                      </button>
                       <button onClick={cerrarSesion}>Cerrar sesión</button>
                     </div>
                   </div>
                 )}
               </div>
             ) : (
-              <button onClick={() => navigate("/login")} className="usuario-invitado">
+              <button
+                onClick={() => navigate("/login")}
+                className="usuario-invitado"
+              >
                 <img src="/img/usuario.png" alt="" /> ¡Bienvenido!
                 <br />
                 <small>Identifícate / Regístrate</small>
@@ -148,18 +200,19 @@ const NavBar = () => {
           <div className="cart">
             <button onClick={() => navigate("/Carrito")}>
               <img src="/img/carrito.png" alt="Carrito" />
-              {cantidadCarrito > 0 && <span className="carrito-contador">{cantidadCarrito}</span>}
+              {cantidadCarrito > 0 && (
+                <span className="carrito-contador">{cantidadCarrito}</span>
+              )}
             </button>
           </div>
         </div>
       </div>
 
       <div className="menu-bar">
-        <span>☰</span>
-        <span>OFERTAS DEL DÍA</span>
-        <span>PRODUCTOS</span>
-        <span>NOSOTROS</span>
-        <span>CONTACTANOS</span>
+        <span onClick={() => navigate("/productos")}>PRODUCTOS</span>
+        <span onClick={() => scrollToSection("ofertas")}>OFERTAS DEL DÍA</span>
+        <span onClick={() => scrollToSection("nosotros")}>NOSOTROS</span>
+        <span onClick={() => scrollToSection("contacto")}>CONTACTANOS</span>
       </div>
     </div>
   );

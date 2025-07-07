@@ -1,0 +1,159 @@
+.compras-container {
+  display: flex;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9fafb;
+  min-height: 100vh;
+  padding-top: 130px;
+  color: #1f2937;
+}
+
+.sidebar {
+  width: 260px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding: 24px;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.03);
+}
+
+.sidebar h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #111827;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 16px;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: #374151;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.sidebar a:hover {
+  color: #1d4ed8;
+}
+
+.compras-content {
+  flex: 1;
+  padding: 40px;
+  background-color: #f3f4f6;
+}
+
+.compras-content h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e3a8a;
+  margin-bottom: 24px;
+}
+
+.filtros {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.filtros input,
+.filtros select {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  color: #111827;
+}
+
+.compra-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.compra-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.reserva-fecha {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.compra-detalle {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.compra-img .img-placeholder {
+  font-size: 36px;
+  background: #fef9c3;
+  color: #ca8a04;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.compra-info {
+  flex: 1;
+}
+
+.estado-confirmada {
+  background: #dcfce7;
+  color: #16a34a;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.compra-info h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.compra-info p {
+  margin: 4px 0;
+  color: #374151;
+}
+
+.compra-actions {
+  text-align: right;
+}
+
+.compra-actions p {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.btn-ver,
+.btn-repetir {
+  margin: 4px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-ver:hover,
+.btn-repetir:hover {
+  background-color: #2563eb;
+}

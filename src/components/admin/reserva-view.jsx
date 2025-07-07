@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import AdminAside from "./template/AdminAside";
-import './admin-css/admin.css';
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
+import * as XLSX from 'xlsx'; // Importar la librería para exportar a Excel
 
 const ReservaView = () => {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ const ReservaView = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedReserva, setSelectedReserva] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
   const { authToken, email, userId, username, role, error, loading } = usePayload();
 
   useEffect(() => {
@@ -73,8 +74,43 @@ const ReservaView = () => {
     }
   }
 
+  // Función para filtrar reservas por nombre de cliente
+  const filteredReservas = reservas.filter(reserva => {
+    if (!searchTerm) return true;
+    
+    const user = users.find(u => u.id === reserva.userId);
+    const userName = user?.profile?.name || "";
+    
+    return userName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  // Función para exportar a Excel
+  const exportToExcel = () => {
+    // Preparar los datos para exportar
+    const dataToExport = filteredReservas.map(reserva => {
+      const user = users.find(u => u.id === reserva.userId);
+      return {
+        ID: reserva.id,
+        Cliente: user?.profile?.name || "Cliente " + reserva.userId,
+        Fecha: new Date(reserva.createdAt).toLocaleDateString(),
+        Total: `$${reserva.total?.toFixed(2)}`,
+        Estado: reserva.status || "N/A",
+        Email: user?.email || "N/A",
+        'Fecha Creación': new Date(reserva.createdAt).toLocaleString(),
+        'Última Actualización': new Date(reserva.updatedAt).toLocaleString()
+      };
+    });
+
+    // Crear hoja de trabajo
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    // Crear libro de trabajo
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Reservas");
+    // Exportar el archivo
+    XLSX.writeFile(wb, "reservas.xlsx");
+  };
+
   const handleOpenModal = (reserva) => {
-    // Buscar el usuario correspondiente a la reserva
     const user = users.find(u => u.id === reserva.userId);
     setSelectedReserva({
       ...reserva,
@@ -103,7 +139,28 @@ const ReservaView = () => {
         <div className="productos-content">
           <div className="productos-header">
             <h1>Reservas</h1>  
-            <span className="product-count">{reservas.length} Reservas</span>
+            <span className="product-count">{filteredReservas.length} Reservas</span>
+          </div>
+          
+          {/* Barra de búsqueda y botón de exportación */}
+          <div className="search-export-container">
+            <div className="search-container" style={{ position: 'relative' }}>
+              <input
+                type="text"
+                placeholder="Buscar por nombre de cliente..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+              <button 
+              onClick={exportToExcel}
+              className="btn-excel">
+              <img 
+                src="/icons/img-excel.png" 
+                className="img-excel"
+              />
+            </button>
+            </div>
           </div>
         </div>
         
@@ -114,18 +171,17 @@ const ReservaView = () => {
             <table className="products-table">
               <thead>
                 <tr>
-                  <th className="column-id">Código</th>
+                  <th className="column-id">ID</th>
                   <th className="column-brand">Cliente</th>
                   <th className="column-model">Fecha</th>
                   <th className="column-category">Total</th>
-                  <th className="column-stock">Estado</th>
+                  <th className="cell-category">Estado</th>
                   <th className="cell-actions"></th>
                 </tr>
               </thead>
               <tbody>
-                {reservas.length > 0 ? (
-                  reservas.map((reserva) => {
-                    // Buscar el usuario correspondiente para mostrar su nombre en la tabla
+                {filteredReservas.length > 0 ? (
+                  filteredReservas.map((reserva) => {
                     const user = users.find(u => u.id === reserva.userId);
                     return (
                       <tr key={reserva.id}>
@@ -155,7 +211,9 @@ const ReservaView = () => {
                   })
                 ) : (
                   <tr className="no-results">
-                    <td colSpan="6">No hay reservas</td> 
+                    <td colSpan="6">
+                      {searchTerm ? "No hay reservas que coincidan con la búsqueda" : "No hay reservas"}
+                    </td> 
                   </tr>
                 )}
               </tbody>

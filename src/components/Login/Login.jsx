@@ -1,9 +1,23 @@
-// Login.jsx
 import React, { useState } from 'react';
 import styles from './Login.module.css';
 import NavBar from '../Nav/NavBar';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+
+const ModalError = ({ mensaje, onClose }) => {
+  if (!mensaje) return null;
+
+  return (
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <p className={styles.modalText}>{mensaje}</p>
+        <button onClick={onClose} className={styles.modalButton}>
+          Cerrar
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,7 +25,12 @@ const Login = () => {
   const [mensaje, setMensaje] = useState('');
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === 'email' && value.length > 254) return;
+    if (name === 'password' && value.length > 20) return;
+
+    setForm({ ...form, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -27,7 +46,10 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok && data.token) {
-        Cookies.set('authToken', data.token, { expires: 1 }); // 1 día
+        Cookies.set('authToken', data.token, { expires: 1 });
+        Cookies.set('userName', data.user?.nombre || 'Usuario');
+        Cookies.set('userEmail', data.user?.email || form.email);
+
         navigate('/');
       } else {
         setMensaje(data.message || '❌ Usuario o contraseña incorrectos');
@@ -58,6 +80,7 @@ const Login = () => {
               value={form.email}
               onChange={handleChange}
               autoComplete="username"
+              maxLength={254}
               required
             />
             <input
@@ -68,9 +91,9 @@ const Login = () => {
               value={form.password}
               onChange={handleChange}
               autoComplete="current-password"
+              maxLength={20}
               required
             />
-            {mensaje && <p className={styles.error}>{mensaje}</p>}
             <button type="submit" className={styles.loginBtn}>
               Iniciar sesión
             </button>
@@ -83,6 +106,8 @@ const Login = () => {
           </a>
         </div>
       </div>
+
+      {mensaje && <ModalError mensaje={mensaje} onClose={() => setMensaje('')} />}
     </div>
   );
 };

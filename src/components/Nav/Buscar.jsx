@@ -39,8 +39,11 @@ const Buscar = () => {
 
   // Filtrar productos por texto y ordenar según selección
   const filtrarYOrdenar = (productos, texto, ordenSeleccionado) => {
-    let filtrados = productos.filter((producto) =>
-      producto.title.toLowerCase().includes(texto.toLowerCase())
+    const textoMin = texto.toLowerCase();
+    let filtrados = productos.filter(
+      (producto) =>
+        producto.title.toLowerCase().includes(textoMin) ||
+        (producto.brand && producto.brand.toLowerCase().includes(textoMin))
     );
 
     if (ordenSeleccionado === "menor") {

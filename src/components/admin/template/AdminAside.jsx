@@ -13,7 +13,9 @@ const AdminAside = () => {
         <h2 className="fs-4 fw-bold mb-4">Admin</h2>
         <ul className="nav flex-column">
           <li className="nav-item">
-            <a href="#" className="nav-link aside-link">
+            <a
+            onClick={() => navigate('/admin/dash')} 
+            className="nav-link aside-link">
               <i className="bi bi-speedometer2 me-2"></i> Dashboard
             </a>
           </li>

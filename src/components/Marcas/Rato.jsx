@@ -2,21 +2,29 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Nav/NavBar";
 import styles from "./Rato.module.css";
+import BotonAñadir from "../carrito/BotonAñadir";
 import fondoRato from "../../assets/Fondos_Marcas/Rato.png";
 
 const Rato = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]);  // Estado para almacenar los productos filtrados por marca
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Función para obtener los productos de la API
   const fetchData = async () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_APP_BACK}/products/getAll`
       );
       const result = await response.json();
-      const filteredData = result.filter((product) => product.brand === "Rato");
+      // Filtrarlos por marca "Rato"
+      const filteredData = result
+        .filter((product) => product.brand === "Rato")
+        .map((product) => ({
+          ...product,
+          unit_price: product.unit_price ?? Math.round(Math.random() * 200),
+        }));
       //console.log(filteredData);
       setData(filteredData);
       setLoading(false);
@@ -26,7 +34,7 @@ const Rato = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(); // Llama a la función para obtener productos
   }, []);
 
   return (
@@ -70,48 +78,11 @@ const Rato = () => {
                   <div className={styles.imagenProducto}></div>
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
-                    <p className={styles.precio}>
-                      S/. {Math.round(Math.random() * 200)}
-                    </p>
+                    <p className={styles.precio}>S/. {producto.unit_price}</p>
 
-                    <button
-                      className={styles.botonOpcion}
-                      onClick={(e) => {
-                        e.stopPropagation(); // <-- evitar que haga navigate
-                        const carritoActual =
-                          JSON.parse(localStorage.getItem("carrito")) || [];
+                    {/* Botón para añadir al carrito */}
+                    <BotonAñadir producto={producto} />
 
-                        const productoExistente = carritoActual.find(
-                          (item) => item.id === producto.id
-                        );
-
-                        if (productoExistente) {
-                          const carritoActualizado = carritoActual.map((item) =>
-                            item.id === producto.id
-                              ? { ...item, cantidad: (item.cantidad || 1) + 1 }
-                              : item
-                          );
-                          localStorage.setItem(
-                            "carrito",
-                            JSON.stringify(carritoActualizado)
-                          );
-                        } else {
-                          const productoAgregado = {
-                            ...producto,
-                            precio: Math.round(Math.random() * 200),
-                            cantidad: 1,
-                          };
-                          localStorage.setItem(
-                            "carrito",
-                            JSON.stringify([...carritoActual, productoAgregado])
-                          );
-                        }
-
-                        window.dispatchEvent(new Event("carritoActualizado"));
-                      }}
-                    >
-                      Reservar
-                    </button>
                   </div>
                 </div>
               ))
