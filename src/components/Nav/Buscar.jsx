@@ -101,6 +101,7 @@ const Buscar = () => {
               <div className={styles.infoContenedor}>
                 <p className={styles.nombreProducto}>{producto.title}</p>
                 <p className={styles.precioProducto}>S/ {producto.precio}</p>
+                <p className={styles.marcaProducto}>Marca: {producto.brand}</p> {/* Mostrar marca */}
               </div>
             </div>
           ))
