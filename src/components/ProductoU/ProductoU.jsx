@@ -10,17 +10,24 @@ const ProductoU = () => {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
   const [showToast, setShowToast] = useState(false);
+
   const [promedioCalificacion, setPromedioCalificacion] = useState(0);
   const [cantidadCalificaciones, setCantidadCalificaciones] = useState(0);
 
+  // estado para forzar actualización
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  //Función que se llama al calificar un producto
+  const handleRefresh = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
   useEffect(() => {
-    // Al cambiar de producto (cambiar el id), se sube al inicio de la página
+    // Al cambiar de producto, se vuelve al inicio
     window.scrollTo({ top: 0, behavior: "smooth" });
     setProducto(null);
     const fetchProducto = async () => {
       try {
-        console.log("ID:", id);
-
         const response = await fetch(
           `${import.meta.env.VITE_APP_BACK}/products/${id}`
         );
@@ -28,7 +35,6 @@ const ProductoU = () => {
 
         if (encontrado) {
           const precioAleatorio = Math.round(Math.random() * 200);
-
           const stockTotal =
             typeof encontrado.stock === "object"
               ? Object.values(encontrado.stock).reduce((a, b) => a + b, 0)
@@ -54,8 +60,9 @@ const ProductoU = () => {
     };
 
     fetchProducto();
-  }, [id]); // incluye el id como dependencia
+  }, [id]);
 
+  // Actualiza promedio y cantidad de calificaciones si hay cambio
   useEffect(() => {
     if (!id) return;
 
@@ -80,28 +87,7 @@ const ProductoU = () => {
       setPromedioCalificacion(0);
       setCantidadCalificaciones(0);
     }
-  }, [producto]);
-
-  {
-    /*const agregarAlCarrito = () => {
-    const carritoGuardado = JSON.parse(localStorage.getItem("carrito")) || [];
-    const indexProducto = carritoGuardado.findIndex(
-      (p) => p.id === producto.id
-    );
-
-    if (indexProducto !== -1) {
-      carritoGuardado[indexProducto].quantity =
-        (carritoGuardado[indexProducto].quantity || 1) + 1;
-    } else {
-      carritoGuardado.push({ ...producto, quantity: 1 });
-    }
-
-    localStorage.setItem("carrito", JSON.stringify(carritoGuardado));
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
-    window.dispatchEvent(new Event("carritoActualizado"));
-  };  */
-  }
+  }, [producto, refreshTrigger]); // se actualiza cuando alguien califica
 
   if (!producto) {
     return <h2 className={styles.cargando}>Cargando producto...</h2>;
@@ -120,6 +106,7 @@ const ProductoU = () => {
               <tr>
                 <td className={styles.productName} colSpan={2}>
                   {producto.title}
+                  {/*  Calificaciones visuales */}
                   <div className={styles.estrellas}>
                     {[...Array(5)].map((_, index) => (
                       <span
@@ -142,48 +129,32 @@ const ProductoU = () => {
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>Precio:</strong>
-                </td>
+                <td><strong>Precio:</strong></td>
                 <td>S/ {producto.unit_price}</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Marca:</strong>
-                </td>
+                <td><strong>Marca:</strong></td>
                 <td>{producto.brand}</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Stock:</strong>
-                </td>
+                <td><strong>Stock:</strong></td>
                 <td>{producto.stock}</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Modelo:</strong>
-                </td>
+                <td><strong>Modelo:</strong></td>
                 <td>{producto.model}</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Categoría:</strong>
-                </td>
+                <td><strong>Categoría:</strong></td>
                 <td>{producto.category}</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Descripción:</strong>
-                </td>
+                <td><strong>Descripción:</strong></td>
                 <td>{producto.description}</td>
               </tr>
               <tr>
                 <td colSpan={2}>
-                  <div
-                    className={styles.botonContainer}
-                    style={{ position: "relative" }}
-                  >
-                    {/* Botón para añadir al carrito */}
+                  <div className={styles.botonContainer} style={{ position: "relative" }}>
                     <BotonAñadir
                       producto={producto}
                       onAdded={() => {
@@ -193,8 +164,7 @@ const ProductoU = () => {
                     />
                     {showToast && (
                       <div className={styles.toast}>
-                        <span className={styles.icon}>✅</span> Producto añadido
-                        al carrito
+                        <span className={styles.icon}>✅</span> Producto añadido al carrito
                       </div>
                     )}
                   </div>
@@ -205,10 +175,13 @@ const ProductoU = () => {
         </div>
       </div>
 
-      {/*CALIFICACION DEL PRODUCTO*/}
-      <CalificacionProducto productoId={producto.id} />
+      {/* Calificación del producto */}
+      <CalificacionProducto
+        productoId={producto.id}
+        onRefresh={handleRefresh}
+      />
 
-      {/* Productos Similares */}
+      {/* Productos similares */}
       <ProductosSimilares
         categoria={producto.category}
         idProductoActual={producto.id}

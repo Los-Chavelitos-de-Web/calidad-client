@@ -4,11 +4,13 @@ import RatingForm from "./RatingForm";
 import RatingStats from "./RatingStats";
 import styles from "./CalificacionProducto.module.css";
 
-const CalificacionProducto = ({ productoId }) => {
+const CalificacionProducto = ({ productoId, onRefresh }) => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  // Llamado cuando alguien califica
   const handleRefresh = () => {
     setRefreshTrigger((prev) => prev + 1);
+    if (onRefresh) onRefresh(); // 🔁 informa al padre (ProductoU)
   };
 
   return (

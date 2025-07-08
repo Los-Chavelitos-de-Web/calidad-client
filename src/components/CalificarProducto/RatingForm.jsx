@@ -1,9 +1,12 @@
+// src/components/Calificaciones/RatingForm.jsx
 import React, { useState, useEffect } from "react";
 import { usePayload } from "../../utils/authHelpers";
+import ComentarioItem from "./ComentarioItem";
 import styles from "./CalificacionProducto.module.css";
 
 const RatingForm = ({ productoId, onRated }) => {
   const [valor, setValor] = useState(0);
+  const [hoverIndex, setHoverIndex] = useState(null);
   const [comentario, setComentario] = useState("");
   const [enviado, setEnviado] = useState(false);
   const { email } = usePayload();
@@ -26,6 +29,7 @@ const RatingForm = ({ productoId, onRated }) => {
         valor,
         comentario,
       }));
+
     setComentarios(listaComentarios);
   }, [productoId, email]);
 
@@ -33,25 +37,30 @@ const RatingForm = ({ productoId, onRated }) => {
     e.preventDefault();
     if (!email || enviado || valor === 0) return;
 
+    const trimmedComment = comentario.trim();
+    if (trimmedComment && trimmedComment.length < 3) {
+      alert("El comentario debe tener al menos 3 caracteres.");
+      return;
+    }
+
     const guardadas = JSON.parse(localStorage.getItem("calificaciones")) || {};
     guardadas[productoId] = guardadas[productoId] || {};
-    guardadas[productoId][email] = { valor, comentario: comentario.trim() };
+    guardadas[productoId][email] = { valor, comentario: trimmedComment };
     localStorage.setItem("calificaciones", JSON.stringify(guardadas));
 
     setEnviado(true);
     if (onRated) onRated();
 
-    if (comentario.trim()) {
+    if (trimmedComment) {
       setComentarios((prev) => [
         ...prev,
-        { correo: email, valor, comentario: comentario.trim() },
+        { correo: email, valor, comentario: trimmedComment },
       ]);
     }
   };
 
   return (
     <div className={styles.ratingContainer}>
-      {/* IZQUIERDA: Estrellas y formulario */}
       <div className={styles.formularioCalificacion}>
         {email ? (
           enviado ? (
@@ -66,10 +75,14 @@ const RatingForm = ({ productoId, onRated }) => {
                     key={i}
                     className={styles.estrella}
                     onClick={() => setValor(i + 1)}
+                    onMouseEnter={() => setHoverIndex(i + 1)}
+                    onMouseLeave={() => setHoverIndex(null)}
                     style={{
                       cursor: "pointer",
-                      color: i < valor ? "#4285f4" : "#ccc",
+                      color: i < (hoverIndex || valor) ? "#4285f4" : "#ccc",
                     }}
+                    aria-label={`Calificar con ${i + 1} estrellas`}
+                    role="button"
                   >
                     ★
                   </span>
@@ -100,34 +113,12 @@ const RatingForm = ({ productoId, onRated }) => {
         )}
       </div>
 
-      {/* DERECHA: Comentarios */}
       <div className={styles.listaComentarios}>
         <h4 className={styles.tituloComentarios}>Comentarios recientes</h4>
         {comentarios.length === 0 ? (
           <p style={{ color: "#888" }}>Aún no hay comentarios.</p>
         ) : (
-          comentarios.map((c, i) => (
-            <div key={i} className={styles.comentario}>
-              <div className={styles.comentarioEstrellas}>
-                {[...Array(5)].map((_, j) => (
-                  <span
-                    key={j}
-                    className={styles.estrella}
-                    style={{
-                      color: j < c.valor ? "#4285f4" : "#ccc",
-                      fontSize: "18px",
-                    }}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
-              <p className={styles.textoComentario}>{c.comentario}</p>
-              <p className={styles.correoComentario}>
-                <i>{c.correo}</i>
-              </p>
-            </div>
-          ))
+          comentarios.map((c, i) => <ComentarioItem key={i} {...c} />)
         )}
       </div>
     </div>

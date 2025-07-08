@@ -68,6 +68,7 @@
 
 .barra {
   flex: 1;
+  min-width: 100px;
   height: 8px;
   background: #e0e0e0;
   border-radius: 4px;
@@ -78,6 +79,7 @@
   height: 100%;
   background: #4285f4;
   border-radius: 4px;
+  transition: width 0.4s ease;
 }
 
 .estrellaGris {
@@ -164,3 +166,22 @@
   color: #999;
 }
 
+/* Mostrar número de votos */
+.votoCantidad {
+  font-size: 0.8rem;
+  color: #555;
+  margin-left: 4px;
+}
+
+/* Responsive en móvil */
+@media (max-width: 600px) {
+  .ratingContainer {
+    flex-direction: column;
+  }
+
+  .listaComentarios {
+    border-left: none;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+  }
+}
