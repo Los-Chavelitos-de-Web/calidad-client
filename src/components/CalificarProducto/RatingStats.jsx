@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./CalificacionProducto.module.css";
 
 const RatingStats = ({ productoId, refresh }) => {
+  // Estado que almacena cuántas calificaciones hay por cada valor (1 a 5 estrellas)
   const [estadisticas, setEstadisticas] = useState({
     5: 0,
     4: 0,
@@ -11,20 +12,23 @@ const RatingStats = ({ productoId, refresh }) => {
   });
 
   useEffect(() => {
+    // Obtiene las calificaciones
     const ratings = JSON.parse(localStorage.getItem("calificaciones")) || {};
     const data = ratings[productoId] || {};
 
     const resumen = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
 
+    // Recorre las calificaciones y cuenta cuántas hay por cada valor
     Object.values(data).forEach((entry) => {
       const valor = entry?.valor;
       if (valor >= 1 && valor <= 5) {
         resumen[valor]++;
       }
     });
-    setEstadisticas(resumen);
-  }, [productoId, refresh]);
+    setEstadisticas(resumen); // Actualiza el estado con las estadísticas
+  }, [productoId, refresh]); // Se actualiza cuando hay un cambio en el producto o se refresca
 
+  // Calcula el total de calificaciones para obtener el porcentaje
   const total = Object.values(estadisticas).reduce((a, b) => a + b, 0);
 
   return (

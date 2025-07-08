@@ -69,6 +69,7 @@ const ProductoU = () => {
     const guardadas = JSON.parse(localStorage.getItem("calificaciones")) || {};
     const productoCalif = guardadas[id];
 
+    // Si no hay calificaciones, se inicializa como un objeto vacío
     if (productoCalif) {
       const valores = Object.values(productoCalif).map((c) =>
         typeof c === "object" && c.valor

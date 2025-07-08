@@ -10,7 +10,7 @@ const CalificacionProducto = ({ productoId, onRefresh }) => {
   // Llamado cuando alguien califica
   const handleRefresh = () => {
     setRefreshTrigger((prev) => prev + 1);
-    if (onRefresh) onRefresh(); // 🔁 informa al padre (ProductoU)
+    if (onRefresh) onRefresh(); // informa al padre (ProductoU)
   };
 
   return (

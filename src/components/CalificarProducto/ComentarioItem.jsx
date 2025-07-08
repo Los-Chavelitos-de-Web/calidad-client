@@ -1,10 +1,10 @@
-// src/components/Calificaciones/ComentarioItem.jsx
 import React from "react";
 import styles from "./CalificacionProducto.module.css";
 
 const ComentarioItem = ({ correo, valor, comentario }) => (
   <div className={styles.comentario}>
     <div className={styles.comentarioEstrellas}>
+      {/* Renderiza 5 estrellas, las activas y se pintan de azul, las demás en gris */}
       {[...Array(5)].map((_, j) => (
         <span
           key={j}

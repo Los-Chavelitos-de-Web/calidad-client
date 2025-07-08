@@ -1,4 +1,3 @@
-// src/components/Calificaciones/RatingForm.jsx
 import React, { useState, useEffect } from "react";
 import { usePayload } from "../../utils/authHelpers";
 import ComentarioItem from "./ComentarioItem";
@@ -16,12 +15,14 @@ const RatingForm = ({ productoId, onRated }) => {
     const guardadas = JSON.parse(localStorage.getItem("calificaciones")) || {};
     const datosProducto = guardadas[productoId] || {};
 
+    // Si el usuario ya calificó, carga su calificación
     if (email && datosProducto[email]) {
       setValor(datosProducto[email].valor || 0);
       setComentario(datosProducto[email].comentario || "");
       setEnviado(true);
     }
 
+    // Filtra solo comentarios con texto y los agrega a la lista de visualización
     const listaComentarios = Object.entries(datosProducto)
       .filter(([_, v]) => v.comentario?.trim())
       .map(([correo, { valor, comentario }]) => ({
@@ -43,14 +44,16 @@ const RatingForm = ({ productoId, onRated }) => {
       return;
     }
 
+    // Guarda la calificación
     const guardadas = JSON.parse(localStorage.getItem("calificaciones")) || {};
     guardadas[productoId] = guardadas[productoId] || {};
     guardadas[productoId][email] = { valor, comentario: trimmedComment };
     localStorage.setItem("calificaciones", JSON.stringify(guardadas));
 
-    setEnviado(true);
+    setEnviado(true); // Marca como enviado para evitar múltiples envíos
     if (onRated) onRated();
 
+    // Si escribió comentario, lo agrega al listado mostrado
     if (trimmedComment) {
       setComentarios((prev) => [
         ...prev,
