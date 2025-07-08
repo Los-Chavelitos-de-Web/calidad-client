@@ -76,7 +76,15 @@ const Ducati = () => {
                   }
                   style={{ cursor: "pointer" }}
                 >
-                  <div className={styles.imagenProducto}></div>
+                  {/* Imagen del producto */}
+                  <div className={styles.imagen}>
+                    <img
+                      src={producto.imageUrl}
+                      alt={producto.title}
+                      className={styles.productoImagen}
+                    />
+                  </div>
+
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
                     <p className={styles.precio}>S/. {producto.unit_price}</p>

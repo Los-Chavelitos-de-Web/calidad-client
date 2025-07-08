@@ -96,7 +96,7 @@ const Buscar = () => {
               style={{ cursor: "pointer" }}
             >
               <div className={styles.imagenContenedor}>
-                <img src={producto.image} alt={producto.title} />
+                <img src={producto.imageUrl} alt={producto.title} />
               </div>
               <div className={styles.infoContenedor}>
                 <p className={styles.nombreProducto}>{producto.title}</p>

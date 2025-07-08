@@ -7,7 +7,7 @@ import fondoRato from "../../assets/Fondos_Marcas/Rato.png";
 
 const Rato = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
-  const [data, setData] = useState([]);  // Estado para almacenar los productos filtrados por marca
+  const [data, setData] = useState([]); // Estado para almacenar los productos filtrados por marca
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ const Rato = () => {
       const result = await response.json();
       // Filtrarlos por marca "Rato"
       const filteredData = result
-        .filter((product) => product.brand === "Rato")
+        .filter((product) => product.brand === "RATO")
         .map((product) => ({
           ...product,
           unit_price: product.unit_price ?? Math.round(Math.random() * 200),
@@ -75,14 +75,21 @@ const Rato = () => {
                   }
                   style={{ cursor: "pointer" }}
                 >
-                  <div className={styles.imagenProducto}></div>
+                  {/* Imagen del producto */}
+                  <div className={styles.imagen}>
+                    <img
+                      src={producto.imageUrl}
+                      alt={producto.title}
+                      className={styles.productoImagen}
+                    />
+                  </div>
+
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
                     <p className={styles.precio}>S/. {producto.unit_price}</p>
 
                     {/* Botón para añadir al carrito */}
                     <BotonAñadir producto={producto} />
-
                   </div>
                 </div>
               ))

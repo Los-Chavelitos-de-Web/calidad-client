@@ -122,7 +122,7 @@ const Productos = () => {
                 >
                   <div className={styles.imagenProducto}>
                     <img
-                      src={producto.image || "/img/placeholder.jpg"}
+                      src={producto.imageUrl}
                       alt={producto.title}
                     />
                   </div>

@@ -21,12 +21,14 @@
   align-items: center;
   justify-content: center;
   border-right: 1px solid #ddd;
+  background-color: #fafafa;
   padding: 30px;
 }
 
 .imagenContainer img {
-  max-width: 100%;
-  max-height: 440px; /* Tamaño imagen */
+  width: 90%;
+  height: auto;
+  max-height: 600px;
   object-fit: contain;
 }
 
@@ -106,83 +108,9 @@
   color: #4285f4; /* Azul Google */
   font-size: 18px;
 }
+
 .calificacionesCantidad {
   margin-left: 6px;
   color: #666;
   font-size: 14px;
 }
-
-/* OPINIONES DEL PRODUCTO */
-
-.opinionesContainer {
-  background-color: #fff;
-  margin: 30px auto;
-  padding: 20px;
-  max-width: 1100px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.ratingResumen {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.promedio {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.ratingValor {
-  font-size: 40px;
-  color: #4285f4;
-  font-weight: bold;
-}
-
-.estrellas {
-  display: flex;
-  font-size: 20px;
-  color: #4285f4;
-}
-
-.totalCalificaciones {
-  margin-top: 5px;
-  font-size: 14px;
-  color: #666;
-}
-
-.barrasEstrellas {
-  width: 280px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.filaEstrella {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.barra {
-  flex: 1;
-  height: 8px;
-  background: #e0e0e0;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.barraInterna {
-  height: 100%;
-  background: #4285f4;
-  border-radius: 4px;
-}
-
-.estrellaGris {
-  font-size: 14px;
-  color: #ccc;
-}
-

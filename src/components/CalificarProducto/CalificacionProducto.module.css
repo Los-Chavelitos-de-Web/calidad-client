@@ -1,0 +1,166 @@
+.opinionesContainer {
+  background-color: #fff;
+  margin: 30px auto;
+  padding: 20px;
+  max-width: 1100px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ratingResumen {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.promedio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.ratingValor {
+  font-size: 40px;
+  color: #4285f4;
+  font-weight: bold;
+}
+
+.estrellas {
+  display: flex;
+  font-size: 20px;
+  gap: 6px;
+}
+
+.estrella {
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-size: 24px;
+  color: #ccc; /* Por defecto gris */
+}
+
+.estrella.activa {
+  color: #4285f4; /* Azul Google */
+}
+
+.estrella:hover {
+  color: #1a73e8;
+}
+
+.totalCalificaciones {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #666;
+}
+
+.barrasEstrellas {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filaEstrella {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.barra {
+  flex: 1;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.barraInterna {
+  height: 100%;
+  background: #4285f4;
+  border-radius: 4px;
+}
+
+.estrellaGris {
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* COMENTARIOS */
+.textareaComentario {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  resize: none;
+  font-family: inherit;
+}
+
+.btnComentario {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btnComentario:hover {
+  background-color: #3367d6;
+}
+
+.ratingContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.formularioCalificacion {
+  flex: 1;
+  min-width: 300px;
+}
+
+.listaComentarios {
+  flex: 1;
+  min-width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  border-left: 1px solid #ddd;
+}
+
+.tituloComentarios {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.comentario {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.comentarioEstrellas {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 4px;
+}
+
+.textoComentario {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  color: #444;
+}
+
+.correoComentario {
+  font-size: 0.8rem;
+  color: #999;
+}
+

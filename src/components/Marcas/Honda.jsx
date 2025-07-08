@@ -19,13 +19,12 @@ const Honda = () => {
       );
       const result = await response.json();
       // Filtrarlos por marca "Honda"
-      const filteredData = result.filter(
-        (product) => product.brand === "Honda"
-      )
-      .map((product) => ({
-        ...product,
-        unit_price: product.unit_price ?? Math.round(Math.random() * 200),
-      }));
+      const filteredData = result
+        .filter((product) => product.brand === "Honda")
+        .map((product) => ({
+          ...product,
+          unit_price: product.unit_price ?? Math.round(Math.random() * 200),
+        }));
       //console.log(filteredData);
       setData(filteredData);
       setLoading(false);
@@ -76,14 +75,21 @@ const Honda = () => {
                   }
                   style={{ cursor: "pointer" }}
                 >
-                  <div className={styles.imagenProducto}></div>
+                  {/* Imagen del producto */}
+                  <div className={styles.imagen}>
+                    <img
+                      src={producto.imageUrl}
+                      alt={producto.title}
+                      className={styles.productoImagen}
+                    />
+                  </div>
+
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
                     <p className={styles.precio}>S/. {producto.unit_price}</p>
 
                     {/* Botón para añadir al carrito */}
                     <BotonAñadir producto={producto} />
-
                   </div>
                 </div>
               ))

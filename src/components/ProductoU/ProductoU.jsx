@@ -4,11 +4,14 @@ import NavBar from "../Nav/NavBar";
 import BotonAñadir from "../carrito/BotonAñadir";
 import styles from "./ProductoU.module.css";
 import ProductosSimilares from "./ProductosSimilares";
+import CalificacionProducto from "../CalificarProducto/CalificacionProducto";
 
 const ProductoU = () => {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
   const [showToast, setShowToast] = useState(false);
+  const [promedioCalificacion, setPromedioCalificacion] = useState(0);
+  const [cantidadCalificaciones, setCantidadCalificaciones] = useState(0);
 
   useEffect(() => {
     // Al cambiar de producto (cambiar el id), se sube al inicio de la página
@@ -40,7 +43,7 @@ const ProductoU = () => {
             stock: stockTotal ?? 0,
             model: encontrado.model || "No especificado",
             category: encontrado.category || "Sin categoría",
-            image: encontrado.image || "/images/no-image.png",
+            image: encontrado.imageUrl || "/images/no-image.png",
           });
         } else {
           console.error("Producto no encontrado.");
@@ -52,6 +55,32 @@ const ProductoU = () => {
 
     fetchProducto();
   }, [id]); // incluye el id como dependencia
+
+  useEffect(() => {
+    if (!id) return;
+
+    const guardadas = JSON.parse(localStorage.getItem("calificaciones")) || {};
+    const productoCalif = guardadas[id];
+
+    if (productoCalif) {
+      const valores = Object.values(productoCalif).map((c) =>
+        typeof c === "object" && c.valor
+          ? c.valor
+          : typeof c === "number"
+          ? c
+          : 0
+      );
+
+      const total = valores.reduce((a, b) => a + b, 0);
+      const promedio = valores.length ? total / valores.length : 0;
+
+      setPromedioCalificacion(promedio.toFixed(1));
+      setCantidadCalificaciones(valores.length);
+    } else {
+      setPromedioCalificacion(0);
+      setCantidadCalificaciones(0);
+    }
+  }, [producto]);
 
   {
     /*const agregarAlCarrito = () => {
@@ -93,12 +122,21 @@ const ProductoU = () => {
                   {producto.title}
                   <div className={styles.estrellas}>
                     {[...Array(5)].map((_, index) => (
-                      <span key={index} className={styles.estrella}>
+                      <span
+                        key={index}
+                        className={styles.estrella}
+                        style={{
+                          color:
+                            index < Math.round(promedioCalificacion)
+                              ? "#4285f4"
+                              : "#ccc",
+                        }}
+                      >
                         ★
                       </span>
                     ))}
                     <span className={styles.calificacionesCantidad}>
-                      (#cantidad)
+                      ({cantidadCalificaciones}) calificaciones
                     </span>
                   </div>
                 </td>
@@ -166,51 +204,10 @@ const ProductoU = () => {
           </table>
         </div>
       </div>
-      {/*CALIFICACION DEL PRODUCTO*/}
-      <div className={styles.opinionesContainer}>
-        <h2 className={styles.opinionesTitulo}>Opiniones del producto</h2>
-        <div className={styles.ratingResumen}>
-          <div className={styles.promedio}>
-            <span className={styles.ratingValor}>4.9</span>
-            <div className={styles.estrellas}>
-              {[...Array(5)].map((_, index) => (
-                <span key={index} className={styles.estrella}>
-                  ★
-                </span>
-              ))}
-            </div>
-            <span className={styles.totalCalificaciones}>
-              (#) calificaciones
-            </span>
-          </div>
 
-          <div className={styles.barrasEstrellas}>
-            {[5, 4, 3, 2, 1].map((estrella) => (
-              <div key={estrella} className={styles.filaEstrella}>
-                <span>{estrella}</span>
-                <div className={styles.barra}>
-                  <div
-                    className={styles.barraInterna}
-                    style={{
-                      width:
-                        estrella === 5
-                          ? "80%"
-                          : estrella === 4
-                          ? "15%"
-                          : estrella === 3
-                          ? "5%"
-                          : estrella === 2
-                          ? "0%"
-                          : "0%",
-                    }}
-                  ></div>
-                </div>
-                <span className={styles.estrellaGris}>★</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/*CALIFICACION DEL PRODUCTO*/}
+      <CalificacionProducto productoId={producto.id} />
+
       {/* Productos Similares */}
       <ProductosSimilares
         categoria={producto.category}
