@@ -1,0 +1,95 @@
+.libroContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 80px); /* Ajusta según el alto de tu NavBar */
+  padding-top: 160px; /* Espacio desde el NavBar */
+  padding-bottom: 40px; /* Espacio inferior para evitar scroll innecesario */
+  box-sizing: border-box;
+}
+
+/* Caja del formulario */
+.libroReclamaciones {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Título centrado */
+.titulo {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+/* Formulario vertical */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.etiqueta {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #444;
+}
+
+/* Inputs */
+.input,
+.textarea {
+  margin-top: 6px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Botón */
+.boton {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton:hover {
+  background-color: #0056b3;
+}
+
+
+@media (max-width: 600px) {
+  .libroContainer {
+    padding-top: 100px;
+    padding-bottom: 20px;
+  }
+}
+
+.infoUsuario {
+  margin-bottom: 20px;
+  font-size: 15px;
+  color: #444;
+  background: #f0f4ff;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.mensajeCarga, .mensajeError {
+  padding: 20px;
+  text-align: center;
+  font-size: 16px;
+}
