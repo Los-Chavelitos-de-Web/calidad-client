@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
+
 import './Reservas.css';
 import NavBar from '../Nav/NavBar';
 
 const getMonthName = (fechaStr) => {
-  const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
-    'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const meses = [
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
+    'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+  ];
   const date = new Date(fechaStr);
   return meses[date.getMonth()];
 };
@@ -18,48 +21,51 @@ const Reservas = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchReservasUsuario = async () => {
-      try {
-        const token = localStorage.getItem('token');
+  const fetchReservasUsuario = async () => {
+    const token = localStorage.getItem("authToken");
 
-        if (!token) {
-          throw new Error("No se encontró el token. Asegúrate de estar logueado.");
-        }
+    if (!token) {
+      setLoading(false);
+      return; // No hay token, no buscar reservas
+    }
 
-        const decoded = jwtDecode(token);
-        const userId = decoded.id || decoded.user_id || decoded.sub;
+    try {
+      const decoded = jwtDecode(token);
+      const userId = decoded.id || decoded.user_id || decoded.sub;
 
-        if (!userId) {
-          throw new Error("No se pudo extraer el ID del usuario del token.");
-        }
-
-        const response = await fetch(`http://localhost:3000/api/v1/reservas/items/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Error al obtener las reservas del usuario.");
-        }
-
-        const data = await response.json();
-        setReservas(data);
-      } catch (err) {
-        console.error(err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      if (!userId) {
+        throw new Error("No se pudo obtener el ID del usuario.");
       }
-    };
 
-    fetchReservasUsuario();
-  }, []);
+      const response = await fetch(`http://localhost:3000/api/v1/reservas/items/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.json();
+        throw new Error(errorBody.message || "Error al obtener las reservas.");
+      }
+
+      const data = await response.json();
+      setReservas(data);
+    } catch (err) {
+      console.error(err);
+      setError("Ocurrió un error al cargar tus reservas.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchReservasUsuario();
+}, []);
+
 
   const reservasFiltradas = reservas.filter((reserva) => {
-    const productoMatch = reserva.producto?.toLowerCase().includes(busqueda.toLowerCase()) || '';
-    const codigoMatch = reserva.codigo_producto?.toLowerCase().includes(busqueda.toLowerCase()) || '';
+    const productoMatch = (reserva.producto || '').toLowerCase().includes(busqueda.toLowerCase());
+    const codigoMatch = (reserva.codigo_producto || '').toLowerCase().includes(busqueda.toLowerCase());
     const mes = getMonthName(reserva.fecha);
     const coincideMes = mesFiltro === 'todos' || mes === mesFiltro;
 
@@ -104,19 +110,21 @@ const Reservas = () => {
           </select>
         </div>
 
-        {loading ? (
-          <p>Cargando tus reservas...</p>
-        ) : error ? (
-          <p className="error">Error: {error}</p>
-        ) : reservasFiltradas.length === 0 ? (
-          <p>No se encontraron reservas con esos filtros.</p>
-        ) : (
+        {loading && <p>Cargando tus reservas...</p>}
+{error && <p className="error">{error}</p>}
+{!loading && !error && reservasFiltradas.length === 0 && (
+  <p>No se encontraron reservas con esos filtros.</p>
+)}
+  
+        {!loading && !error && reservasFiltradas.length > 0 && (
           reservasFiltradas.map((reserva) => (
-            <div className="reserva-card" key={reserva.id}>
+            <div className="reserva-card" key={reserva.id || reserva.codigo_producto || Math.random()}>
               <p className="reserva-fecha">
-                {new Date(reserva.fecha).toLocaleDateString('es-PE', {
-                  day: '2-digit', month: 'long', year: 'numeric'
-                })}
+                {reserva.fecha
+                  ? new Date(reserva.fecha).toLocaleDateString('es-PE', {
+                      day: '2-digit', month: 'long', year: 'numeric'
+                    })
+                  : 'Fecha no disponible'}
               </p>
               <div className="reserva-detalle">
                 <div className="reserva-img">
@@ -124,13 +132,15 @@ const Reservas = () => {
                 </div>
                 <div className="reserva-info">
                   <span className="estado-confirmada">Confirmada</span>
-                  <h3>Código: {reserva.codigo_producto}</h3>
-                  <p className="producto">{reserva.producto}</p>
-                  <p className="color">Cantidad: {reserva.cantidad}</p>
-                  <p className="color">Precio Base: S/. {reserva.precio_base.toFixed(2)}</p>
+                  <h3>Código: {reserva.codigo_producto || 'N/A'}</h3>
+                  <p className="producto">{reserva.producto || 'Producto no disponible'}</p>
+                  <p className="color">Cantidad: {reserva.cantidad ?? 'N/A'}</p>
+                  <p className="color">
+                    Precio Base: S/. {typeof reserva.precio_base === 'number' ? reserva.precio_base.toFixed(2) : 'N/A'}
+                  </p>
                 </div>
                 <div className="reserva-actions">
-                  <p className="tienda">Reserva ID: {reserva.reservaId}</p>
+                  <p className="tienda">Reserva ID: {reserva.reservaId || 'N/A'}</p>
                   <button className="btn-ver">Ver reserva</button>
                   <button className="btn-repetir">Repetir reserva</button>
                 </div>
