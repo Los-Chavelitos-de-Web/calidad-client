@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AdminAside from "./template/AdminAside";
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
-import DashboardChart from "./DashboardChart";
+import DashboardChart from "./dashboardChart";
 import LowStockProducts from "./LowStockProducts";
 import './admin-css/dashboard-view.css';
 import './admin-css/low-stock-products.css';
