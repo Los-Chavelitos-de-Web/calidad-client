@@ -25,6 +25,8 @@ import Perfil from './components/Perfil/Perfil';
 import Reservas from './components/Reservas/Reservas';
 import Compras from './components/Compras/Compras';
 import ReclamosCard from './components/admin/libro-reclamaciones';
+import LibroReclamaciones from './components/LibroReclamaciones/libroReclamaciones';
+
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
         <Route path="/reservas" element={<Reservas />} />
         <Route path="/compras" element={<Compras />} />
         <Route path="/libro-reclamaciones" element={<ReclamosCard />} />
+        <Route path="/libroReclamaciones" element={<LibroReclamaciones />} />
 
 
         {/* Marcas */}
