@@ -1,17 +1,18 @@
 import "./ContProducto.css";
 import { useNavigate } from "react-router-dom";
 
-const ContProducto = ({ id, titulo, marca }) => {
+const ContProducto = ({ id, titulo, marca, imageUrl }) => {
   const navigate = useNavigate();
   const irADetalle = () => {
     navigate(`/producto/${id}`);
   };
+
   return (
     <article className="product-container">
       <div className="image-wrapper">
         <img
-          src="/productos-img/MINISIERRA A BATERIA GTA-26.jpg"
-          alt="Minisierra a batería GTA-26"
+          src={imageUrl}
+          alt={titulo}
           className="product-image"
         />
       </div>
