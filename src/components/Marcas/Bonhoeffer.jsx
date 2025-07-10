@@ -7,7 +7,7 @@ import fondoBonhoeffer from "../../assets/Fondos_Marcas/Bonhoeffer2.png";
 
 const Bonhoeffer = () => {
   const [mostrarMas, setMostrarMas] = useState(false);
-  const [data, setData] = useState([]);  // Estado para almacenar los productos filtrados por marca
+  const [data, setData] = useState([]); // Estado para almacenar los productos filtrados por marca
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -75,14 +75,21 @@ const Bonhoeffer = () => {
                   }
                   style={{ cursor: "pointer" }}
                 >
-                  <div className={styles.imagenProducto}></div>
+                  {/* Imagen del producto */}
+                  <div className={styles.imagen}>
+                    <img
+                      src={producto.imageUrl}
+                      alt={producto.title}
+                      className={styles.productoImagen}
+                    />
+                  </div>
+
                   <div className={styles.detalleProducto}>
                     <p className={styles.descripcion}>{producto.title}</p>
                     <p className={styles.precio}>S/. {producto.unit_price}</p>
 
                     {/* Botón para añadir al carrito */}
                     <BotonAñadir producto={producto} />
-                    
                   </div>
                 </div>
               ))

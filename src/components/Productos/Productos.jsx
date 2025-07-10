@@ -16,7 +16,7 @@ const Productos = () => {
   const productosPorPagina = 12; // Cantidad de productos por página
   const navigate = useNavigate();
 
-  // Fetch de los productos al montar el componente
+   // Al cargar el componente, obtenemos los productos del backend
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,26 +35,28 @@ const Productos = () => {
     fetchData();
   }, []);
 
-  // Generar listado de marcas únicas para el filtro
+  // Obtener las marcas únicas para el filtro
   const marcas = ["Todas", ...new Set(data.map((p) => p.brand))];
 
-  // Filtrado por marca y ordenamiento por precio
+    // Aplica filtro por marca y ordena por precio si corresponde
   const productosFiltrados = (filtroMarca === "Todas"
     ? data
     : data.filter((p) => p.brand === filtroMarca)
   ).sort((a, b) => {
     if (ordenPrecio === "asc") return a.unit_price - b.unit_price;
     if (ordenPrecio === "desc") return b.unit_price - a.unit_price;
-    return 0;
+    return 0; // Sin ordenamiento
   });
 
   // Lógica de paginación
   const indiceInicial = (paginaActual - 1) * productosPorPagina;
   const indiceFinal = indiceInicial + productosPorPagina;
+  // Obtener los productos que se mostrarán en la página actual
   const productosEnPagina = productosFiltrados.slice(indiceInicial, indiceFinal);
+  // Calcular el total de páginas
   const totalPaginas = Math.ceil(productosFiltrados.length / productosPorPagina);
 
-  // Cambiar página con validación de límites
+  // Función para cambiar de página
   const cambiarPagina = (nuevaPagina) => {
     if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
       setPaginaActual(nuevaPagina);
@@ -65,7 +67,6 @@ const Productos = () => {
     <div className={styles.fondoProductos}>
       <NavBar />
       <div className={styles.layoutGeneral}>
-        {/* FILTRO LATERAL */}
         <aside className={styles.filtro}>
           {/* Filtro por marca */}
           <h3 className={styles.filtroTitulo}>Filtrar por marca</h3>
@@ -122,7 +123,7 @@ const Productos = () => {
                 >
                   <div className={styles.imagenProducto}>
                     <img
-                      src={producto.image || "/img/placeholder.jpg"}
+                      src={producto.imageUrl}
                       alt={producto.title}
                     />
                   </div>

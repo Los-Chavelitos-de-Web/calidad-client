@@ -94,20 +94,20 @@
 }
 
 .imagenProducto {
-  height: 160px;
-  margin-bottom: 1rem;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  background-color: #eee;
   border-radius: 6px;
 }
 
 .imagenProducto img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* ✅ muestra toda la imagen sin recortes */
 }
 
 .detalleProducto {
