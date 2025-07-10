@@ -3,55 +3,32 @@ import AdminAside from "./template/AdminAside";
 import './admin-css/sales-view.css';
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
+import SaleDetailsModal from "./sales-modal";
+
+// Función helper para formatear precios
+const formatPrice = (price) => {
+  return Number(price || 0).toFixed(2);
+};
 
 const SalesView = () => {
   const navigate = useNavigate();
   const [sales, setSales] = useState([]);
   const [filteredSales, setFilteredSales] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { authToken, email, userId, username, role, error, loading } = usePayload();
+  const { authToken, error, loading } = usePayload();
   
   // Estados para el filtro de fechas
   const [dateFilter, setDateFilter] = useState({
     startDate: '',
     endDate: '',
-    filterType: 'all' // 'all', 'today', 'week', 'month', 'custom'
+    filterType: 'all'
   });
 
-  useEffect(() => {
-    if (loading) return;
+  // Estados para el modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentSale, setCurrentSale] = useState(null);
 
-    if (error) {
-      console.warn(error);
-      navigate("/login");
-      return;
-    }
-
-    getSalesData();
-  }, [loading, error]);
-  
-  async function getSalesData() {
-    try {
-      setIsLoading(true);
-      const res = await fetch(`${import.meta.env.VITE_APP_BACK}/sales/getAll`, {
-        headers: {
-          'Authorization': `Bearer ${authToken}`
-        }
-      });
-      const salesData = await res.json();
-      setSales(salesData);
-      setFilteredSales(salesData); // Inicialmente mostrar todas las ventas
-    } catch (error) {
-      console.error("Error al cargar ventas:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    applyDateFilter();
-  }, [dateFilter, sales]);
-
+  // Función para aplicar filtros de fecha
   const applyDateFilter = () => {
     if (!sales.length) return;
 
@@ -89,7 +66,7 @@ const SalesView = () => {
         if (dateFilter.startDate && dateFilter.endDate) {
           const start = new Date(dateFilter.startDate);
           const end = new Date(dateFilter.endDate);
-          end.setHours(23, 59, 59, 999); // Incluir todo el día final
+          end.setHours(23, 59, 59, 999);
           
           filtered = filtered.filter(sale => {
             const saleDate = new Date(sale.createdAt);
@@ -98,12 +75,55 @@ const SalesView = () => {
         }
         break;
       
-      default: // 'all'
-        // No filtrar, mostrar todo
+      default:
         break;
     }
 
     setFilteredSales(filtered);
+  };
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (error) {
+      console.warn(error);
+      navigate("/login");
+      return;
+    }
+
+    getSalesData();
+  }, [loading, error]);
+  
+  async function getSalesData() {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${import.meta.env.VITE_APP_BACK}/sales/getAll`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+      const salesData = await res.json();
+      setSales(salesData);
+      setFilteredSales(salesData);
+    } catch (error) {
+      console.error("Error al cargar ventas:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    applyDateFilter();
+  }, [dateFilter, sales]);
+
+  const handleOpenModal = (sale) => {
+    setIsModalOpen(true);
+    setCurrentSale(sale);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setCurrentSale(null);
   };
 
   const handleFilterChange = (e) => {
@@ -144,7 +164,6 @@ const SalesView = () => {
             <span className="product-count">{filteredSales.length} ventas</span>
           </div>
           
-          {/* Filtros de fecha */}
           <div className="sales-filters">
             <div className="quick-filters">
               <button 
@@ -237,8 +256,8 @@ const SalesView = () => {
                       <td className="cell-cod">{sale.id}</td>
                       <td className="cell-client">{sale.userId || "N/A"}</td>
                       <td className="cell-date">{new Date(sale.createdAt).toLocaleDateString()}</td>
-                      <td className="cell-state">S/.{sale.total?.toFixed(2)}</td> 
-                      <td className="cell-actions">
+                      <td className="cell-total">S/.{formatPrice(sale.total)}</td>
+                      <td className="cell-state">
                         {sale.status || "N/A"}
                       </td>
                       <td className="cell-actions">
@@ -257,7 +276,7 @@ const SalesView = () => {
                   ))
                 ) : (
                   <tr className="no-results">
-                    <td colSpan="6">No hay ventas {dateFilter.filterType !== 'all' ? 'para este período' : ''}</td>
+                    <td colSpan="6">No hay compra {dateFilter.filterType !== 'all' ? 'para este período' : ''}</td>
                   </tr>
                 )}
               </tbody>
@@ -265,6 +284,13 @@ const SalesView = () => {
           )}
         </div>
       </div>
+
+      <SaleDetailsModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        sale={currentSale}
+        authToken={authToken}
+      />
     </div>
   );
 };

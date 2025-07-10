@@ -1,66 +1,23 @@
-import { useState } from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const UserModal = ({ 
   selectedUser, 
-  isModalOpen, 
-  handleCloseModal, 
-  toggleUserStatus,
+  newRole, 
+  availableRoles, 
+  translateRole, 
   formatDate,
-  authToken,
-  onRoleUpdate
+  onClose, 
+  onRoleChange, 
+  onRoleSelectChange,
+  onToggleStatus 
 }) => {
-  const [isEditingRole, setIsEditingRole] = useState(false);
-  const [newRole, setNewRole] = useState(selectedUser?.role || "");
-  const [isUpdating, setIsUpdating] = useState(false);
-
-  if (!isModalOpen || !selectedUser) return null;
-
-  // Roles disponibles según tu imagen
-  const availableRoles = ["GERENTE", "ALMACEN_VENTAS", "CLIENTE"];
-
-  const handleRoleChange = async () => {
-    if (newRole === selectedUser.role) {
-      setIsEditingRole(false);
-      return;
-    }
-
-    setIsUpdating(true);
-    try {
-      const response = await fetch(`${import.meta.env.VITE_APP_BACK}/users/role`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`
-        },
-        body: JSON.stringify({
-          userId: selectedUser.id,
-          newRole: newRole
-        })
-      });
-
-      if (response.ok) {
-        // Llamar a la función de actualización del padre
-        onRoleUpdate(selectedUser.id, newRole);
-        setIsEditingRole(false);
-      } else {
-        const errorData = await response.json();
-        console.error('Error al actualizar el rol:', errorData);
-        alert('Error al actualizar el rol');
-      }
-    } catch (error) {
-      console.error('Error al actualizar el rol:', error);
-      alert('Error al actualizar el rol');
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
   return (
     <div className="modal-overlay">
       <div className="modal-container">
         <div className="modal-header">
           <h2>Detalles del Usuario</h2>
-          <button className="modal-close-btn" onClick={handleCloseModal}>
+          <button className="modal-close-btn" onClick={onClose}>
             &times;
           </button>
         </div>
@@ -74,56 +31,37 @@ const UserModal = ({
             <span className="detail-value">{selectedUser.email}</span>
           </div>
           <div className="user-detail-row">
-            <span className="detail-label">Nombre completo:</span>
+            <span className="detail-label">Nombre:</span>
             <span className="detail-value">
               {selectedUser.profile?.name || "No especificado"}
             </span>
           </div>
           <div className="user-detail-row">
-            <span className="detail-label">Rol:</span>
-            <span className="detail-value">
-              {isEditingRole ? (
-                <div className="role-edit-container">
-                  <select
-                    value={newRole}
-                    onChange={(e) => setNewRole(e.target.value)}
-                    className="role-select"
-                    disabled={isUpdating}
-                  >
-                    {availableRoles.map(role => (
-                      <option key={role} value={role}>{role}</option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={handleRoleChange}
-                    className="role-save-btn"
-                    disabled={isUpdating}
-                  >
-                    {isUpdating ? 'Guardando...' : 'Guardar'}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setNewRole(selectedUser.role);
-                      setIsEditingRole(false);
-                    }}
-                    className="role-cancel-btn"
-                    disabled={isUpdating}
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              ) : (
-                <div className="role-display-container">
-                  <span>{selectedUser.role}</span>
-                  <button
-                    onClick={() => setIsEditingRole(true)}
-                    className="role-edit-btn"
-                  >
-                    Editar
-                  </button>
-                </div>
-              )}
-            </span>
+            <span className="detail-label">Rol actual:</span>
+            <span className="detail-value">{translateRole(selectedUser.role)}</span>
+          </div>
+          <div className="user-detail-row">
+            <span className="detail-label">Cambiar rol:</span>
+            <div className="role-change-container">
+              <select 
+                className="role-select"
+                value={newRole}
+                onChange={(e) => onRoleSelectChange(e.target.value)}
+              >
+                {availableRoles.map(role => (
+                  <option key={role} value={role}>
+                    {translateRole(role)}
+                  </option>
+                ))}
+              </select>
+              <button 
+                className="change-role-btn"
+                onClick={onRoleChange}
+                disabled={newRole === selectedUser.role}
+              >
+                Cambiar Rol
+              </button>
+            </div>
           </div>
           <div className="user-detail-row">
             <span className="detail-label">Estado:</span>
@@ -134,7 +72,7 @@ const UserModal = ({
             </span>
           </div>
           <div className="user-detail-row">
-            <span className="detail-label">Fecha de creación:</span>
+            <span className="detail-label">Registro:</span>
             <span className="detail-value">{formatDate(selectedUser.createdAt)}</span>
           </div>
           {selectedUser.profile?.phone && (
@@ -153,17 +91,29 @@ const UserModal = ({
         <div className="modal-footer">
           <button 
             className={`status-toggle-btn ${selectedUser.isActive ? 'deactivate' : 'activate'}`}
-            onClick={toggleUserStatus}
+            onClick={onToggleStatus}
           >
-            {selectedUser.isActive ? 'Desactivar Usuario' : 'Activar Usuario'}
+            {selectedUser.isActive ? 'Desactivar' : 'Activar'}
           </button>
-          <button className="modal-btn close-btn" onClick={handleCloseModal}>
+          <button className="modal-btn close-btn" onClick={onClose}>
             Cerrar
           </button>
         </div>
       </div>
     </div>
   );
+};
+
+UserModal.propTypes = {
+  selectedUser: PropTypes.object.isRequired,
+  newRole: PropTypes.string.isRequired,
+  availableRoles: PropTypes.array.isRequired,
+  translateRole: PropTypes.func.isRequired,
+  formatDate: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onRoleChange: PropTypes.func.isRequired,
+  onRoleSelectChange: PropTypes.func.isRequired,
+  onToggleStatus: PropTypes.func.isRequired
 };
 
 export default UserModal;
