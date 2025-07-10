@@ -4,6 +4,7 @@ import './admin-css/sales-view.css';
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
 import SaleDetailsModal from "./sales-modal";
+import * as XLSX from 'xlsx';
 
 // Función helper para formatear precios
 const formatPrice = (price) => {
@@ -27,6 +28,49 @@ const SalesView = () => {
   // Estados para el modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentSale, setCurrentSale] = useState(null);
+
+  // Función para exportar a Excel
+  const exportToExcel = () => {
+    // Preparar los datos para exportar
+    const dataToExport = filteredSales.map(sale => ({
+      'Código': sale.id,
+      'Cliente': sale.userId || "N/A",
+      'Fecha': new Date(sale.createdAt).toLocaleDateString(),
+      'Total (S/.)': formatPrice(sale.total),
+      'Estado': sale.status || "N/A",
+      'Email': sale.user?.email || "N/A",
+      'Teléfono': sale.user?.phone || "N/A",
+      'Método Pago': sale.paymentMethod || "N/A",
+      'Cant. Productos': sale.items?.length || 0,
+      'Dirección': sale.shippingAddress || "N/A"
+    }));
+
+    // Crear hoja de trabajo
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    
+    // Ajustar el ancho de las columnas
+    const wscols = [
+      {wch: 10},  // Código
+      {wch: 20},  // Cliente
+      {wch: 12},  // Fecha
+      {wch: 12},  // Total
+      {wch: 15},  // Estado
+      {wch: 25},  // Email
+      {wch: 15},  // Teléfono
+      {wch: 15},  // Método Pago
+      {wch: 15},  // Cant. Productos
+      {wch: 30}   // Dirección
+    ];
+    ws['!cols'] = wscols;
+    
+    // Crear libro de trabajo
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Ventas");
+    
+    // Exportar archivo
+    const fileName = `ventas_${dateFilter.filterType}_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+  };
 
   // Función para aplicar filtros de fecha
   const applyDateFilter = () => {
@@ -163,7 +207,6 @@ const SalesView = () => {
             <h1>Ventas</h1>  
             <span className="product-count">{filteredSales.length} ventas</span>
           </div>
-          
           <div className="sales-filters">
             <div className="quick-filters">
               <button 
@@ -196,6 +239,19 @@ const SalesView = () => {
               >
                 Personalizado
               </button>
+              <div className="header-actions">
+              <button 
+                onClick={exportToExcel}
+                className="export-excel-btn"
+                disabled={filteredSales.length === 0}
+                title="Exportar a Excel"
+              >
+                <svg className="excel-icon" viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6m1.8 18H14l-2-3.4l-2 3.4H8.2l2.9-4.5L8.2 11H10l2 3.4l2-3.4h1.8l-2.9 4.5l2.9 4.5M13 9V3.5L18.5 9H13z"/>
+                </svg>
+                Exportar Excel
+              </button>
+            </div>
             </div>
             
             {dateFilter.filterType === 'custom' && (
@@ -264,6 +320,7 @@ const SalesView = () => {
                         <button 
                           className="action-btn"
                           onClick={() => handleOpenModal(sale)}
+                          title="Ver detalles"
                         >
                           <img 
                             src="../public/icons/tres-puntos.png" 

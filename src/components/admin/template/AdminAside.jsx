@@ -47,6 +47,13 @@ const AdminAside = () => {
               <i className="bi bi-people me-2"></i> Trabajadores
             </a>
           </li>
+          <li className="nav-item">
+            <a 
+            onClick={() => navigate('/admin/reclamos')}
+            className="nav-link aside-link">
+              <i className="bi bi-people me-2"></i> Reclamaciones
+            </a>
+          </li>
         </ul>
       </nav>
 
