@@ -90,7 +90,7 @@ const Footer = () => {
             <li>
               <a
                 onClick={
-                  email ? () => navigate("/libro-reclamaciones") : undefined
+                  email ? () => navigate("/libroReclamaciones") : undefined
                 }
                 className="footer-link libro-link"
               >
