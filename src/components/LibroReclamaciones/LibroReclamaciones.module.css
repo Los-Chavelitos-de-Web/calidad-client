@@ -6,14 +6,21 @@
   padding-top: 160px; /* Espacio desde el NavBar */
   padding-bottom: 40px; /* Espacio inferior para evitar scroll innecesario */
   box-sizing: border-box;
+
+  /* ✅ Fondo con imagen */
+  background-image: url('/public/img/login-logo.jpg'); /* si está en /public/images/ */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
+
 
 /* Caja del formulario */
 .libroReclamaciones {
   width: 100%;
   max-width: 600px;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: #cccaca;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
