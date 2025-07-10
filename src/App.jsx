@@ -24,7 +24,7 @@ import DashboardView from './components/admin/dashboard-view';
 import Perfil from './components/Perfil/Perfil';
 import Reservas from './components/Reservas/Reservas';
 import Compras from './components/Compras/Compras';
-import LibroReclamaciones from './components/LibroReclamaciones/LibroReclamaciones';
+import ReclamosCard from './components/admin/libro-reclamaciones';
 
 function App() {
   return (
@@ -40,7 +40,7 @@ function App() {
         <Route path="/producto/:id" element={<ProductoU />} />
         <Route path="/reservas" element={<Reservas />} />
         <Route path="/compras" element={<Compras />} />
-        <Route path="/libro-reclamaciones" element={<LibroReclamaciones />} />
+        <Route path="/libro-reclamaciones" element={<ReclamosCard />} />
 
 
         {/* Marcas */}
@@ -57,6 +57,7 @@ function App() {
         <Route path="/admin/users" element={<UserView/>}/>
         <Route path="/admin/reservas" element={<ReservaView/>}/>
         <Route path="/admin/dash" element={<DashboardView/>}/>
+        <Route path="/admin/reclamos" element={<ReclamosCard/>} />
 
         {/*Vista Controladores*/}
         <Route path='/admin/insertar' element={<InsertProduct/>}/>
