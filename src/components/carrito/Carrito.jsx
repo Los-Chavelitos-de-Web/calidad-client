@@ -40,7 +40,7 @@ const Carrito = () => {
       unit_price: producto.unit_price || producto.precio || 0,
       stock: producto.stock || 100,
       quantity: producto.quantity || producto.cantidad || 1,
-      image: producto.image || "https://via.placeholder.com/100",
+      image: producto.imageUrl || "https://via.placeholder.com/100",
       createdAt: producto.createdAt || hoy,
     }));
 

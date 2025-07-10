@@ -4,20 +4,30 @@ import NavBar from "../Nav/NavBar";
 import BotonAñadir from "../carrito/BotonAñadir";
 import styles from "./ProductoU.module.css";
 import ProductosSimilares from "./ProductosSimilares";
+import CalificacionProducto from "../CalificarProducto/CalificacionProducto";
 
 const ProductoU = () => {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
   const [showToast, setShowToast] = useState(false);
 
+  const [promedioCalificacion, setPromedioCalificacion] = useState(0);
+  const [cantidadCalificaciones, setCantidadCalificaciones] = useState(0);
+
+  // estado para forzar actualización
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  //Función que se llama al calificar un producto
+  const handleRefresh = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
   useEffect(() => {
-    // Al cambiar de producto (cambiar el id), se sube al inicio de la página
+    // Al cambiar de producto, se vuelve al inicio
     window.scrollTo({ top: 0, behavior: "smooth" });
     setProducto(null);
     const fetchProducto = async () => {
       try {
-        console.log("ID:", id);
-
         const response = await fetch(
           `${import.meta.env.VITE_APP_BACK}/products/${id}`
         );
@@ -25,7 +35,6 @@ const ProductoU = () => {
 
         if (encontrado) {
           const precioAleatorio = Math.round(Math.random() * 200);
-
           const stockTotal =
             typeof encontrado.stock === "object"
               ? Object.values(encontrado.stock).reduce((a, b) => a + b, 0)
@@ -40,7 +49,7 @@ const ProductoU = () => {
             stock: stockTotal ?? 0,
             model: encontrado.model || "No especificado",
             category: encontrado.category || "Sin categoría",
-            image: encontrado.image || "/images/no-image.png",
+            image: encontrado.imageUrl || "/images/no-image.png",
           });
         } else {
           console.error("Producto no encontrado.");
@@ -51,28 +60,35 @@ const ProductoU = () => {
     };
 
     fetchProducto();
-  }, [id]); // incluye el id como dependencia
+  }, [id]);
 
-  {
-    /*const agregarAlCarrito = () => {
-    const carritoGuardado = JSON.parse(localStorage.getItem("carrito")) || [];
-    const indexProducto = carritoGuardado.findIndex(
-      (p) => p.id === producto.id
-    );
+  // Actualiza promedio y cantidad de calificaciones si hay cambio
+  useEffect(() => {
+    if (!id) return;
 
-    if (indexProducto !== -1) {
-      carritoGuardado[indexProducto].quantity =
-        (carritoGuardado[indexProducto].quantity || 1) + 1;
+    const guardadas = JSON.parse(localStorage.getItem("calificaciones")) || {};
+    const productoCalif = guardadas[id];
+
+    // Si no hay calificaciones, se inicializa como un objeto vacío
+    if (productoCalif) {
+      const valores = Object.values(productoCalif).map((c) =>
+        typeof c === "object" && c.valor
+          ? c.valor
+          : typeof c === "number"
+          ? c
+          : 0
+      );
+
+      const total = valores.reduce((a, b) => a + b, 0);
+      const promedio = valores.length ? total / valores.length : 0;
+
+      setPromedioCalificacion(promedio.toFixed(1));
+      setCantidadCalificaciones(valores.length);
     } else {
-      carritoGuardado.push({ ...producto, quantity: 1 });
+      setPromedioCalificacion(0);
+      setCantidadCalificaciones(0);
     }
-
-    localStorage.setItem("carrito", JSON.stringify(carritoGuardado));
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
-    window.dispatchEvent(new Event("carritoActualizado"));
-  };  */
-  }
+  }, [producto, refreshTrigger]); // se actualiza cuando alguien califica
 
   if (!producto) {
     return <h2 className={styles.cargando}>Cargando producto...</h2>;
@@ -91,61 +107,55 @@ const ProductoU = () => {
               <tr>
                 <td className={styles.productName} colSpan={2}>
                   {producto.title}
+                  {/*  Calificaciones visuales */}
                   <div className={styles.estrellas}>
                     {[...Array(5)].map((_, index) => (
-                      <span key={index} className={styles.estrella}>
+                      <span
+                        key={index}
+                        className={styles.estrella}
+                        style={{
+                          color:
+                            index < Math.round(promedioCalificacion)
+                              ? "#4285f4"
+                              : "#ccc",
+                        }}
+                      >
                         ★
                       </span>
                     ))}
                     <span className={styles.calificacionesCantidad}>
-                      (#cantidad)
+                      ({cantidadCalificaciones}) calificaciones
                     </span>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>Precio:</strong>
-                </td>
+                <td><strong>Precio:</strong></td>
                 <td>S/ {producto.unit_price}</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Marca:</strong>
-                </td>
+                <td><strong>Marca:</strong></td>
                 <td>{producto.brand}</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Stock:</strong>
-                </td>
+                <td><strong>Stock:</strong></td>
                 <td>{producto.stock}</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Modelo:</strong>
-                </td>
+                <td><strong>Modelo:</strong></td>
                 <td>{producto.model}</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Categoría:</strong>
-                </td>
+                <td><strong>Categoría:</strong></td>
                 <td>{producto.category}</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Descripción:</strong>
-                </td>
+                <td><strong>Descripción:</strong></td>
                 <td>{producto.description}</td>
               </tr>
               <tr>
                 <td colSpan={2}>
-                  <div
-                    className={styles.botonContainer}
-                    style={{ position: "relative" }}
-                  >
-                    {/* Botón para añadir al carrito */}
+                  <div className={styles.botonContainer} style={{ position: "relative" }}>
                     <BotonAñadir
                       producto={producto}
                       onAdded={() => {
@@ -155,8 +165,7 @@ const ProductoU = () => {
                     />
                     {showToast && (
                       <div className={styles.toast}>
-                        <span className={styles.icon}>✅</span> Producto añadido
-                        al carrito
+                        <span className={styles.icon}>✅</span> Producto añadido al carrito
                       </div>
                     )}
                   </div>
@@ -166,52 +175,14 @@ const ProductoU = () => {
           </table>
         </div>
       </div>
-      {/*CALIFICACION DEL PRODUCTO*/}
-      <div className={styles.opinionesContainer}>
-        <h2 className={styles.opinionesTitulo}>Opiniones del producto</h2>
-        <div className={styles.ratingResumen}>
-          <div className={styles.promedio}>
-            <span className={styles.ratingValor}>4.9</span>
-            <div className={styles.estrellas}>
-              {[...Array(5)].map((_, index) => (
-                <span key={index} className={styles.estrella}>
-                  ★
-                </span>
-              ))}
-            </div>
-            <span className={styles.totalCalificaciones}>
-              (#) calificaciones
-            </span>
-          </div>
 
-          <div className={styles.barrasEstrellas}>
-            {[5, 4, 3, 2, 1].map((estrella) => (
-              <div key={estrella} className={styles.filaEstrella}>
-                <span>{estrella}</span>
-                <div className={styles.barra}>
-                  <div
-                    className={styles.barraInterna}
-                    style={{
-                      width:
-                        estrella === 5
-                          ? "80%"
-                          : estrella === 4
-                          ? "15%"
-                          : estrella === 3
-                          ? "5%"
-                          : estrella === 2
-                          ? "0%"
-                          : "0%",
-                    }}
-                  ></div>
-                </div>
-                <span className={styles.estrellaGris}>★</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      {/* Productos Similares */}
+      {/* Calificación del producto */}
+      <CalificacionProducto
+        productoId={producto.id}
+        onRefresh={handleRefresh}
+      />
+
+      {/* Productos similares */}
       <ProductosSimilares
         categoria={producto.category}
         idProductoActual={producto.id}

@@ -82,7 +82,7 @@ const ProductosSimilares = ({ categoria, idProductoActual, nombreBase }) => {
             >
               <div className={styles.imagenProducto}>
                 <img
-                  src={producto.image}
+                  src={producto.imageUrl}
                   alt={producto.title}
                 />
               </div>

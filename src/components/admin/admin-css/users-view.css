@@ -1,0 +1,562 @@
+/* Estilos generales del contenedor */
+
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f5f7fa;
+}
+
+.admin-aside-wrapper {
+    width: 250px;
+    background-color: #2c3e50;
+    color: white;
+}
+
+.admin-main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: #f5f7fa;
+}
+
+
+/* Estilos del encabezado */
+
+.productos-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.productos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.productos-header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+.product-count {
+    background-color: #e8f4fd;
+    color: #2980b9;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+/* Estilos de búsqueda y exportación */
+
+.search-export-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.btn-excel {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.btn-excel:hover {
+    background-color: #219653;
+}
+
+.img-excel {
+    width: 20px;
+    height: 20px;
+}
+
+
+/* Estilos de la tabla */
+
+.table-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.products-table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.products-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e9ecef;
+    color: #495057;
+}
+
+.products-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+
+/* Estilos de celdas específicas */
+
+.cell-id {
+    font-family: monospace;
+    color: #6c757d;
+}
+
+.cell-name {
+    font-weight: 500;
+}
+
+.cell-model {
+    color: #6c757d;
+}
+
+.cell-stock {
+    text-align: center;
+}
+
+
+/* Estilos de badges de estado */
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-badge.inactive {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+
+/* Estilos de botones de acción */
+
+.cell-actions {
+    text-align: center;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+    background-color: #e9ecef;
+}
+
+.action-icon {
+    width: 20px;
+    height: 20px;
+}
+
+
+/* Estilos para "no hay resultados" */
+
+.no-results td {
+    text-align: center;
+    padding: 20px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+
+/* Estilos del modal */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #2c3e50;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6c757d;
+    transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+    color: #495057;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.user-detail-row {
+    display: flex;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #495057;
+    width: 150px;
+    flex-shrink: 0;
+}
+
+.detail-value {
+    color: #6c757d;
+    flex: 1;
+}
+
+
+/* Estilos para cambiar rol */
+
+.role-change-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.role-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex: 1;
+}
+
+.change-role-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.change-role-btn:hover {
+    background-color: #2980b9;
+}
+
+.change-role-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+
+/* Estilos del pie del modal */
+
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+}
+
+.status-toggle-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.status-toggle-btn.activate {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-toggle-btn.activate:hover {
+    background-color: #218838;
+}
+
+.status-toggle-btn.deactivate {
+    background-color: #dc3545;
+    color: white;
+}
+
+.status-toggle-btn.deactivate:hover {
+    background-color: #c82333;
+}
+
+.modal-btn {
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.close-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.close-btn:hover {
+    background-color: #5a6268;
+}
+
+
+/* Estilos para el indicador de carga */
+
+.loading-indicator {
+    padding: 20px;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+}
+
+
+/*Modal*/
+
+
+/* Contenedor principal */
+
+.search-export-container {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Contenedor de filtros */
+
+.filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+
+/* Campo de búsqueda */
+
+.search-input {
+    flex: 1;
+    min-width: 250px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+
+/* Selector de roles */
+
+.role-filter-container {
+    position: relative;
+    min-width: 200px;
+}
+
+.role-filter-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background-color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+}
+
+.role-filter-select:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+
+/* Botón de exportación */
+
+.btn-excel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background-color: #1d6f42;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-excel:hover {
+    background-color: #166534;
+    transform: translateY(-1px);
+}
+
+.btn-excel:active {
+    transform: translateY(0);
+}
+
+.img-excel {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
+}
+
+.btn-excel-text {
+    margin-left: 0.25rem;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .filters-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-input,
+    .role-filter-container,
+    .btn-excel {
+        width: 100%;
+    }
+}
+
+
+/* Estilos responsivos */
+
+@media (max-width: 768px) {
+    .admin-container {
+        flex-direction: column;
+    }
+    .admin-aside-wrapper {
+        width: 100%;
+    }
+    .search-export-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .user-detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    .detail-label {
+        width: 100%;
+    }
+    .modal-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .status-toggle-btn,
+    .modal-btn {
+        width: 100%;
+    }
+}

@@ -8,10 +8,12 @@ const BotonAñadir = ({ producto, onAdded = () => {} }) => {
 
     const carritoActual = JSON.parse(localStorage.getItem("carrito")) || [];
 
+    // Verifica si el producto ya existe en el carrito
     const productoExistente = carritoActual.find(
       (item) => item.id === producto.id
     );
 
+    // Si existe, actualiza la cantidad
     if (productoExistente) {
       const carritoActualizado = carritoActual.map((item) =>
         item.id === producto.id
@@ -23,6 +25,7 @@ const BotonAñadir = ({ producto, onAdded = () => {} }) => {
       );
       localStorage.setItem("carrito", JSON.stringify(carritoActualizado));
     } else {
+      // Si no existe, lo agrega con cantidad 1
       const productoAgregado = {
         ...producto,
         quantity: 1,
@@ -33,6 +36,7 @@ const BotonAñadir = ({ producto, onAdded = () => {} }) => {
       );
     }
 
+    // Actualiza el contador de productos en el carrito
     window.dispatchEvent(new Event("carritoActualizado"));
     onAdded(); // Llamar callback opcional
   };

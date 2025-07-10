@@ -24,6 +24,7 @@ import DashboardView from './components/admin/dashboard-view';
 import Perfil from './components/Perfil/Perfil';
 import Reservas from './components/Reservas/Reservas';
 import Compras from './components/Compras/Compras';
+import LibroReclamaciones from './components/LibroReclamaciones/LibroReclamaciones';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/producto/:id" element={<ProductoU />} />
         <Route path="/reservas" element={<Reservas />} />
         <Route path="/compras" element={<Compras />} />
+        <Route path="/libro-reclamaciones" element={<LibroReclamaciones />} />
 
 
         {/* Marcas */}

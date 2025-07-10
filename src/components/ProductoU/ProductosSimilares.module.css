@@ -37,8 +37,15 @@
 
 .imagenProducto {
   width: 100%;
-  height: 150px;
-  background-color: #ddd; /* puedes cambiar por una imagen o fondo dinámico */
+  height: 180px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.imagenProducto img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* o 'cover', según cómo quieres que se vean */
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }

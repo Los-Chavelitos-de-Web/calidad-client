@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import AdminAside from "./template/AdminAside";
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
-import * as XLSX from 'xlsx'; // Importar la librería para exportar a Excel
+import * as XLSX from 'xlsx';
+import UserModal from "./user.modal.jsx";
+import UserFilters from "./user-filter.jsx";
+import './admin-css/users-view.css';
 
 const UserView = () => {
   const navigate = useNavigate();
@@ -10,8 +13,12 @@ const UserView = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all"); // Nuevo estado para el filtro de roles
+  const [newRole, setNewRole] = useState("");
   const { authToken, error, loading } = usePayload();
+
+  const availableRoles = ["GERENTE", "ALMACEN_VENTAS", "CLIENTE"];
 
   useEffect(() => {
     if (loading) return;
@@ -60,48 +67,28 @@ const UserView = () => {
     }
   }
 
-  // Función para filtrar usuarios por nombre o email
   const filteredUsers = users.filter(user => {
-    if (!searchTerm) return true;
+    // Filtro por término de búsqueda
+    const matchesSearch = !searchTerm || 
+      user.profile?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const searchLower = searchTerm.toLowerCase();
-    const nameMatch = user.profile?.name?.toLowerCase().includes(searchLower) || false;
-    const emailMatch = user.email.toLowerCase().includes(searchLower);
+    // Filtro por rol
+    const matchesRole = roleFilter === "all" || user.role === roleFilter;
     
-    return nameMatch || emailMatch;
+    return matchesSearch && matchesRole;
   });
-
-  // Función para exportar a Excel
-  const exportToExcel = () => {
-    // Preparar los datos para exportar
-    const dataToExport = filteredUsers.map(user => ({
-      ID: user.id,
-      Nombre: user.profile?.name || "No especificado",
-      Email: user.email,
-      Rol: user.role,
-      Estado: user.isActive ? "Activo" : "Inactivo",
-      'Fecha Registro': new Date(user.createdAt).toLocaleDateString(),
-      'Teléfono': user.profile?.phone || "N/A",
-      'Dirección': user.profile?.address || "N/A"
-    }));
-
-    // Crear hoja de trabajo
-    const ws = XLSX.utils.json_to_sheet(dataToExport);
-    // Crear libro de trabajo
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
-    // Exportar el archivo
-    XLSX.writeFile(wb, "usuarios.xlsx");
-  };
 
   const handleOpenModal = (user) => {
     setSelectedUser(user);
+    setNewRole(user.role);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedUser(null);
+    setNewRole("");
   };
 
   const toggleUserStatus = async () => {
@@ -109,7 +96,6 @@ const UserView = () => {
     
     try {
       const newStatus = !selectedUser.isActive;
-      
       const response = await fetch(`${import.meta.env.VITE_APP_BACK}/users/isActive`, {
         method: 'PUT',
         headers: {
@@ -123,28 +109,56 @@ const UserView = () => {
       });
 
       if (response.ok) {
-        // Actualizar el estado local
-        const updatedUsers = users.map(user => 
-          user.id === selectedUser.id 
-            ? { ...user, isActive: newStatus } 
-            : user
-        );
-        
-        setUsers(updatedUsers);
+        setUsers(users.map(user => 
+          user.id === selectedUser.id ? { ...user, isActive: newStatus } : user
+        ));
         setSelectedUser({ ...selectedUser, isActive: newStatus });
-      } else {
-        console.error('Error al cambiar el estado del usuario');
-        const errorData = await response.json();
-        console.error('Detalles del error:', errorData);
       }
     } catch (error) {
-      console.error('Error al cambiar el estado del usuario:', error);
+      console.error('Error al cambiar estado:', error);
     }
   };
   
+  const changeUserRole = async () => {
+    if (!selectedUser || !newRole || newRole === selectedUser.role) return;
+    
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BACK}/users/role`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({
+          id: selectedUser.id,
+          role: newRole
+        })
+      });
+
+      if (response.ok) {
+        setUsers(users.map(user => 
+          user.id === selectedUser.id ? { ...user, role: newRole } : user
+        ));
+        setSelectedUser({ ...selectedUser, role: newRole });
+        alert('Rol actualizado correctamente');
+      }
+    } catch (error) {
+      console.error('Error al cambiar rol:', error);
+    }
+  };
+
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString('es-ES', options);
+  };
+
+  const translateRole = (role) => {
+    const translations = {
+      'GERENTE': 'Gerente',
+      'ALMACEN_VENTAS': 'Almacén/Ventas',
+      'CLIENTE': 'Cliente'
+    };
+    return translations[role] || role;
   };
 
   return (
@@ -160,26 +174,14 @@ const UserView = () => {
             <span className="product-count">{filteredUsers.length} usuarios</span>
           </div>
 
-          {/* Barra de búsqueda y botón de exportación */}
-          <div className="search-export-container" >
-            <div className="search-container" style={{ position: 'relative' }}>
-              <input
-                type="text"
-                placeholder="Buscar por nombre o email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-              <button 
-              onClick={exportToExcel}
-              className="btn-excel">
-              <img 
-                src="/icons/img-excel.png" 
-                className="img-excel"
-              />
-            </button>
-            </div>
-          </div>
+          <UserFilters
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            roleFilter={roleFilter}
+            setRoleFilter={setRoleFilter}
+            users={users}
+            filteredUsers={filteredUsers}
+          />
         </div>
 
         <div className="table-container">
@@ -195,7 +197,7 @@ const UserView = () => {
                   <th className="column-model">Fecha Registro</th>
                   <th className="column-category">Rol</th>
                   <th className="cell-category">Estado</th>
-                  <th className="cell-actions">Acciones</th>
+                  <th className="cell-model">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -203,14 +205,10 @@ const UserView = () => {
                   filteredUsers.map((user) => (
                     <tr key={user.id}>
                       <td className="cell-name">{user.id}</td>
-                      <td className="cell-id">
-                        {user.profile?.name || "No especificado"}
-                      </td>
+                      <td className="cell-id">{user.profile?.name || "No especificado"}</td>
                       <td className="cell-name">{user.email}</td>
-                      <td className="cell-model">
-                        {new Date(user.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="cell-id">{user.role}</td>
+                      <td className="cell-model">{new Date(user.createdAt).toLocaleDateString()}</td>
+                      <td className="cell-id">{translateRole(user.role)}</td>
                       <td className="cell-stock">
                         <span className={`status-badge ${user.isActive ? 'active' : 'inactive'}`}>
                           {user.isActive ? "Activo" : "Inactivo"}
@@ -223,7 +221,7 @@ const UserView = () => {
                           title="Ver detalles"
                         >
                           <img
-                            src="../public/icons/tres-puntos.png"
+                            src="../icons/tres-puntos.png"
                             alt="Opciones"
                             className="action-icon"
                           />
@@ -234,7 +232,9 @@ const UserView = () => {
                 ) : (
                   <tr className="no-results">
                     <td colSpan="7">
-                      {searchTerm ? "No hay usuarios que coincidan con la búsqueda" : "No hay usuarios registrados"}
+                      {searchTerm || roleFilter !== "all" 
+                        ? "No hay usuarios que coincidan con los filtros" 
+                        : "No hay usuarios registrados"}
                     </td>
                   </tr>
                 )}
@@ -244,73 +244,18 @@ const UserView = () => {
         </div>
       </div>
 
-      {/* Modal de detalles del usuario */}
       {isModalOpen && selectedUser && (
-        <div className="modal-overlay">
-          <div className="modal-container">
-            <div className="modal-header">
-              <h2>Detalles del Usuario</h2>
-              <button className="modal-close-btn" onClick={handleCloseModal}>
-                &times;
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="user-detail-row">
-                <span className="detail-label">ID:</span>
-                <span className="detail-value">{selectedUser.id}</span>
-              </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Email:</span>
-                <span className="detail-value">{selectedUser.email}</span>
-              </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Nombre completo:</span>
-                <span className="detail-value">
-                  {selectedUser.profile?.name || "No especificado"}
-                </span>
-              </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Rol:</span>
-                <span className="detail-value">{selectedUser.role}</span>
-              </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Estado:</span>
-                <span className="detail-value">
-                  <span className={`status-badge ${selectedUser.isActive ? 'active' : 'inactive'}`}>
-                    {selectedUser.isActive ? "Activo" : "Inactivo"}
-                  </span>
-                </span>
-              </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Fecha de creación:</span>
-                <span className="detail-value">{formatDate(selectedUser.createdAt)}</span>
-              </div>
-              {selectedUser.profile?.phone && (
-                <div className="user-detail-row">
-                  <span className="detail-label">Teléfono:</span>
-                  <span className="detail-value">{selectedUser.profile.phone}</span>
-                </div>
-              )}
-              {selectedUser.profile?.address && (
-                <div className="user-detail-row">
-                  <span className="detail-label">Dirección:</span>
-                  <span className="detail-value">{selectedUser.profile.address}</span>
-                </div>
-              )}
-            </div>
-            <div className="modal-footer">
-              <button 
-                className={`status-toggle-btn ${selectedUser.isActive ? 'deactivate' : 'activate'}`}
-                onClick={toggleUserStatus}
-              >
-                {selectedUser.isActive ? 'Desactivar Usuario' : 'Activar Usuario'}
-              </button>
-              <button className="modal-btn close-btn" onClick={handleCloseModal}>
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
+        <UserModal
+          selectedUser={selectedUser}
+          newRole={newRole}
+          availableRoles={availableRoles}
+          translateRole={translateRole}
+          formatDate={formatDate}
+          onClose={handleCloseModal}
+          onRoleChange={changeUserRole}
+          onRoleSelectChange={setNewRole}
+          onToggleStatus={toggleUserStatus}
+        />
       )}
     </div>
   );
