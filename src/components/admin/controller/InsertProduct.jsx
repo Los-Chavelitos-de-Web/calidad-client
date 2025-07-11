@@ -9,6 +9,7 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
     brand: '',
     price: '',
     stock: '{}',
+    specs: '{}',
     model: '',
     category: '',
     manufacturer: '',
@@ -26,7 +27,7 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
       ...producto,
       [name]: value
     });
-    
+
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -35,68 +36,66 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
     }
   };
 
-  const handleStockChange = (e) => {
-    const value = e.target.value;
-    setProducto({
-      ...producto,
-      stock: value
-    });
-    
-    if (errors.stock) {
-      setErrors({
-        ...errors,
-        stock: null
-      });
-    }
-  };
-
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!producto.title.trim()) newErrors.title = 'Título es requerido';
     if (!producto.description.trim()) newErrors.description = 'Descripción es requerida';
     if (!producto.brand.trim()) newErrors.brand = 'Marca es requerida';
     if (!producto.category.trim()) newErrors.category = 'Categoría es requerida';
-    
+
     if (!producto.price.trim()) {
       newErrors.price = 'Precio es requerido';
     } else if (isNaN(Number(producto.price)) || Number(producto.price) <= 0) {
       newErrors.price = 'Precio debe ser un número positivo';
     }
-    
+
     try {
-      JSON.parse(producto.stock);
-    } catch (e) {
-      newErrors.stock = 'Stock debe ser un JSON válido';
-    }
-    
+  const parsedStock = JSON.parse(producto.stock);
+  if (typeof parsedStock !== 'object' || Array.isArray(parsedStock)) {
+    newErrors.stock = 'El stock debe ser un objeto JSON válido';
+  }
+} catch (e) {
+  newErrors.stock = 'Formato JSON inválido en el stock';
+}
+
+
     if (producto.manualUrl && !/^https?:\/\/.+\..+/.test(producto.manualUrl)) {
       newErrors.manualUrl = 'URL no válida';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
     if (!authToken) {
       alert('No estás autenticado');
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
+      const payload = {
+        ...producto,
+        price: Number(producto.price),
+        stock: JSON.parse(producto.stock),
+        specs: JSON.parse(producto.specs)
+      };
+
+      console.log("Payload enviado:", payload);
+
       const response = await fetch(`${import.meta.env.VITE_APP_BACK}/products/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${authToken}`
         },
-        body: JSON.stringify(producto) 
+        body: JSON.stringify(payload)
       });
 
       const result = await response.json();
@@ -109,13 +108,14 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
           brand: '',
           price: '',
           stock: '{}',
+          specs: '{}',
           model: '',
           category: '',
           manufacturer: '',
           manualUrl: '',
           createdAt: new Date().toISOString()
         });
-        onProductCreated(); // Notificar al componente padre
+        onProductCreated();
       } else {
         alert(`Error: ${result.message || 'No se pudo insertar el producto'}`);
       }
@@ -136,13 +136,12 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
           <h2 className="modal-title">Agregar nuevo producto</h2>
           <button className="modal-close-btn" onClick={onClose}>&times;</button>
         </div>
-        
+
         <div className="modal-body">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Columna izquierda */}
               <div className="space-y-4">
-                {/* Campo Título */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
                   <input
@@ -150,27 +149,23 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
                     name="title"
                     value={producto.title}
                     onChange={handleChange}
-                    placeholder="Nombre del producto"
                     className={`w-full border rounded-md p-2 ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
                   />
                   {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
                 </div>
-                
-                {/* Campo Descripción */}
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
                   <textarea
                     name="description"
                     value={producto.description}
                     onChange={handleChange}
-                    placeholder="Descripción detallada del producto"
                     rows={3}
                     className={`w-full border rounded-md p-2 ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
                   />
                   {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
                 </div>
-                
-                {/* Campo Marca */}
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Marca *</label>
                   <input
@@ -178,47 +173,57 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
                     name="brand"
                     value={producto.brand}
                     onChange={handleChange}
-                    placeholder="Marca del producto"
                     className={`w-full border rounded-md p-2 ${errors.brand ? 'border-red-500' : 'border-gray-300'}`}
                   />
                   {errors.brand && <p className="text-red-500 text-xs mt-1">{errors.brand}</p>}
                 </div>
               </div>
-              
+
               {/* Columna derecha */}
               <div className="space-y-4">
-                {/* Campo Precio */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Precio *</label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
                     <input
-                      type="text"
+                      type="number"
                       name="price"
                       value={producto.price}
                       onChange={handleChange}
-                      placeholder="0.00"
                       className={`w-full border rounded-md p-2 pl-8 ${errors.price ? 'border-red-500' : 'border-gray-300'}`}
                     />
                   </div>
                   {errors.price && <p className="text-red-500 text-xs mt-1">{errors.price}</p>}
                 </div>
-                
-                {/* Campo Stock */}
+                {/*Stock */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Stock * (Formato JSON)</label>
                   <textarea
                     name="stock"
                     value={producto.stock}
-                    onChange={handleStockChange}
+                    onChange={handleChange}
                     placeholder='{"almacen1": 10, "almacen2": 5}'
                     rows={3}
                     className={`w-full border rounded-md p-2 font-mono text-sm ${errors.stock ? 'border-red-500' : 'border-gray-300'}`}
                   />
                   {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock}</p>}
                 </div>
-                
-                {/* Campo Modelo */}
+
+                {/*Especificaciones */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Especificaciones * (Formato JSON)</label>
+                  <textarea
+                    name="specs"
+                    value={producto.specs}
+                    onChange={handleChange}
+                    placeholder='{"almacen1": 10, "almacen2": 5}'
+                    rows={3}
+                    className={`w-full border rounded-md p-2 font-mono text-sm ${errors.specs ? 'border-red-500' : 'border-gray-300'}`}
+                  />
+                  {errors.specs && <p className="text-red-500 text-xs mt-1">{errors.specs}</p>}
+                </div>
+
+              {/*Modelo */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Modelo</label>
                   <input
@@ -226,12 +231,10 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
                     name="model"
                     value={producto.model}
                     onChange={handleChange}
-                    placeholder="Modelo/número de parte"
                     className="w-full border border-gray-300 rounded-md p-2"
                   />
                 </div>
-                
-                {/* Campo Categoría */}
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Categoría *</label>
                   <input
@@ -239,17 +242,15 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
                     name="category"
                     value={producto.category}
                     onChange={handleChange}
-                    placeholder="Categoría del producto"
                     className={`w-full border rounded-md p-2 ${errors.category ? 'border-red-500' : 'border-gray-300'}`}
                   />
                   {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category}</p>}
                 </div>
               </div>
             </div>
-            
+
             {/* Campos adicionales */}
             <div className="form-grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Campo Fabricante */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Fabricante</label>
                 <input
@@ -257,12 +258,10 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
                   name="manufacturer"
                   value={producto.manufacturer}
                   onChange={handleChange}
-                  placeholder="Fabricante del producto"
                   className="w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
-              
-              {/* Campo URL Manual */}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">URL del Manual</label>
                 <input
@@ -270,15 +269,14 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
                   name="manualUrl"
                   value={producto.manualUrl}
                   onChange={handleChange}
-                  placeholder="https://ejemplo.com/manual.pdf"
                   className={`w-full border rounded-md p-2 ${errors.manualUrl ? 'border-red-500' : 'border-gray-300'}`}
                 />
                 {errors.manualUrl && <p className="text-red-500 text-xs mt-1">{errors.manualUrl}</p>}
               </div>
             </div>
-            
+
             <input type="hidden" name="createdAt" value={producto.createdAt} />
-            
+
             <div className="flex justify-end pt-4">
               <button
                 type="button"

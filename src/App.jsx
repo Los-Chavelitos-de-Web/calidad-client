@@ -25,7 +25,7 @@ import Perfil from './components/Perfil/Perfil';
 import Reservas from './components/Reservas/Reservas';
 import Compras from './components/Compras/Compras';
 import ReclamosCard from './components/admin/libro-reclamaciones';
-import LibroReclamaciones from './components/LibroReclamaciones/libroReclamaciones';
+import LibroReclamaciones from './components/LibroReclamaciones/LibroReclamaciones';
 
 
 function App() {
