@@ -27,6 +27,7 @@ import Compras from "./components/Compras/Compras";
 import ReclamosCard from "./components/admin/libro-reclamaciones";
 import LibroReclamaciones from "./components/LibroReclamaciones/LibroReclamaciones";
 import NotFound from "./components/NotFound/NotFound";
+import WhatsAppButton from "./components/WhatsAppButton/WhatsAppButton";
 
 function App() {
   return (
@@ -71,7 +72,11 @@ function App() {
 
         {/* Ruta 404*/}
         <Route path="*" element={<NotFound />} />
+      
       </Routes>
+      {/* Botón flotante visible en toda la app */}
+      <WhatsAppButton />
+
     </Router>
   );
 }
