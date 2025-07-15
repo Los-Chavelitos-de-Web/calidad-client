@@ -25,7 +25,7 @@ const Productos = () => {
         // Asegura que todos los productos tengan un precio asignado
         const datosProcesados = productos.map((p) => ({
           ...p,
-          unit_price: p.unit_price ?? Math.round(Math.random() * 200),
+          unit_price: p.unit_price ?? parseFloat((Math.random() * 800 + 200).toFixed(2)),
         }));
         setData(datosProcesados);
       } catch (err) {
