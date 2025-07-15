@@ -23,7 +23,7 @@ const Buscar = () => {
 
         const productosConPrecios = productos.map((p) => ({
           ...p,
-          precio: p.precio ?? Math.round(Math.random() * 200),
+          precio: p.precio ?? parseFloat((Math.random() * 800 + 200).toFixed(2)),
         }));
 
         setProductosOriginales(productosConPrecios);
