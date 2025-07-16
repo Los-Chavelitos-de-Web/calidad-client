@@ -1,14 +1,29 @@
 import React, { useState } from 'react';
+import { usePayload } from "../../utils/authHelpers";
+import './admin-css/edit-modal.css';
 
 const EditProductModal = ({ product, onClose, onProductUpdated }) => {
-  const [formData, setFormData] = useState({ ...product });
+  const [formData, setFormData] = useState({
+    title: product.title || '',
+    brand: product.brand || '',
+    model: product.model || '',
+    category: product.category || '',
+    price: product.price || 0,
+    description: product.description || '',
+    manufacturer: product.manufacturer || '',
+    manualUrl: product.manualUrl || ''
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const authToken = localStorage.getItem("token");
+  const { authToken } = usePayload() || {};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === "price" ? parseFloat(value) : value
+    }));
   };
 
   const handleUpdate = async () => {
@@ -67,6 +82,18 @@ const EditProductModal = ({ product, onClose, onProductUpdated }) => {
 
           <label>Precio:
             <input type="number" name="price" value={formData.price} onChange={handleChange} />
+          </label>
+
+          <label>Descripción:
+            <textarea name="description" value={formData.description} onChange={handleChange} />
+          </label>
+
+          <label>Fabricante:
+            <input type="text" name="manufacturer" value={formData.manufacturer} onChange={handleChange} />
+          </label>
+
+          <label>URL del Manual:
+            <input type="text" name="manualUrl" value={formData.manualUrl} onChange={handleChange} />
           </label>
 
           <div className="modal-actions">

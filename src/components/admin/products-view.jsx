@@ -8,6 +8,7 @@ import { exportProductsToExcel } from "./exportToExcel";
 import EditProductModal from "../admin/EditProductModal";
 import './admin-css/products-view.css';
 import './admin-css/ProductsDetaills.css';
+import './admin-css/edit-modal.css';
 
 const ProductosView = () => {
   const navigate = useNavigate();
