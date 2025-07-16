@@ -95,6 +95,22 @@
     justify-content: flex-end;
 }
 
+.modalBtn-responderBtn {
+    background-color: #28a745;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-right: 1rem;
+}
+
+.modalBtn-responderBtn:hover {
+    background-color: #0c5f1f;
+}
+
 .modalBtn {
     padding: 10px 20px;
     background-color: #007bff;
@@ -104,10 +120,6 @@
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
-}
-
-.modalOverlay {
-    background-color: red !important;
 }
 
 .modalBtn:hover {

@@ -164,28 +164,11 @@ const ReclamosCard = () => {
         </div>
       </div>
 
-      {isModalOpen && selectedReclamo && (
-        <div className="modal-overlay">
-          <div className="modal-container">
-            <div className="modal-header">
-              <h2>Detalles del Reclamo</h2>
-              <button className="modal-close-btn" onClick={handleCloseModal}>&times;</button>
-            </div>
-            <div className="modal-body">
-              <div className="detail-row"><strong>ID:</strong> {selectedReclamo.id}</div>
-              <div className="detail-row"><strong>Usuario:</strong> {selectedReclamo.user?.email || `ID: ${selectedReclamo.userId}`}</div>
-              <div className="detail-row"><strong>Título:</strong> {selectedReclamo.title}</div>
-              <div className="detail-row"><strong>Descripción:</strong> {selectedReclamo.description}</div>
-              <div className="detail-row"><strong>Fecha:</strong> {formatDate(selectedReclamo.createdAt)}</div>
-              <div className="detail-row"><strong>Estado:</strong> {selectedReclamo.status}</div>
-              {selectedReclamo.contact && <div className="detail-row"><strong>Contacto:</strong> {selectedReclamo.contact}</div>}
-            </div>
-            <div className="modal-footer">
-              <button className="modal-btn" onClick={handleCloseModal}>Cerrar</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ReclamoModal 
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        reclamo={selectedReclamo}
+      />
     </div>
   );
 };
