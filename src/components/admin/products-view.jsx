@@ -3,7 +3,6 @@ import AdminAside from "./template/AdminAside";
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
 import ProductDetailsModal from "./productDetailsModal";
-import DeleteConfirmationModal from "./deleteConfirmationModal";
 import FormularioProducto from "./controller/InsertProduct"; // Importamos el formulario
 import { exportProductsToExcel } from "./exportToExcel";
 import './admin-css/products-view.css';
@@ -17,9 +16,7 @@ const ProductosView = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [showFormModal, setShowFormModal] = useState(false); // Estado para el formulario modal
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [productToDelete, setProductToDelete] = useState(null);
+  const [showFormModal, setShowFormModal] = useState(false);
   const { authToken } = usePayload();
 
   // Obtener datos de productos
@@ -97,46 +94,6 @@ const ProductosView = () => {
     handleCloseFormModal();
   };
 
-  // Delete handlers
-  const handleDeleteClick = (producto) => {
-    setProductToDelete(producto);
-    setShowDeleteConfirm(true);
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteConfirm(false);
-    setProductToDelete(null);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (!productToDelete) return;
-    
-    try {
-      const response = await fetch(`${import.meta.env.VITE_APP_BACK}/products/delete`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`
-        },
-        body: JSON.stringify({ id: productToDelete.id })
-      });
-
-      if (response.ok) {
-        await getData();
-        alert('Producto eliminado correctamente');
-      } else {
-        const errorData = await response.json();
-        alert(`Error al eliminar producto: ${errorData.message}`);
-      }
-    } catch (error) {
-      console.error('Error al eliminar producto:', error);
-      alert('Error al conectar con el servidor');
-    } finally {
-      setShowDeleteConfirm(false);
-      setProductToDelete(null);
-    }
-  };
-
   return (
     <div className="admin-container">
       <div className="admin-aside-wrapper">
@@ -209,17 +166,6 @@ const ProductosView = () => {
                       <td className="cell-actions">
                         <div className="action-buttons">
                           <button 
-                            className="action-btn-delete-btn"
-                            onClick={() => handleDeleteClick(producto)}
-                            title="Eliminar producto"
-                          >
-                            <img 
-                              src="/icons/delete-icon.png" 
-                              alt="Eliminar" 
-                              className="action-icon"
-                            />
-                          </button>
-                          <button 
                             className="action-btn"
                             onClick={() => handleOpenDetailsModal(producto)}
                             title="Ver detalles"
@@ -260,14 +206,6 @@ const ProductosView = () => {
           isOpen={showFormModal}
           onClose={handleCloseFormModal}
           onProductCreated={handleProductCreated}
-        />
-      )}
-
-      {showDeleteConfirm && (
-        <DeleteConfirmationModal 
-          onCancel={handleCancelDelete}
-          onConfirm={handleConfirmDelete}
-          productName={productToDelete?.title}
         />
       )}
     </div>

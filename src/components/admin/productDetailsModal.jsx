@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './admin-css/ProductsDetaills.css';
 
 const ProductDetailsModal = ({ product, onClose }) => {
+  const [isActive, setIsActive] = useState(product?.isActive || false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const getStock = (stockData) => {
     if (!stockData) return 0;
     return Object.values(stockData).reduce((sum, val) => sum + (val || 0), 0);
@@ -28,6 +31,29 @@ const ProductDetailsModal = ({ product, onClose }) => {
     return value.toString();
   };
 
+  const handleToggleStatus = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_APP_BACK}/products/status/${product.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isActive: !isActive }),
+      });
+
+      if (res.ok) {
+        setIsActive(!isActive);
+      } else {
+        console.error('Error al cambiar el estado del producto');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -43,6 +69,7 @@ const ProductDetailsModal = ({ product, onClose }) => {
               <p><strong>Modelo:</strong> {product.model}</p>
               <p><strong>Categoría:</strong> {product.category}</p>
               <p><strong>Stock total:</strong> {getStock(product.stock)}</p>
+              <p><strong>Estado:</strong> {isActive ? 'Activo' : 'Inactivo'}</p>
             </div>
             <div className="specs-section">
               <h4>Especificaciones Técnicas</h4>
@@ -61,6 +88,13 @@ const ProductDetailsModal = ({ product, onClose }) => {
                 <p>No hay especificaciones disponibles</p>
               )}
             </div>
+            <button 
+              onClick={handleToggleStatus}
+              disabled={isLoading}
+              className={`status-btn ${isActive ? 'active' : 'inactive'}`}
+            >
+              {isLoading ? 'Cargando...' : (isActive ? 'Desactivar' : 'Activar')}
+            </button>
           </div>
         )}
       </div>
