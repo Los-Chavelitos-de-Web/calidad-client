@@ -3,8 +3,9 @@ import AdminAside from "./template/AdminAside";
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
 import ProductDetailsModal from "./productDetailsModal";
-import FormularioProducto from "./controller/InsertProduct"; // Importamos el formulario
+import FormularioProducto from "./controller/InsertProduct";
 import { exportProductsToExcel } from "./exportToExcel";
+import EditProductModal from "../admin/EditProductModal";
 import './admin-css/products-view.css';
 import './admin-css/ProductsDetaills.css';
 
@@ -17,16 +18,15 @@ const ProductosView = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const { authToken } = usePayload();
 
-  // Obtener datos de productos
   async function getData() {
     try {
       setIsLoading(true);
       const res = await fetch(`${import.meta.env.VITE_APP_BACK}/products/getAll`);
       const productos = await res.json();
       setData(productos);
-      setFilteredData(productos);
     } catch (error) {
       console.error("Error al obtener productos:", error);
     } finally {
@@ -38,29 +38,30 @@ const ProductosView = () => {
     getData();
   }, []);
 
-  // Calcular stock total
+  useEffect(() => {
+    const sortByStatusAndId = (list) => {
+      return [...list].sort((a, b) => {
+        if (a.isActive !== b.isActive) return a.isActive ? -1 : 1;
+        return a.id - b.id;
+      });
+    };
+
+    const term = searchTerm.toLowerCase();
+    const filtered = data.filter(producto => 
+      producto.title.toLowerCase().includes(term) || 
+      producto.brand.toLowerCase().includes(term) ||
+      producto.model.toLowerCase().includes(term) ||
+      producto.category.toLowerCase().includes(term)
+    );
+
+    setFilteredData(sortByStatusAndId(filtered));
+  }, [searchTerm, data]);
+
   const getStock = (stockData) => {
     if (!stockData) return 0;
     return Object.values(stockData).reduce((sum, val) => sum + (val || 0), 0);
   };
 
-  // Filtrar productos
-  useEffect(() => {
-    if (!searchTerm) {
-      setFilteredData(data);
-    } else {
-      const term = searchTerm.toLowerCase();
-      const filtered = data.filter(producto => 
-        producto.title.toLowerCase().includes(term) || 
-        producto.brand.toLowerCase().includes(term) ||
-        producto.model.toLowerCase().includes(term) ||
-        producto.category.toLowerCase().includes(term)
-      );
-      setFilteredData(filtered);
-    }
-  }, [searchTerm, data]);
-
-  // Manejar exportación a Excel
   const handleExport = async () => {
     try {
       await exportProductsToExcel(filteredData, getStock);
@@ -69,7 +70,6 @@ const ProductosView = () => {
     }
   };
 
-  // Modal handlers
   const handleOpenDetailsModal = (producto) => {
     setSelectedProduct(producto);
     setShowDetailsModal(true);
@@ -80,7 +80,6 @@ const ProductosView = () => {
     setSelectedProduct(null);
   };
 
-  // Form modal handlers
   const handleOpenFormModal = () => {
     setShowFormModal(true);
   };
@@ -90,8 +89,33 @@ const ProductosView = () => {
   };
 
   const handleProductCreated = () => {
-    getData(); // Refrescar la lista después de crear
+    getData();
     handleCloseFormModal();
+  };
+
+  const handleStatusChange = (updatedProduct) => {
+    const updatedList = data.map((p) =>
+      p.id === updatedProduct.id ? updatedProduct : p
+    );
+    setData(updatedList);
+  };
+
+  const handleOpenEditModal = (producto) => {
+    setSelectedProduct(producto);
+    setShowEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedProduct(null);
+  };
+
+  const handleProductUpdated = (updatedProduct) => {
+    const updatedList = data.map((p) =>
+      p.id === updatedProduct.id ? updatedProduct : p
+    );
+    setData(updatedList);
+    handleCloseEditModal();
   };
 
   return (
@@ -99,7 +123,7 @@ const ProductosView = () => {
       <div className="admin-aside-wrapper">
         <AdminAside/>
       </div>
-      
+
       <div className="admin-main-content">
         <div className="productos-content">
           <div className="productos-header">
@@ -107,7 +131,7 @@ const ProductosView = () => {
             <span className="product-count">{filteredData.length} productos</span>
           </div>
         </div>
-        
+
         <div className="search-container">
           <input
             type="text"
@@ -134,7 +158,7 @@ const ProductosView = () => {
             Agregar Producto
           </button>
         </div>
-        
+
         <div className="table-container">
           {isLoading ? (
             <div className="loading-indicator">Cargando productos...</div>
@@ -176,6 +200,17 @@ const ProductosView = () => {
                               className="action-icon"
                             />
                           </button>
+                          <button 
+                            className="action-btn"
+                            onClick={() => handleOpenEditModal(producto)}
+                            title="Editar"
+                          >
+                            <img 
+                              src="/icons/edit.png" 
+                              alt="Editar" 
+                              className="action-icon"
+                            />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -193,11 +228,11 @@ const ProductosView = () => {
         </div>
       </div>
 
-      {/* Modales */}
       {showDetailsModal && (
         <ProductDetailsModal 
           product={selectedProduct} 
           onClose={handleCloseDetailsModal} 
+          onStatusChange={handleStatusChange} 
         />
       )}
 
@@ -206,6 +241,14 @@ const ProductosView = () => {
           isOpen={showFormModal}
           onClose={handleCloseFormModal}
           onProductCreated={handleProductCreated}
+        />
+      )}
+
+      {showEditModal && (
+        <EditProductModal
+          product={selectedProduct}
+          onClose={handleCloseEditModal}
+          onProductUpdated={handleProductUpdated}
         />
       )}
     </div>

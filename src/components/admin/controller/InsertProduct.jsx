@@ -72,9 +72,14 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${authToken}`
+          
         },
+        
         body: JSON.stringify(payload)
       });
+      console.log("Token:", authToken);
+console.log("Producto ID:", producto.id);
+
 
       const result = await response.json();
 

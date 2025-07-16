@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { usePayload } from "../../utils/authHelpers";
 import './admin-css/ProductsDetaills.css';
 
 const ProductDetailsModal = ({ product, onClose }) => {
   const [isActive, setIsActive] = useState(product?.isActive || false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [error, setError] = useState(null);
+  
+  // Obtener el token de autenticación
+  const { authToken } = usePayload();
   const getStock = (stockData) => {
     if (!stockData) return 0;
     return Object.values(stockData).reduce((sum, val) => sum + (val || 0), 0);
@@ -33,22 +37,35 @@ const ProductDetailsModal = ({ product, onClose }) => {
 
   const handleToggleStatus = async () => {
     setIsLoading(true);
+    setError(null);
+    
     try {
-      const res = await fetch(`${import.meta.env.VITE_APP_BACK}/products/status/${product.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ isActive: !isActive }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_BACK}/products/status/${product.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ isActive: !isActive }),
+        }
+        
+      );
+      console.log("Token:", authToken);
+console.log("Producto ID:", product.id);
 
-      if (res.ok) {
-        setIsActive(!isActive);
-      } else {
-        console.error('Error al cambiar el estado del producto');
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al actualizar el estado');
       }
+
+      const data = await response.json();
+      setIsActive(!isActive);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error al cambiar estado:', error);
+      setError(error.message || 'No se pudo actualizar el estado. Intente nuevamente.');
     } finally {
       setIsLoading(false);
     }
@@ -95,6 +112,7 @@ const ProductDetailsModal = ({ product, onClose }) => {
             >
               {isLoading ? 'Cargando...' : (isActive ? 'Desactivar' : 'Activar')}
             </button>
+            {error && <p className="error-message">{error}</p>}
           </div>
         )}
       </div>
