@@ -37,12 +37,7 @@ const SalesView = () => {
       'Cliente': sale.userId || "N/A",
       'Fecha': new Date(sale.createdAt).toLocaleDateString(),
       'Total (S/.)': formatPrice(sale.total),
-      'Estado': sale.status || "N/A",
-      'Email': sale.user?.email || "N/A",
-      'Teléfono': sale.user?.phone || "N/A",
-      'Método Pago': sale.paymentMethod || "N/A",
-      'Cant. Productos': sale.items?.length || 0,
-      'Dirección': sale.shippingAddress || "N/A"
+      'Estado': sale.status || "N/A"
     }));
 
     // Crear hoja de trabajo
@@ -323,7 +318,7 @@ const SalesView = () => {
                           title="Ver detalles"
                         >
                           <img 
-                            src="../public/icons/tres-puntos.png" 
+                            src="../icons/tres-puntos.png" 
                             alt="Opciones" 
                             className="action-icon"
                           />
