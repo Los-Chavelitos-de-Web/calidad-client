@@ -11,7 +11,12 @@ const EditProductModal = ({ product, onClose, onProductUpdated }) => {
     price: product.price || 0,
     description: product.description || '',
     manufacturer: product.manufacturer || '',
-    manualUrl: product.manualUrl || ''
+    manualUrl: product.manualUrl || '',
+    stock: product.stock || {
+      Piura: 0,
+      Sullana: 0,
+      Tambogrande: 0
+    }
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -20,10 +25,22 @@ const EditProductModal = ({ product, onClose, onProductUpdated }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === "price" ? parseFloat(value) : value
-    }));
+
+    if (name.startsWith("stock.")) {
+      const sede = name.split(".")[1];
+      setFormData(prev => ({
+        ...prev,
+        stock: {
+          ...prev.stock,
+          [sede]: parseInt(value, 10) || 0
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: name === "price" ? parseFloat(value) : value
+      }));
+    }
   };
 
   const handleUpdate = async () => {
@@ -95,6 +112,34 @@ const EditProductModal = ({ product, onClose, onProductUpdated }) => {
           <label>URL del Manual:
             <input type="text" name="manualUrl" value={formData.manualUrl} onChange={handleChange} />
           </label>
+
+          <fieldset>
+            <legend>Cantidad por sede:</legend>
+            <label>Piura:
+              <input
+                type="number"
+                name="stock.Piura"
+                value={formData.stock.Piura}
+                onChange={handleChange}
+              />
+            </label>
+            <label>Sullana:
+              <input
+                type="number"
+                name="stock.Sullana"
+                value={formData.stock.Sullana}
+                onChange={handleChange}
+              />
+            </label>
+            <label>Tambogrande:
+              <input
+                type="number"
+                name="stock.Tambogrande"
+                value={formData.stock.Tambogrande}
+                onChange={handleChange}
+              />
+            </label>
+          </fieldset>
 
           <div className="modal-actions">
             <button 
