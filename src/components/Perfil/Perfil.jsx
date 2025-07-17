@@ -5,29 +5,88 @@ import { usePayload } from "../../utils/authHelpers";
 import "./Perfil.css";
 
 const Perfil = () => {
-  const { username, email, dni, loading, error } = usePayload();
+  const { userId, username, email, dni, role, loading, error } = usePayload();
 
   const [editNombre, setEditNombre] = useState("");
-  const [editDni, setEditDni] = useState("");
   const [editEmail, setEditEmail] = useState("");
+  const [dniValue, setDniValue] = useState("");
+
+  const [actualizando, setActualizando] = useState(false);
+    // Retrieve authToken from localStorage (or your preferred method)
+    const authToken = localStorage.getItem("authToken");
+
+  useEffect(() => {
+    const fetchDni = async () => {
+      if (!userId) return;
+
+      try {
+        const response = await fetch(`${import.meta.env.VITE_APP_BACK}/users/profile/${userId}`, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+        const data = await response.json();
+        setDniValue(data.dni || "");
+      } catch (err) {
+        console.error("Error al obtener el DNI:", err);
+      }
+    }
+
+    fetchDni();
+  });
 
   useEffect(() => {
     if (!loading && !error) {
       setEditNombre(username || "");
-      setEditDni(dni || "");
       setEditEmail(email || "");
+      setDniValue(dni || "");
     }
   }, [username, dni, email, loading, error]);
 
-  const handleActualizar = () => {
-    // Aquí iría la lógica para enviar los datos al servidor (API call)
-    console.log("Datos actualizados:", {
-      nombre: editNombre,
-      dni: editDni,
-      email: editEmail,
-    });
-    alert("Datos actualizados (simulado)");
+  const handleActualizar = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(editEmail)) {
+      alert("El correo no tiene un formato válido.");
+      return;
+    }
+
+    if (!userId) {
+      alert("No se pudo obtener el ID del usuario.");
+      return;
+    }
+
+    setActualizando(true);
+
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BACK}/users/update/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          name: editNombre,
+          email: editEmail,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al actualizar los datos.");
+      }
+
+      const data = await response.json();
+      alert("Datos actualizados correctamente.");
+      console.log("Respuesta del servidor:", data);
+    } catch (err) {
+      console.error(err);
+      alert("Hubo un problema al actualizar los datos.");
+    } finally {
+      setActualizando(false);
+    }
   };
+
+  const datosModificados = editNombre !== username || editEmail !== email;
 
   if (loading) return <p>Cargando perfil...</p>;
   if (error) return <p>{error}</p>;
@@ -59,11 +118,7 @@ const Perfil = () => {
         <div className="perfil-datos">
           <div className="perfil-dato">
             <strong>DNI:</strong>
-            <input
-              type="text"
-              value={editDni}
-              onChange={(e) => setEditDni(e.target.value)}
-            />
+            <span>{dniValue}</span>
           </div>
           <div className="perfil-dato">
             <strong>Nombre:</strong>
@@ -81,10 +136,20 @@ const Perfil = () => {
               onChange={(e) => setEditEmail(e.target.value)}
             />
           </div>
+          {role !== "CLIENTE" && (
+            <div className="perfil-dato">
+              <strong>Rol:</strong>
+              <span>{role}</span>
+            </div>
+          )}
         </div>
 
-        <button className="btn-actualizar" onClick={handleActualizar}>
-          Actualizar datos
+        <button
+          className="btn-actualizar"
+          onClick={handleActualizar}
+          disabled={!datosModificados || actualizando}
+        >
+          {actualizando ? "Actualizando..." : "Actualizar datos"}
         </button>
       </main>
     </div>
