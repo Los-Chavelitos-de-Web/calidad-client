@@ -143,7 +143,7 @@ console.log("Producto ID:", producto.id);
                   <div key={index} className="flex items-center gap-2 mb-2">
                     <input
                       type="text"
-                      placeholder="Clave"
+                      placeholder="Especificación"
                       value={spec.key}
                       onChange={(e) => {
                         const newSpecs = [...specsList];
