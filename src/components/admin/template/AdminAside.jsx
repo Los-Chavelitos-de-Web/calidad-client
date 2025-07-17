@@ -44,7 +44,7 @@ const AdminAside = () => {
             <a 
             onClick={() => navigate('/admin/users')}
             className="nav-link aside-link">
-              <i className="bi bi-people me-2"></i> Trabajadores
+              <i className="bi bi-people me-2"></i> Usuarios
             </a>
           </li>
           <li className="nav-item">
