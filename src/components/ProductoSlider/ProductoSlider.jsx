@@ -63,6 +63,7 @@ export function ProductosSlider() {
               id={p.id}
               titulo={p.title}
               marca={p.brand}
+              imageUrl={p.imageUrl} // <- Aquí pasas la imagen
             />
           ))}
         </div>

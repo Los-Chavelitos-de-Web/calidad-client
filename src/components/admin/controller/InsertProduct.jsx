@@ -8,7 +8,6 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
     description: '',
     brand: '',
     price: '',
-    stock: '{}',
     model: '',
     category: '',
     manufacturer: '',
@@ -16,111 +15,87 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
     createdAt: new Date().toISOString()
   });
 
+  const [stockFields, setStockFields] = useState({
+    piura: 0,
+    sullana: 0,
+    tambogrande: 0
+  });
+
+  const [specsList, setSpecsList] = useState([{ key: '', value: '' }]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { authToken } = usePayload();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProducto({
-      ...producto,
-      [name]: value
-    });
-    
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: null
-      });
-    }
-  };
-
-  const handleStockChange = (e) => {
-    const value = e.target.value;
-    setProducto({
-      ...producto,
-      stock: value
-    });
-    
-    if (errors.stock) {
-      setErrors({
-        ...errors,
-        stock: null
-      });
-    }
+    setProducto({ ...producto, [name]: value });
+    if (errors[name]) setErrors({ ...errors, [name]: null });
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
     if (!producto.title.trim()) newErrors.title = 'Título es requerido';
     if (!producto.description.trim()) newErrors.description = 'Descripción es requerida';
     if (!producto.brand.trim()) newErrors.brand = 'Marca es requerida';
     if (!producto.category.trim()) newErrors.category = 'Categoría es requerida';
-    
-    if (!producto.price.trim()) {
-      newErrors.price = 'Precio es requerido';
-    } else if (isNaN(Number(producto.price)) || Number(producto.price) <= 0) {
+    if (!producto.price.trim() || isNaN(Number(producto.price)) || Number(producto.price) <= 0) {
       newErrors.price = 'Precio debe ser un número positivo';
     }
-    
-    try {
-      JSON.parse(producto.stock);
-    } catch (e) {
-      newErrors.stock = 'Stock debe ser un JSON válido';
-    }
-    
     if (producto.manualUrl && !/^https?:\/\/.+\..+/.test(producto.manualUrl)) {
       newErrors.manualUrl = 'URL no válida';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
-    if (!authToken) {
-      alert('No estás autenticado');
-      return;
-    }
-    
+    if (!validateForm() || !authToken) return;
+
     setIsSubmitting(true);
-    
     try {
+      const specsObject = specsList.reduce((acc, curr) => {
+        if (curr.key.trim()) acc[curr.key] = curr.value;
+        return acc;
+      }, {});
+
+      const payload = {
+        ...producto,
+        price: Number(producto.price),
+        stock: stockFields,
+        specs: specsObject
+      };
+
       const response = await fetch(`${import.meta.env.VITE_APP_BACK}/products/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${authToken}`
+          
         },
-        body: JSON.stringify(producto) 
+        
+        body: JSON.stringify(payload)
       });
+      console.log("Token:", authToken);
+console.log("Producto ID:", producto.id);
+
 
       const result = await response.json();
 
       if (response.ok) {
         alert("Producto insertado con éxito");
         setProducto({
-          title: '',
-          description: '',
-          brand: '',
-          price: '',
-          stock: '{}',
-          model: '',
-          category: '',
-          manufacturer: '',
-          manualUrl: '',
-          createdAt: new Date().toISOString()
+          title: '', description: '', brand: '', price: '', model: '',
+          category: '', manufacturer: '', manualUrl: '', createdAt: new Date().toISOString()
         });
-        onProductCreated(); // Notificar al componente padre
+        setStockFields({ piura: 0, sullana: 0, tambogrande: 0 });
+        setSpecsList([{ key: '', value: '' }]);
+        onProductCreated();
       } else {
         alert(`Error: ${result.message || 'No se pudo insertar el producto'}`);
       }
     } catch (err) {
-      console.error('Error al enviar el formulario:', err);
       alert("Error al conectar con el servidor");
     } finally {
       setIsSubmitting(false);
@@ -136,170 +111,122 @@ const FormularioProducto = ({ isOpen, onClose, onProductCreated }) => {
           <h2 className="modal-title">Agregar nuevo producto</h2>
           <button className="modal-close-btn" onClick={onClose}>&times;</button>
         </div>
-        
-        <div className="modal-body">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="form-grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Columna izquierda */}
-              <div className="space-y-4">
-                {/* Campo Título */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={producto.title}
-                    onChange={handleChange}
-                    placeholder="Nombre del producto"
-                    className={`w-full border rounded-md p-2 ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
-                  />
-                  {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
-                </div>
-                
-                {/* Campo Descripción */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
-                  <textarea
-                    name="description"
-                    value={producto.description}
-                    onChange={handleChange}
-                    placeholder="Descripción detallada del producto"
-                    rows={3}
-                    className={`w-full border rounded-md p-2 ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
-                  />
-                  {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
-                </div>
-                
-                {/* Campo Marca */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Marca *</label>
-                  <input
-                    type="text"
-                    name="brand"
-                    value={producto.brand}
-                    onChange={handleChange}
-                    placeholder="Marca del producto"
-                    className={`w-full border rounded-md p-2 ${errors.brand ? 'border-red-500' : 'border-gray-300'}`}
-                  />
-                  {errors.brand && <p className="text-red-500 text-xs mt-1">{errors.brand}</p>}
-                </div>
-              </div>
-              
-              {/* Columna derecha */}
-              <div className="space-y-4">
-                {/* Campo Precio */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Precio *</label>
-                  <div className="relative">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="form-grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <Input label="Título *" name="title" value={producto.title} onChange={handleChange} error={errors.title} />
+              <Textarea label="Descripción *" name="description" value={producto.description} onChange={handleChange} error={errors.description} />
+              <Input label="Marca *" name="brand" value={producto.brand} onChange={handleChange} error={errors.brand} />
+            </div>
+
+            <div className="space-y-4">
+              <Input label="Precio *" name="price" value={producto.price} onChange={handleChange} error={errors.price} type="number" />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Stock por almacén *</label>
+                {Object.keys(stockFields).map((city) => (
+                  <div key={city} className="mb-2">
+                    <label className="text-xs font-medium capitalize">{city}</label>
                     <input
-                      type="text"
-                      name="price"
-                      value={producto.price}
-                      onChange={handleChange}
-                      placeholder="0.00"
-                      className={`w-full border rounded-md p-2 pl-8 ${errors.price ? 'border-red-500' : 'border-gray-300'}`}
+                      type="number"
+                      name={city}
+                      value={stockFields[city]}
+                      onChange={(e) => setStockFields({ ...stockFields, [city]: parseInt(e.target.value) || 0 })}
+                      className="w-full border border-gray-300 rounded-md p-2"
                     />
                   </div>
-                  {errors.price && <p className="text-red-500 text-xs mt-1">{errors.price}</p>}
-                </div>
-                
-                {/* Campo Stock */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Stock * (Formato JSON)</label>
-                  <textarea
-                    name="stock"
-                    value={producto.stock}
-                    onChange={handleStockChange}
-                    placeholder='{"almacen1": 10, "almacen2": 5}'
-                    rows={3}
-                    className={`w-full border rounded-md p-2 font-mono text-sm ${errors.stock ? 'border-red-500' : 'border-gray-300'}`}
-                  />
-                  {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock}</p>}
-                </div>
-                
-                {/* Campo Modelo */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Modelo</label>
-                  <input
-                    type="text"
-                    name="model"
-                    value={producto.model}
-                    onChange={handleChange}
-                    placeholder="Modelo/número de parte"
-                    className="w-full border border-gray-300 rounded-md p-2"
-                  />
-                </div>
-                
-                {/* Campo Categoría */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Categoría *</label>
-                  <input
-                    type="text"
-                    name="category"
-                    value={producto.category}
-                    onChange={handleChange}
-                    placeholder="Categoría del producto"
-                    className={`w-full border rounded-md p-2 ${errors.category ? 'border-red-500' : 'border-gray-300'}`}
-                  />
-                  {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category}</p>}
-                </div>
+                ))}
               </div>
-            </div>
-            
-            {/* Campos adicionales */}
-            <div className="form-grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Campo Fabricante */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Fabricante</label>
-                <input
-                  type="text"
-                  name="manufacturer"
-                  value={producto.manufacturer}
-                  onChange={handleChange}
-                  placeholder="Fabricante del producto"
-                  className="w-full border border-gray-300 rounded-md p-2"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Especificaciones</label>
+                {specsList.map((spec, index) => (
+                  <div key={index} className="flex items-center gap-2 mb-2">
+                    <input
+                      type="text"
+                      placeholder="Clave"
+                      value={spec.key}
+                      onChange={(e) => {
+                        const newSpecs = [...specsList];
+                        newSpecs[index].key = e.target.value;
+                        setSpecsList(newSpecs);
+                      }}
+                      className="w-1/3 border border-gray-300 rounded-md p-2"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Valor"
+                      value={spec.value}
+                      onChange={(e) => {
+                        const newSpecs = [...specsList];
+                        newSpecs[index].value = e.target.value;
+                        setSpecsList(newSpecs);
+                      }}
+                      className="w-1/2 border border-gray-300 rounded-md p-2"
+                    />
+                    <button type="button" className="eliminar-spec" onClick={() => {
+                      const newSpecs = specsList.filter((_, i) => i !== index);
+                      setSpecsList(newSpecs.length === 0 ? [{ key: '', value: '' }] : newSpecs);
+                    }}>❌</button>
+                  </div>
+                ))}
+                <button type="button" className="agregar-spec" onClick={() => setSpecsList([...specsList, { key: '', value: '' }])}>
+                  + Añadir especificación
+                </button>
               </div>
-              
-              {/* Campo URL Manual */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">URL del Manual</label>
-                <input
-                  type="url"
-                  name="manualUrl"
-                  value={producto.manualUrl}
-                  onChange={handleChange}
-                  placeholder="https://ejemplo.com/manual.pdf"
-                  className={`w-full border rounded-md p-2 ${errors.manualUrl ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.manualUrl && <p className="text-red-500 text-xs mt-1">{errors.manualUrl}</p>}
-              </div>
+              <Input label="Modelo" name="model" value={producto.model} onChange={handleChange} />
+              <Input label="Categoría *" name="category" value={producto.category} onChange={handleChange} error={errors.category} />
             </div>
-            
-            <input type="hidden" name="createdAt" value={producto.createdAt} />
-            
-            <div className="flex justify-end pt-4">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 mr-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting || !authToken}
-                className={`px-6 py-2 rounded-md text-white ${isSubmitting || !authToken ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'}`}
-              >
-                {isSubmitting ? 'Enviando...' : 'Guardar Producto'}
-              </button>
-            </div>
-          </form>
-        </div>
+          </div>
+
+          <div className="form-grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Input label="Fabricante" name="manufacturer" value={producto.manufacturer} onChange={handleChange} />
+            <Input label="URL del Manual" name="manualUrl" value={producto.manualUrl} onChange={handleChange} error={errors.manualUrl} type="url" />
+          </div>
+
+          <input type="hidden" name="createdAt" value={producto.createdAt} />
+
+          <div className="flex justify-end pt-4 gap-4">
+            <button type="button" className="cancelar" onClick={onClose}>Cancelar</button>
+            <button type="submit" className='guardar' disabled={isSubmitting || !authToken}>
+              {isSubmitting ? 'Enviando...' : 'Guardar Producto'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
+
+// Componentes reutilizables
+const Input = ({ label, name, value, onChange, error, type = "text", prefix }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <div className="relative">
+      {prefix && <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">{prefix}</span>}
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        className={`w-full border rounded-md p-2 ${prefix ? 'pl-8' : ''} ${error ? 'border-red-500' : 'border-gray-300'}`}
+      />
+    </div>
+    {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+  </div>
+);
+
+const Textarea = ({ label, name, value, onChange, error }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <textarea
+      name={name}
+      value={value}
+      onChange={onChange}
+      rows={3}
+      className={`w-full border rounded-md p-2 ${error ? 'border-red-500' : 'border-gray-300'}`}
+    />
+    {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+  </div>
+);
 
 export default FormularioProducto;

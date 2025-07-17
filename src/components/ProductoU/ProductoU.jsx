@@ -34,7 +34,7 @@ const ProductoU = () => {
         const encontrado = await response.json();
 
         if (encontrado) {
-          const precioAleatorio = Math.round(Math.random() * 200);
+          const precioAleatorio = parseFloat((Math.random() * 800 + 200).toFixed(2));
           const stockTotal =
             typeof encontrado.stock === "object"
               ? Object.values(encontrado.stock).reduce((a, b) => a + b, 0)

@@ -97,10 +97,10 @@ const Registro = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.email.endsWith('@gmail.com')) {
-      setMensaje('❌ Solo se permiten correos @gmail.com');
-      return;
-    }
+   // if (!formData.email.endsWith('@gmail.com')) {
+     // setMensaje('❌ Solo se permiten correos @gmail.com');
+      //return;
+    //}
 
     if (formData.password.length < 8) {
       setMensaje('❌ La contraseña debe tener al menos 8 caracteres');

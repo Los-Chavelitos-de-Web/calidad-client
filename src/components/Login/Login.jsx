@@ -46,11 +46,19 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok && data.token) {
+        const rol = data.user?.rol?.toUpperCase() || 'CLIENTE';
+
         Cookies.set('authToken', data.token, { expires: 1 });
         Cookies.set('userName', data.user?.nombre || 'Usuario');
         Cookies.set('userEmail', data.user?.email || form.email);
+        Cookies.set('userRol', rol);
 
-        navigate('/');
+        // Redirección según el rol
+        if (rol === 'GERENTE') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       } else {
         setMensaje(data.message || '❌ Usuario o contraseña incorrectos');
       }

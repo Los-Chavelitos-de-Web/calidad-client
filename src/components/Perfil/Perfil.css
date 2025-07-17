@@ -159,3 +159,61 @@
   font-weight: 600;
   color: #111827;
 }
+
+
+.perfil-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.perfil-dato {
+  display: flex;
+  flex-direction: column;
+}
+
+.perfil-dato label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.4rem;
+}
+
+.perfil-dato input {
+  padding: 0.7rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: #f8f9fa;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.perfil-dato input:focus {
+  border-color: #00b4d8;
+  background-color: #fff;
+  outline: none;
+}
+
+.btn-actualizar {
+  margin-top: 2rem;
+  padding: 0.8rem 1.5rem;
+  background-color: #00b4d8;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: fit-content;
+}
+
+.btn-actualizar:hover {
+  background-color: #0096c7;
+}
+
+.mensaje-actualizacion {
+  margin-top: 1rem;
+  color: #2e7d32;
+  font-weight: bold;
+}

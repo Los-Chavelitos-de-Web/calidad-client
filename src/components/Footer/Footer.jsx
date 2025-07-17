@@ -51,8 +51,8 @@ const Footer = () => {
               </a>
             </li>
             <li>
-              <a className="footer-link" onClick={() => navigate("/honda")}>
-                Still
+              <a className="footer-link" onClick={() => navigate("/stihl")}>
+                Stihl
               </a>
             </li>
             <li>
@@ -90,7 +90,7 @@ const Footer = () => {
             <li>
               <a
                 onClick={
-                  email ? () => navigate("/libro-reclamaciones") : undefined
+                  email ? () => navigate("/libroReclamaciones") : undefined
                 }
                 className="footer-link libro-link"
               >

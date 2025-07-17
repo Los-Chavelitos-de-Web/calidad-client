@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import AdminAside from "./template/AdminAside";
 import { useNavigate } from "react-router-dom";
 import { usePayload } from "../../utils/authHelpers";
-import UserModal from "./user.modal";
-import UserFilters from "./user-filter";
+import * as XLSX from 'xlsx';
+import UserModal from "./user.modal.jsx";
+import UserFilters from "./user-filter.jsx";
 import './admin-css/users-view.css';
 
 const UserView = () => {
@@ -13,8 +14,11 @@ const UserView = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState("all");
+  const [roleFilter, setRoleFilter] = useState("all"); // Nuevo estado para el filtro de roles
+  const [newRole, setNewRole] = useState("");
   const { authToken, error, loading } = usePayload();
+
+  const availableRoles = ["GERENTE", "ALMACEN_VENTAS", "CLIENTE"];
 
   useEffect(() => {
     if (loading) return;
@@ -64,22 +68,27 @@ const UserView = () => {
   }
 
   const filteredUsers = users.filter(user => {
-    const searchLower = searchTerm.toLowerCase();
-    const nameMatch = user.profile?.name?.toLowerCase().includes(searchLower) || false;
-    const emailMatch = user.email.toLowerCase().includes(searchLower);
-    const roleMatch = roleFilter === "all" || user.role === roleFilter;
+    // Filtro por término de búsqueda
+    const matchesSearch = !searchTerm || 
+      user.profile?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
     
-    return (nameMatch || emailMatch) && roleMatch;
+    // Filtro por rol
+    const matchesRole = roleFilter === "all" || user.role === roleFilter;
+    
+    return matchesSearch && matchesRole;
   });
 
   const handleOpenModal = (user) => {
     setSelectedUser(user);
+    setNewRole(user.role);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedUser(null);
+    setNewRole("");
   };
 
   const toggleUserStatus = async () => {
@@ -87,7 +96,6 @@ const UserView = () => {
     
     try {
       const newStatus = !selectedUser.isActive;
-      
       const response = await fetch(`${import.meta.env.VITE_APP_BACK}/users/isActive`, {
         method: 'PUT',
         headers: {
@@ -101,27 +109,56 @@ const UserView = () => {
       });
 
       if (response.ok) {
-        const updatedUsers = users.map(user => 
-          user.id === selectedUser.id 
-            ? { ...user, isActive: newStatus } 
-            : user
-        );
-        
-        setUsers(updatedUsers);
+        setUsers(users.map(user => 
+          user.id === selectedUser.id ? { ...user, isActive: newStatus } : user
+        ));
         setSelectedUser({ ...selectedUser, isActive: newStatus });
-      } else {
-        console.error('Error al cambiar el estado del usuario');
-        const errorData = await response.json();
-        console.error('Detalles del error:', errorData);
       }
     } catch (error) {
-      console.error('Error al cambiar el estado del usuario:', error);
+      console.error('Error al cambiar estado:', error);
     }
   };
   
+  const changeUserRole = async () => {
+    if (!selectedUser || !newRole || newRole === selectedUser.role) return;
+    
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BACK}/users/role`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({
+          id: selectedUser.id,
+          role: newRole
+        })
+      });
+
+      if (response.ok) {
+        setUsers(users.map(user => 
+          user.id === selectedUser.id ? { ...user, role: newRole } : user
+        ));
+        setSelectedUser({ ...selectedUser, role: newRole });
+        alert('Rol actualizado correctamente');
+      }
+    } catch (error) {
+      console.error('Error al cambiar rol:', error);
+    }
+  };
+
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString('es-ES', options);
+  };
+
+  const translateRole = (role) => {
+    const translations = {
+      'GERENTE': 'Gerente',
+      'ALMACEN_VENTAS': 'Almacén/Ventas',
+      'CLIENTE': 'Cliente'
+    };
+    return translations[role] || role;
   };
 
   return (
@@ -145,79 +182,81 @@ const UserView = () => {
             users={users}
             filteredUsers={filteredUsers}
           />
+        </div>
 
-          <div className="table-container">
-            {isLoading ? (
-              <div className="loading-indicator">Cargando usuarios...</div>
-            ) : (
-              <table className="products-table">
-                <thead>
-                  <tr>
-                    <th className="column-id">ID</th>
-                    <th className="column-category">Nombre</th>
-                    <th className="column-brand">Email</th>
-                    <th className="column-model">Fecha Registro</th>
-                    <th className="column-category">Rol</th>
-                    <th className="cell-category">Estado</th>
-                    <th className="cell-actions">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.length > 0 ? (
-                    filteredUsers.map((user) => (
-                      <tr key={user.id}>
-                        <td className="cell-name">{user.id}</td>
-                        <td className="cell-id">
-                          {user.profile?.name || "No especificado"}
-                        </td>
-                        <td className="cell-name">{user.email}</td>
-                        <td className="cell-model">
-                          {new Date(user.createdAt).toLocaleDateString()}
-                        </td>
-                        <td className="cell-id">{user.role}</td>
-                        <td className="cell-stock">
-                          <span className={`status-badge ${user.isActive ? 'active' : 'inactive'}`}>
-                            {user.isActive ? "Activo" : "Inactivo"}
-                          </span>
-                        </td>
-                        <td className="cell-actions">
-                          <button
-                            className="action-btn"
-                            onClick={() => handleOpenModal(user)}
-                            title="Ver detalles"
-                          >
-                            <img
-                              src="../icons/tres-puntos.png"
-                              alt="Opciones"
-                              className="action-icon"
-                            />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr className="no-results">
-                      <td colSpan="7">
-                        {searchTerm || roleFilter !== "all" 
-                          ? "No hay usuarios que coincidan con los filtros" 
-                          : "No hay usuarios registrados"}
+        <div className="table-container">
+          {isLoading ? (
+            <div className="loading-indicator">Cargando usuarios...</div>
+          ) : (
+            <table className="products-table">
+              <thead>
+                <tr>
+                  <th className="column-id">ID</th>
+                  <th className="column-category">Nombre</th>
+                  <th className="column-brand">Email</th>
+                  <th className="column-model">Fecha Registro</th>
+                  <th className="column-category">Rol</th>
+                  <th className="cell-category">Estado</th>
+                  <th className="cell-model">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.length > 0 ? (
+                  filteredUsers.map((user) => (
+                    <tr key={user.id}>
+                      <td className="cell-name">{user.id}</td>
+                      <td className="cell-id">{user.profile?.name || "No especificado"}</td>
+                      <td className="cell-name">{user.email}</td>
+                      <td className="cell-model">{new Date(user.createdAt).toLocaleDateString()}</td>
+                      <td className="cell-id">{translateRole(user.role)}</td>
+                      <td className="cell-stock">
+                        <span className={`status-badge ${user.isActive ? 'active' : 'inactive'}`}>
+                          {user.isActive ? "Activo" : "Inactivo"}
+                        </span>
+                      </td>
+                      <td className="cell-actions">
+                        <button
+                          className="action-btn"
+                          onClick={() => handleOpenModal(user)}
+                          title="Ver detalles"
+                        >
+                          <img
+                            src="../icons/tres-puntos.png"
+                            alt="Opciones"
+                            className="action-icon"
+                          />
+                        </button>
                       </td>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            )}
-          </div>
+                  ))
+                ) : (
+                  <tr className="no-results">
+                    <td colSpan="7">
+                      {searchTerm || roleFilter !== "all" 
+                        ? "No hay usuarios que coincidan con los filtros" 
+                        : "No hay usuarios registrados"}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
-      <UserModal
-        selectedUser={selectedUser}
-        isModalOpen={isModalOpen}
-        handleCloseModal={handleCloseModal}
-        toggleUserStatus={toggleUserStatus}
-        formatDate={formatDate}
-      />
+      {isModalOpen && selectedUser && (
+        <UserModal
+          selectedUser={selectedUser}
+          newRole={newRole}
+          availableRoles={availableRoles}
+          translateRole={translateRole}
+          formatDate={formatDate}
+          onClose={handleCloseModal}
+          onRoleChange={changeUserRole}
+          onRoleSelectChange={setNewRole}
+          onToggleStatus={toggleUserStatus}
+        />
+      )}
     </div>
   );
 };

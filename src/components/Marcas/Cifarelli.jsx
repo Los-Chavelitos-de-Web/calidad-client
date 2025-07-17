@@ -23,7 +23,7 @@ const Cifarelli = () => {
         .filter((product) => product.brand === "Cifarelli")
         .map((product) => ({
           ...product,
-          unit_price: product.unit_price ?? Math.round(Math.random() * 200),
+          unit_price: product.unit_price ?? parseFloat((Math.random() * 800 + 200).toFixed(2)),
         }));
       //console.log(filteredData);
       setData(filteredData);
